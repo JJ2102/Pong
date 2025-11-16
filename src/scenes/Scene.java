@@ -1,5 +1,7 @@
 package scenes;
 
+import objekts.GameWindow;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -9,12 +11,15 @@ import java.awt.event.MouseMotionListener;
 
 public abstract class Scene extends JPanel implements KeyListener, MouseMotionListener {
     protected Timer timer;
+    protected GameWindow window;
 
-    public Scene() {
+    public Scene(GameWindow window) {
+        this.window = window;
         setFocusable(true);
         requestFocusInWindow();
         addKeyListener(this);
         addMouseMotionListener(this);
+        initScene();
     }
 
     // Lebenszyklus
@@ -35,11 +40,7 @@ public abstract class Scene extends JPanel implements KeyListener, MouseMotionLi
 
     // Default Input-Handling
     @Override public void keyTyped(KeyEvent e) {}
-    @Override public void keyPressed(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-            System.exit(0);
-        }
-    }
+    @Override public void keyPressed(KeyEvent e) {}
     @Override public void keyReleased(KeyEvent e) {}
     @Override public void mouseDragged(MouseEvent e) {}
     @Override public void mouseMoved(MouseEvent e) {}

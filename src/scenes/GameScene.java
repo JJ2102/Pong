@@ -1,19 +1,20 @@
 package scenes;
 
 import math.Vektor3;
+import objekts.GameWindow;
 import objekts.Panel;
 import utility.MouseSettings;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 
 public class GameScene extends Scene {
     Panel player;
     private Vektor3 mousePos = new Vektor3(0,0,0); // Aktuelle Mausposition
 
-    public GameScene() {
-        super();
-        initScene();
+    public GameScene(GameWindow window) {
+        super(window);
         startScene();
     }
 
