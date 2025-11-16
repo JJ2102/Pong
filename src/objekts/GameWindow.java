@@ -13,7 +13,7 @@ public class GameWindow extends JFrame {
     private Scenes currentScene;
 
     public GameWindow(Dimension size) {
-        this.setTitle("Pong 3D");
+        super("Pong 3D");
 
         cardLayout = new CardLayout();
         mainPanel = new JPanel(cardLayout);
@@ -26,28 +26,25 @@ public class GameWindow extends JFrame {
         this.setSize(size);
         this.setUndecorated(true);
         this.setResizable(false);
-        this.setVisible(true);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setVisible(true);
     }
 
     private void initScenes() {
-        currentScene = Scenes.MENU; // Standard-Szene festlegen
+        // MenuScene
+        MenuScene menuScene = new MenuScene(this);
+        mainPanel.add(menuScene, Scenes.MENU.name());
 
         // GameScene
         GameScene gameScene = new GameScene(this);
-        mainPanel.add(gameScene, "GameScene");
+        mainPanel.add(gameScene, Scenes.GAME.name());
 
-        // MenuScene
-        MenuScene menuScene = new MenuScene(this);
-        mainPanel.add(menuScene, "MenuScene");
+        currentScene = Scenes.MENU; // Standard-Szene festlegen
     }
 
 
     public void showScene() {
-        switch (currentScene) {
-            case GAME -> cardLayout.show(mainPanel, "GameScene");
-            case MENU -> cardLayout.show(mainPanel, "MenuScene");
-        }
+        cardLayout.show(mainPanel, currentScene.name());
     }
 
     // Getters und Setters
