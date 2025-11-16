@@ -1,10 +1,15 @@
+import scenes.GameScene;
+import scenes.Scene;
+
 import javax.swing.*;
 import java.awt.*;
 
 public class Window extends JFrame {
-    private Scene scene = new Scene();
+    private Scene scene = new GameScene();
 
     public Window (Dimension size) {
+
+
         this.setTitle("Pong 3D");
 
         this.add(scene);
