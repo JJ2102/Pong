@@ -48,9 +48,18 @@ public class GameWindow extends JFrame {
     }
 
     // Getters und Setters
-    public void setCurrentScene(Scenes currentScene) {
-        this.currentScene = currentScene;
+    public void setCurrentScene(Scenes scene) {
+        this.currentScene = scene;
         showScene();
+
+        Component activeScene = null;
+        switch (scene) {
+            case MENU -> activeScene = mainPanel.getComponent(0); // Menü-Szene
+            case GAME -> activeScene = mainPanel.getComponent(1); // Spiel-Szene
+        }
+        if (activeScene != null) {
+            activeScene.requestFocusInWindow(); // Fokus auf die aktive Szene setzen
+        }
     }
 
 
