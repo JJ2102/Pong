@@ -12,9 +12,11 @@ import java.awt.event.MouseMotionListener;
 public abstract class Scene extends JPanel implements KeyListener, MouseMotionListener {
     protected final GameWindow window;
     protected Timer timer;
+    protected Dimension size;
 
     public Scene(GameWindow window) {
         this.window = window;
+        this.size = window.getSIZE();
         setFocusable(true);
         addKeyListener(this);
         addMouseMotionListener(this);
@@ -28,11 +30,11 @@ public abstract class Scene extends JPanel implements KeyListener, MouseMotionLi
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-    };
+    }
 
     public void startScene() {
         if (timer == null) {
-            timer = new Timer(20, e -> {
+            timer = new Timer(20, _ -> {
                 update();
                 repaint();
             });

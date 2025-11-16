@@ -11,9 +11,11 @@ public class GameWindow extends JFrame {
     private final CardLayout cardLayout;
     private final JPanel mainPanel;
     private Scenes currentScene;
+    private final Dimension SIZE;
 
     public GameWindow(Dimension size) {
         super("Pong 3D");
+        SIZE = size;
 
         cardLayout = new CardLayout();
         mainPanel = new JPanel(cardLayout);
@@ -62,5 +64,7 @@ public class GameWindow extends JFrame {
         }
     }
 
-
+    public Dimension getSIZE() {
+        return SIZE;
+    }
 }

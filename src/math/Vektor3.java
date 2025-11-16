@@ -14,4 +14,9 @@ public class Vektor3 {
     public static Vektor3 up() {
         return new Vektor3(0, 1, 0);
     }
+
+    @Override
+    public String toString() {
+        return "( " + x + ", " + y + ", " + z + " )";
+    }
 }

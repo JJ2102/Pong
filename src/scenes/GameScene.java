@@ -22,7 +22,7 @@ public class GameScene extends Scene {
 
     @Override
     protected void initScene() {
-        player = new Panel(new Vektor3(100, 100, 0));
+        player = new Panel(new Vektor3(size.getWidth()/2, size.getHeight()/2, 0));
         setCursor(MouseSettings.getInvisibleCursor());
     }
 
