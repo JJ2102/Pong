@@ -22,11 +22,13 @@ public class GameScene extends Scene {
 
     @Override
     protected void initScene() {
-        player = new Panel(new Vektor3(size.getWidth()/2, size.getHeight()/2, 0));
         setCursor(MouseSettings.getInvisibleCursor());
+        player = new Panel(new Vektor3(size.getWidth()/2, size.getHeight()/2, 0));
     }
 
     public void update() {
+        if(window.isPauseActive()) return; // Pausieren, wenn Overlay aktiv ist
+
         player.setPosition(mousePos);
     }
 
@@ -40,13 +42,12 @@ public class GameScene extends Scene {
     public void mouseMoved(MouseEvent e) {
         double mouseShift = player.getSIZE() / 2.0;
         mousePos = new Vektor3(e.getX() - mouseShift, e.getY() - mouseShift, 0);
-        player.setPosition(mousePos);
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-            window.setCurrentScene(Scenes.MENU);
+            window.togglePauseOverlay();
         }
     }
 }

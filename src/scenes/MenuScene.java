@@ -2,6 +2,7 @@ package scenes;
 
 import enums.Scenes;
 import objekts.GameWindow;
+import utility.Button;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,17 +16,36 @@ public class MenuScene extends Scene {
 
     @Override
     protected void initScene() {
-        setLayout(new FlowLayout(FlowLayout.CENTER, 20, 200));
+        setLayout(new GridBagLayout()); // Zentrierte Inhalte
+
+        // Titel-Label
+        JLabel title = new JLabel("Pong 3D");
+        title.setFont(new Font("Arial", Font.BOLD, 72));
+        title.setForeground(Color.BLACK);
 
         // Start Button
-        JButton startButton = new JButton("Start Game");
+        Button startButton = new Button("Start Game");
         startButton.addActionListener(_ -> window.setCurrentScene(Scenes.GAME));
         add(startButton);
 
         // Exit Button
-        JButton exitButton = new JButton("Exit");
+        Button exitButton = new Button("Exit");
         exitButton.addActionListener(_ -> System.exit(0));
         add(exitButton);
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.anchor = GridBagConstraints.CENTER;
+        gbc.insets = new Insets(20, 0, 20, 0);
+
+        gbc.gridy = 0;
+        add(title, gbc);
+
+        gbc.gridy = 1;
+        add(startButton, gbc);
+
+        gbc.gridy = 2;
+        add(exitButton, gbc);
     }
 
     @Override
@@ -34,9 +54,6 @@ public class MenuScene extends Scene {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        // Menü zeichnen (Hintergrund, Titel, etc.)
-        g.setFont(new Font("Arial", Font.BOLD, 48));
-        g.drawString("Pong 3D", getWidth() / 2 - 100, 100);
     }
 
     @Override

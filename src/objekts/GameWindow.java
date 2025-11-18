@@ -3,6 +3,7 @@ package objekts;
 import enums.Scenes;
 import scenes.GameScene;
 import scenes.MenuScene;
+import scenes.PauseOverlay;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,6 +13,8 @@ public class GameWindow extends JFrame {
     private final JPanel mainPanel;
     private Scenes currentScene;
     private final Dimension SIZE;
+
+    private PauseOverlay pauseOverlay;
 
     public GameWindow(Dimension size) {
         super("Pong 3D");
@@ -41,6 +44,11 @@ public class GameWindow extends JFrame {
         GameScene gameScene = new GameScene(this);
         mainPanel.add(gameScene, Scenes.GAME.name());
 
+        // PauseScene
+        pauseOverlay = new PauseOverlay(this);
+        setGlassPane(pauseOverlay);
+        pauseOverlay.setVisible(false);
+
         currentScene = Scenes.MENU; // Standard-Szene festlegen
     }
 
@@ -48,6 +56,22 @@ public class GameWindow extends JFrame {
     public void showScene() {
         cardLayout.show(mainPanel, currentScene.name());
     }
+
+    // Szene-Pause Overlay Methoden
+    public void togglePauseOverlay() {
+        pauseOverlay.setVisible(!pauseOverlay.isVisible());
+        if (pauseOverlay.isVisible()) {
+            pauseOverlay.requestFocusInWindow();
+        } else {
+            Component gameScene = mainPanel.getComponent(1); // idx 1 = GameScene
+            gameScene.requestFocusInWindow();
+        }
+    }
+
+    public boolean isPauseActive() {
+        return pauseOverlay.isVisible();
+    }
+
 
     // Getters und Setters
     public void setCurrentScene(Scenes scene) {
@@ -62,6 +86,10 @@ public class GameWindow extends JFrame {
         if (activeScene != null) {
             activeScene.requestFocusInWindow(); // Fokus auf die aktive Szene setzen
         }
+    }
+
+    public Scenes getCurrentScene() {
+        return currentScene;
     }
 
     public Dimension getSIZE() {

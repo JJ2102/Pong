@@ -11,6 +11,10 @@ public class Vektor3 {
         this.z = z;
     }
 
+    public double length() {
+        return Math.sqrt(x * x + y * y + z * z); // Pythagoras im 3D-Raum
+    }
+
     public static Vektor3 up() {
         return new Vektor3(0, 1, 0);
     }
