@@ -1,6 +1,5 @@
 package scenes;
 
-import enums.Scenes;
 import math.Vektor3;
 import objekts.GameWindow;
 import objekts.Panel;
