@@ -1,15 +1,11 @@
 package scenes;
 
 import math.Vektor3;
-import meshes.Cube;
 import objekts.Box;
-import objekts.Entity;
 import objekts.Panel;
 import rendering.Camera;
-import rendering.Mesh;
 import rendering.Renderer;
 import utility.MouseSettings;
-
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -39,7 +35,7 @@ public class GameScene extends Scene {
         camera.setPosition(new Vektor3(0, 0, -5));
 
         // Objekte initialisieren
-        player = new Panel(new Vektor3(getWidth()/2, getHeight()/2, 0));
+        player = new Panel(new Vektor3((double) getWidth() /2, (double) getHeight() /2, 0));
         box = new Box();
     }
 
