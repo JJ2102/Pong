@@ -5,6 +5,7 @@ import meshes.Cube;
 import objekts.Box;
 import objekts.Entity;
 import objekts.Panel;
+import rendering.Camera;
 import rendering.Mesh;
 import rendering.Renderer;
 import utility.MouseSettings;
@@ -16,6 +17,7 @@ import java.awt.event.MouseEvent;
 public class GameScene extends Scene {
     // Renderer
     private Renderer renderer;
+    private Camera camera;
 
     // Objekte
     private Panel player;
@@ -32,11 +34,12 @@ public class GameScene extends Scene {
         setCursor(MouseSettings.getInvisibleCursor());
 
         // Renderer initialisieren
-        Dimension size = window.getSize();
-        renderer = new Renderer(size.width, size.height);
+        renderer = new Renderer(getWidth(), getHeight());
+        camera = new Camera();
+        camera.setPosition(new Vektor3(0, 0, -5));
 
         // Objekte initialisieren
-        player = new Panel(new Vektor3(size.getWidth()/2, size.getHeight()/2, 0));
+        player = new Panel(new Vektor3(getWidth()/2, getHeight()/2, 0));
         box = new Box();
     }
 
@@ -52,7 +55,7 @@ public class GameScene extends Scene {
         Graphics2D g2d = (Graphics2D) g;
 
         renderer.updateSize(getWidth(), getHeight());
-        renderer.renderEntity(g2d, box);
+        renderer.renderEntity(g2d, box, camera);
         player.paintMe(g2d);
     }
 

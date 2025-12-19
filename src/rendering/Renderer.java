@@ -42,13 +42,13 @@ public class Renderer {
         double y = v.y * t.scale.y;
         double z = v.z * t.scale.z;
 
-        // Rotation um Y-Achse (Beispiel)
+        // Rotation um y-Achse (Beispiel)
         double cosY = Math.cos(t.rotation.y);
         double sinY = Math.sin(t.rotation.y);
         double rx = cosY * x + sinY * z;
         double rz = -sinY * x + cosY * z;
 
-        // Rotation um X-Achse
+        // Rotation um x-Achse
         double cosX = Math.cos(t.rotation.x);
         double sinX = Math.sin(t.rotation.x);
         double ry = cosX * y - sinX * rz;
@@ -64,7 +64,35 @@ public class Renderer {
         return new Vektor3(rxx + t.position.x, ryy + t.position.y, rz + t.position.z);
     }
 
-    public void renderEntity(Graphics2D g, Entity entity) {
+    public Vektor3 worldToCamera(Vektor3 worldPos, Camera cam) {
+        // Translation (Welt -> Kamera-Ursprung)
+        double x = worldPos.x - cam.getPosition().x;
+        double y = worldPos.y - cam.getPosition().y;
+        double z = worldPos.z - cam.getPosition().z;
+
+        // SCHRITT 2: Rotation (inverse der Kamera-Rotation)
+        // Yaw (Y-Achse) - links/rechts schauen
+        double cosY = Math.cos(-cam.getRotation().y);
+        double sinY = Math.sin(-cam.getRotation().y);
+        double rx = cosY * x + sinY * z;
+        double rz = -sinY * x + cosY * z;
+
+        // Pitch (x-Achse) - hoch/runter-schauen
+        double cosX = Math.cos(-cam.getRotation().x);
+        double sinX = Math.sin(-cam.getRotation().x);
+        double ry = cosX * y - sinX * rz;
+        rz = sinX * y + cosX * rz;
+
+        // Roll (z-Achse) - optional, meist 0
+        double cosZ = Math.cos(-cam.getRotation().z);
+        double sinZ = Math.sin(-cam.getRotation().z);
+        double rxx = cosZ * rx - sinZ * ry;
+        double ryy = sinZ * rx + cosZ * ry;
+
+        return new Vektor3(rxx, ryy, rz);
+    }
+
+    public void renderEntity(Graphics2D g, Entity entity, Camera camera) {
         if (entity == null || entity.getMesh() == null || entity.getMesh().vertices == null) return;
 
         // Anti-Aliasing für sauberere Linien
@@ -80,10 +108,20 @@ public class Renderer {
                 int i0 = edge[0];
                 int i1 = edge[1];
                 if (i0 < 0 || i1 < 0 || i0 >= mesh.vertices.size() || i1 >= mesh.vertices.size()) continue; // Sicherheitscheck
-                Vektor3 tp1 = applyTransform(mesh.vertices.get(i0), transform);
-                Vektor3 tp2 = applyTransform(mesh.vertices.get(i1), transform);
-                Vertex v1 = project(tp1);
-                Vertex v2 = project(tp2);
+
+                // Weltposition der beiden Eckpunkte der Kante
+                Vektor3 worldPos1 = applyTransform(mesh.vertices.get(i0), transform);
+                Vektor3 worldPos2 = applyTransform(mesh.vertices.get(i1), transform);
+
+                // Umwandlung in Kamerakoordinaten
+                Vektor3 cameraPos1 = worldToCamera(worldPos1, camera);
+                Vektor3 cameraPos2 = worldToCamera(worldPos2, camera);
+
+                // Projektion auf 2D-Bildschirm
+                Vertex v1 = project(cameraPos1);
+                Vertex v2 = project(cameraPos2);
+
+                // Zeichnen der Kante
                 if (v1 != null && v2 != null) {
                     g.setColor(Color.BLACK);
                     g.drawLine(v1.x, v1.y, v2.x, v2.y);
@@ -98,8 +136,14 @@ public class Renderer {
                 Polygon poly = new Polygon();
                 for (int idx : face) {
                     if (idx < 0 || idx >= mesh.vertices.size()) continue;
-                    Vektor3 tp = applyTransform(mesh.vertices.get(idx), transform);
-                    Vertex v = project(tp);
+
+
+                    // Objekt-Transformation → Kamera-Transformation → Projektion
+                    Vektor3 worldPos = applyTransform(mesh.vertices.get(idx), transform);
+                    Vektor3 cameraPos = worldToCamera(worldPos, camera);
+                    Vertex v = project(cameraPos);
+
+                    // Hinzufügen des projizierten Punkts zum Polygon
                     if (v != null) {
                         poly.addPoint(v.x, v.y);
                     }
