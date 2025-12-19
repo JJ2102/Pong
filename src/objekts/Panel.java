@@ -1,37 +1,28 @@
 package objekts;
 
 import math.Vektor3;
+import meshes.Ellipse;
+import meshes.Rectangle;
+import rendering.Mesh;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
 
-public class Panel {
-    Vektor3 position;
-    int SIZE = 100;
+public class Panel extends Entity {
+    private final double xSize = 1;
+    private final double ySize = 1;
 
     public Panel(Vektor3 position) {
-        this.position = position;
+        super(new Color(0, 0, 0, 150));
+        Mesh panalMesh = new Rectangle(xSize, ySize, 0.1);
+        this.setMesh(panalMesh);
     }
 
-    public void setPosition(Vektor3 position) {
-        this.position = position;
+    public double getYSize() {
+        return ySize;
     }
 
-    public Vektor3 getPosition() {
-        return position;
-    }
-
-    public int getSIZE() {
-        return SIZE;
-    }
-
-    public void paintMe(Graphics2D g) {
-
-
-        Rectangle2D panel = new Rectangle2D.Double(position.x, position.y, SIZE, SIZE);
-
-        g.setColor(new Color(0, 0, 0, 150));
-        g.draw(panel);
-        g.fill(panel);
+    public double getXSize() {
+        return xSize;
     }
 }

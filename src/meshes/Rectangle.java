@@ -4,18 +4,18 @@ import rendering.Mesh;
 import math.Vektor3;
 import java.util.Arrays;
 
-public class Cube extends Mesh {
-    public Cube(double size) {
+public class Rectangle extends Mesh {
+    public Rectangle(double xSize, double ySize, double zSize) {
         super(
                 Arrays.asList(
-                        new Vektor3(-size, -size, size),
-                        new Vektor3(size, -size, size),
-                        new Vektor3(size, size, size),
-                        new Vektor3(-size, size, size),
-                        new Vektor3(-size, -size, -size),
-                        new Vektor3(size, -size, -size),
-                        new Vektor3(size, size, -size),
-                        new Vektor3(-size, size, -size)
+                        new Vektor3(-xSize, -ySize, zSize), // Ecke
+                        new Vektor3(xSize, -ySize, zSize),
+                        new Vektor3(xSize, ySize, zSize),
+                        new Vektor3(-xSize, ySize, zSize),
+                        new Vektor3(-xSize, -ySize, -zSize),
+                        new Vektor3(xSize, -ySize, -zSize),
+                        new Vektor3(xSize, ySize, -zSize),
+                        new Vektor3(-xSize, ySize, -zSize)
                 ),
                 new int[][] { // Kanten
                         {0,1},{1,2},{2,3},{3,0},

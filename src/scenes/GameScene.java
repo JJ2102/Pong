@@ -1,6 +1,7 @@
 package scenes;
 
 import math.Vektor3;
+import objekts.Ball;
 import objekts.Box;
 import objekts.Panel;
 import rendering.Camera;
@@ -18,6 +19,7 @@ public class GameScene extends Scene {
     // Objekte
     private Panel player;
     private Box box;
+    private Ball ball;
     private Vektor3 mousePos = new Vektor3(0,0,0); // Aktuelle Mausposition
 
     public GameScene(GameWindow window) {
@@ -37,12 +39,13 @@ public class GameScene extends Scene {
         // Objekte initialisieren
         player = new Panel(new Vektor3((double) getWidth() /2, (double) getHeight() /2, 0));
         box = new Box();
+        ball = new Ball();
     }
 
     public void update() {
         if(window.isPauseActive()) return; // Pausieren, wenn Overlay aktiv ist
-
-        player.setPosition(mousePos);
+        ball.move();
+        player.getTransform().position = mousePos;
         repaint();
     }
 
@@ -51,15 +54,17 @@ public class GameScene extends Scene {
         Graphics2D g2d = (Graphics2D) g;
 
         renderer.updateSize(getWidth(), getHeight());
-        renderer.renderEntity(g2d, box, camera);
-        player.paintMe(g2d);
+        //renderer.renderEntity(g2d, box, camera);
+        renderer.renderEntity(g2d, ball, camera);
+        renderer.renderEntity(g2d, player, camera);
     }
 
     // ===== KeyListener Methoden =====
     @Override
-    public void mouseMoved(MouseEvent e) {
-        double mouseShift = player.getSIZE() / 2.0;
-        mousePos = new Vektor3(e.getX() - mouseShift, e.getY() - mouseShift, 0);
+    public void mouseMoved(MouseEvent e) { // TODO: Mausposition in Weltkoordinaten umrechnen
+        double mouseShiftX = player.getXSize() / 2.0;
+        double mouseShiftY = player.getYSize() / 2.0;
+        mousePos = new Vektor3(e.getX() - mouseShiftX, e.getY() - mouseShiftY, 0);
     }
 
     @Override

@@ -1,15 +1,16 @@
 package objekts;
 
 import math.Vektor3;
-import meshes.Cube;
+import meshes.Rectangle;
 import rendering.Mesh;
+
+import java.awt.*;
 
 public class Box extends Entity {
 
     public Box() {
-        super();
-        Mesh boxMesh = new Cube(1);
+        super(Color.DARK_GRAY);
+        Mesh boxMesh = new Rectangle(2.2, 1.2, 4);
         this.setMesh(boxMesh);
-        this.transform.scale = new Vektor3(1, 1, 1);
     }
 }

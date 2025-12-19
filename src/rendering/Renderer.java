@@ -63,6 +63,7 @@ public class Renderer {
         return new Vektor3(rxx + t.position.x, ryy + t.position.y, rz + t.position.z);
     }
 
+    // Converter von Welt- zu Kamerakoordinaten
     public Vektor3 worldToCamera(Vektor3 worldPos, Camera cam) {
         // Translation (Welt -> Kamera-Ursprung)
         double x = worldPos.x - cam.getPosition().x;
@@ -100,6 +101,35 @@ public class Renderer {
         Mesh mesh = entity.getMesh();
         Transform transform = entity.getTransform();
 
+        // Flächen
+        if (mesh.faces != null) {
+            for (int[] face : mesh.faces) {
+                if (face == null || face.length == 0) continue;
+                Polygon poly = new Polygon();
+                for (int idx : face) {
+                    if (idx < 0 || idx >= mesh.vertices.size()) continue;
+
+
+                    // Objekt-Transformation → Kamera-Transformation → Projektion
+                    Vektor3 worldPos = applyTransform(mesh.vertices.get(idx), transform);
+                    Vektor3 cameraPos = worldToCamera(worldPos, camera);
+                    Vertex v = project(cameraPos, camera.getFov());
+
+                    // Hinzufügen des projizierten Punkts zum Polygon
+                    if (v != null) {
+                        poly.addPoint(v.x, v.y);
+                    }
+                }
+                // Nur zeichnen, wenn mindestens ein Dreieck möglich ist
+                if (poly.npoints >= 3) {
+                    g.setColor(entity.getColor());
+                    g.fillPolygon(poly);
+                    g.setColor(Color.BLACK);
+//                    g.drawPolygon(poly);
+                }
+            }
+        }
+
         // Kanten
         if (mesh.edges != null) {
             for (int[] edge : mesh.edges) {
@@ -124,35 +154,6 @@ public class Renderer {
                 if (v1 != null && v2 != null) {
                     g.setColor(Color.BLACK);
                     g.drawLine(v1.x, v1.y, v2.x, v2.y);
-                }
-            }
-        }
-
-        // Flächen
-        if (mesh.faces != null) {
-            for (int[] face : mesh.faces) {
-                if (face == null || face.length == 0) continue;
-                Polygon poly = new Polygon();
-                for (int idx : face) {
-                    if (idx < 0 || idx >= mesh.vertices.size()) continue;
-
-
-                    // Objekt-Transformation → Kamera-Transformation → Projektion
-                    Vektor3 worldPos = applyTransform(mesh.vertices.get(idx), transform);
-                    Vektor3 cameraPos = worldToCamera(worldPos, camera);
-                    Vertex v = project(cameraPos, camera.getFov());
-
-                    // Hinzufügen des projizierten Punkts zum Polygon
-                    if (v != null) {
-                        poly.addPoint(v.x, v.y);
-                    }
-                }
-                // Nur zeichnen, wenn mindestens ein Dreieck möglich ist
-                if (poly.npoints >= 3) {
-                    g.setColor(new Color(100, 150, 200, 128)); // halbtransparent
-                    g.fillPolygon(poly);
-                    g.setColor(Color.BLACK);
-//                    g.drawPolygon(poly);
                 }
             }
         }
