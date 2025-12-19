@@ -38,8 +38,6 @@ public class GameScene extends Scene {
         // Objekte initialisieren
         player = new Panel(new Vektor3(size.getWidth()/2, size.getHeight()/2, 0));
         box = new Box();
-        box.getTransform().position = new Vektor3(0, 0, 5); // 5 Einheiten vor der Kamera
-        box.getTransform().scale = new Vektor3(1, 1, 1); //
     }
 
     public void update() {

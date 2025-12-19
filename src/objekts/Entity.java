@@ -4,8 +4,8 @@ import rendering.Mesh;
 import rendering.Transform;
 
 public class Entity {
-    private Mesh mesh;
-    private Transform transform;
+    protected Mesh mesh;
+    protected Transform transform;
 
     public Entity(Mesh mesh) {
         this.mesh = mesh;
