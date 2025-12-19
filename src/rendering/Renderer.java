@@ -7,7 +7,6 @@ import objekts.Entity;
 import java.awt.*;
 
 public class Renderer {
-    private final double f = 0.8; // Brennweite
     private int width, height;
     private double scale;
 
@@ -25,11 +24,11 @@ public class Renderer {
     }
 
     // Projektion von 3D -> 2D
-    private Vertex project(Vektor3 p) {
+    private Vertex project(Vektor3 p, double fov) {
         if (p == null) return null;
         if (p.z <= 0) return null; // hinter Kamera
-        double x = f * p.x / p.z;
-        double y = f * p.y / p.z;
+        double x = fov * p.x / p.z;
+        double y = fov * p.y / p.z;
         int sx = (int) (width / 2.0 + x * scale);
         int sy = (int) (height / 2.0 - y * scale);
         return new Vertex(sx, sy);
@@ -118,8 +117,8 @@ public class Renderer {
                 Vektor3 cameraPos2 = worldToCamera(worldPos2, camera);
 
                 // Projektion auf 2D-Bildschirm
-                Vertex v1 = project(cameraPos1);
-                Vertex v2 = project(cameraPos2);
+                Vertex v1 = project(cameraPos1, camera.getFov());
+                Vertex v2 = project(cameraPos2 , camera.getFov());
 
                 // Zeichnen der Kante
                 if (v1 != null && v2 != null) {
@@ -141,7 +140,7 @@ public class Renderer {
                     // Objekt-Transformation → Kamera-Transformation → Projektion
                     Vektor3 worldPos = applyTransform(mesh.vertices.get(idx), transform);
                     Vektor3 cameraPos = worldToCamera(worldPos, camera);
-                    Vertex v = project(cameraPos);
+                    Vertex v = project(cameraPos, camera.getFov());
 
                     // Hinzufügen des projizierten Punkts zum Polygon
                     if (v != null) {
