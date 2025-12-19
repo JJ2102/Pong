@@ -1,18 +1,25 @@
 package scenes;
 
-import enums.Scenes;
 import math.Vektor3;
-import objekts.GameWindow;
+import meshes.Cube;
+import objekts.Box;
+import objekts.Entity;
 import objekts.Panel;
+import rendering.Mesh;
+import rendering.Renderer;
 import utility.MouseSettings;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 public class GameScene extends Scene {
+    // Renderer
+    private Renderer renderer;
+
+    // Objekte
     private Panel player;
+    private Box box;
     private Vektor3 mousePos = new Vektor3(0,0,0); // Aktuelle Mausposition
 
     public GameScene(GameWindow window) {
@@ -23,18 +30,32 @@ public class GameScene extends Scene {
     @Override
     protected void initScene() {
         setCursor(MouseSettings.getInvisibleCursor());
+
+        // Renderer initialisieren
+        Dimension size = window.getSize();
+        renderer = new Renderer(size.width, size.height);
+
+        // Objekte initialisieren
         player = new Panel(new Vektor3(size.getWidth()/2, size.getHeight()/2, 0));
+        box = new Box();
+        box.getTransform().position = new Vektor3(0, 0, 5); // 5 Einheiten vor der Kamera
+        box.getTransform().scale = new Vektor3(1, 1, 1); //
     }
 
     public void update() {
         if(window.isPauseActive()) return; // Pausieren, wenn Overlay aktiv ist
 
         player.setPosition(mousePos);
+        repaint();
     }
 
-    public void paintComponent(java.awt.Graphics g) {
+    public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        player.paintMe(g);
+        Graphics2D g2d = (Graphics2D) g;
+
+        renderer.updateSize(getWidth(), getHeight());
+        renderer.renderEntity(g2d, box);
+        player.paintMe(g2d);
     }
 
     // ===== KeyListener Methoden =====

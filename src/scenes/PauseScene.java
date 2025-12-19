@@ -1,7 +1,4 @@
-package objekts;
-
-import enums.Scenes;
-import scenes.Scene;
+package scenes;
 
 public class PauseScene extends Scene {
 

@@ -25,12 +25,13 @@ public class Panel {
         return SIZE;
     }
 
-    public void paintMe(Graphics g) {
-        Graphics2D g2d = (Graphics2D) g;
+    public void paintMe(Graphics2D g) {
+
 
         Rectangle2D panel = new Rectangle2D.Double(position.x, position.y, SIZE, SIZE);
 
-        g2d.draw(panel);
-        g2d.fill(panel);
+        g.setColor(new Color(0, 0, 0, 150));
+        g.draw(panel);
+        g.fill(panel);
     }
 }

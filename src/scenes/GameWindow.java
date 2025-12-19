@@ -1,9 +1,6 @@
-package objekts;
+package scenes;
 
 import enums.Scenes;
-import scenes.GameScene;
-import scenes.MenuScene;
-import scenes.PauseOverlay;
 
 import javax.swing.*;
 import java.awt.*;

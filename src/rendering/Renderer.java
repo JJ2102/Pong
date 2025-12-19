@@ -1,0 +1,117 @@
+package rendering;
+
+import math.Vektor3;
+import math.Vertex;
+import objekts.Entity;
+
+import java.awt.*;
+
+public class Renderer {
+    private final double f = 0.8; // Brennweite
+    private int width, height;
+    private double scale;
+
+    public Renderer(int width, int height) {
+        this.width = width;
+        this.height = height;
+        this.scale = Math.min(width, height) / 2.0;
+    }
+
+    // Ermöglicht Aktualisierung bei Panel-Resize
+    public void updateSize(int width, int height) {
+        this.width = width;
+        this.height = height;
+        this.scale = Math.min(width, height) / 2.0;
+    }
+
+    // Projektion von 3D -> 2D
+    private Vertex project(Vektor3 p) {
+        if (p == null) return null;
+        if (p.z <= 0) return null; // hinter Kamera
+        double x = f * p.x / p.z;
+        double y = f * p.y / p.z;
+        int sx = (int) (width / 2.0 + x * scale);
+        int sy = (int) (height / 2.0 - y * scale);
+        return new Vertex(sx, sy);
+    }
+
+    // Transformation anwenden (Scale, Rotation, Translation)
+    private Vektor3 applyTransform(Vektor3 v, Transform t) {
+        // Skalierung
+        double x = v.x * t.scale.x;
+        double y = v.y * t.scale.y;
+        double z = v.z * t.scale.z;
+
+        // Rotation um Y-Achse (Beispiel)
+        double cosY = Math.cos(t.rotation.y);
+        double sinY = Math.sin(t.rotation.y);
+        double rx = cosY * x + sinY * z;
+        double rz = -sinY * x + cosY * z;
+
+        // Rotation um X-Achse
+        double cosX = Math.cos(t.rotation.x);
+        double sinX = Math.sin(t.rotation.x);
+        double ry = cosX * y - sinX * rz;
+        rz = sinX * y + cosX * rz;
+
+        // Rotation um Z-Achse
+        double cosZ = Math.cos(t.rotation.z);
+        double sinZ = Math.sin(t.rotation.z);
+        double rxx = cosZ * rx - sinZ * ry;
+        double ryy = sinZ * rx + cosZ * ry;
+
+        // Translation
+        return new Vektor3(rxx + t.position.x, ryy + t.position.y, rz + t.position.z);
+    }
+
+    public void renderEntity(Graphics2D g, Entity entity) {
+        if (entity == null || entity.getMesh() == null || entity.getMesh().vertices == null) return;
+
+        // Anti-Aliasing für sauberere Linien
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+        Mesh mesh = entity.getMesh();
+        Transform transform = entity.getTransform();
+
+        // Kanten
+        if (mesh.edges != null) {
+            for (int[] edge : mesh.edges) {
+                if (edge == null || edge.length < 2) continue;
+                int i0 = edge[0];
+                int i1 = edge[1];
+                if (i0 < 0 || i1 < 0 || i0 >= mesh.vertices.size() || i1 >= mesh.vertices.size()) continue; // Sicherheitscheck
+                Vektor3 tp1 = applyTransform(mesh.vertices.get(i0), transform);
+                Vektor3 tp2 = applyTransform(mesh.vertices.get(i1), transform);
+                Vertex v1 = project(tp1);
+                Vertex v2 = project(tp2);
+                if (v1 != null && v2 != null) {
+                    g.setColor(Color.BLACK);
+                    g.drawLine(v1.x, v1.y, v2.x, v2.y);
+                }
+            }
+        }
+
+        // Flächen
+        if (mesh.faces != null) {
+            for (int[] face : mesh.faces) {
+                if (face == null || face.length == 0) continue;
+                Polygon poly = new Polygon();
+                for (int idx : face) {
+                    if (idx < 0 || idx >= mesh.vertices.size()) continue;
+                    Vektor3 tp = applyTransform(mesh.vertices.get(idx), transform);
+                    Vertex v = project(tp);
+                    if (v != null) {
+                        poly.addPoint(v.x, v.y);
+                    }
+                }
+                // Nur zeichnen, wenn mindestens ein Dreieck möglich ist
+                if (poly.npoints >= 3) {
+                    g.setColor(new Color(100, 150, 200, 128)); // halbtransparent
+                    g.fillPolygon(poly);
+                    g.setColor(Color.BLACK);
+//                    g.drawPolygon(poly);
+                }
+            }
+        }
+    }
+}

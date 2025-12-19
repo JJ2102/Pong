@@ -1,7 +1,6 @@
 package scenes;
 
 import enums.Scenes;
-import objekts.GameWindow;
 import utility.Button;
 
 import javax.swing.*;
