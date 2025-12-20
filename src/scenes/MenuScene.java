@@ -1,6 +1,6 @@
 package scenes;
 
-import enums.Scenes;
+import enums.EnumScenes;
 import utility.Button;
 
 import javax.swing.*;
@@ -24,7 +24,10 @@ public class MenuScene extends Scene {
 
         // Start Button
         Button startButton = new Button("Start Game");
-        startButton.addActionListener(_ -> window.setCurrentScene(Scenes.GAME));
+        startButton.addActionListener(_ -> {
+            window.setCurrentScene(EnumScenes.GAME);
+            window.getGameScene().startScene();
+        });
         add(startButton);
 
         // Exit Button
@@ -58,7 +61,7 @@ public class MenuScene extends Scene {
     @Override
     public void keyPressed(KeyEvent e) {
         switch (e.getKeyCode()) {
-            case KeyEvent.VK_ENTER -> window.setCurrentScene(Scenes.GAME);
+            case KeyEvent.VK_ENTER -> window.setCurrentScene(EnumScenes.GAME);
             case KeyEvent.VK_ESCAPE -> System.exit(0);
         }
     }

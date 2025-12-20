@@ -1,6 +1,6 @@
 package scenes;
 
-import enums.Scenes;
+import enums.EnumScenes;
 import utility.Button;
 
 import javax.swing.*;
@@ -30,7 +30,7 @@ public class PauseOverlay extends JPanel implements KeyListener {
         resumeBtn.addActionListener(_ -> window.togglePauseOverlay());
         menuBtn.addActionListener(_ -> {
             window.togglePauseOverlay();
-            window.setCurrentScene(Scenes.MENU);
+            window.setCurrentScene(EnumScenes.MENU);
         });
         quitBtn.addActionListener(_ -> System.exit(0));
 

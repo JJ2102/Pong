@@ -24,7 +24,6 @@ public class GameScene extends Scene {
 
     public GameScene(GameWindow window) {
         super(window);
-        startScene();
     }
 
     @Override

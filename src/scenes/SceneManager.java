@@ -1,6 +1,6 @@
 package scenes;
 
-import enums.Scenes;
+import enums.EnumScenes;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,7 +12,7 @@ import java.util.Map;
 public class SceneManager {
     private final JLayeredPane layeredPane;
     private final Dimension size;
-    private final Map<Scenes, JPanel> scenes = new EnumMap<>(Scenes.class);
+    private final Map<EnumScenes, JPanel> scenes = new EnumMap<>(EnumScenes.class);
     private final List<JComponent> activeOverlays = new ArrayList<>();
 
     public SceneManager(Dimension size) {
@@ -26,15 +26,15 @@ public class SceneManager {
         return layeredPane;
     }
 
-    public void registerScene(Scenes id, JPanel panel) {
+    public void registerScene(EnumScenes id, JPanel panel) {
         panel.setBounds(0, 0, size.width, size.height);
         panel.setVisible(false);
         scenes.put(id, panel);
         layeredPane.add(panel, JLayeredPane.DEFAULT_LAYER);
     }
 
-    public void setScene(Scenes id) {
-        for (Map.Entry<Scenes, JPanel> entry : scenes.entrySet()) {
+    public void setScene(EnumScenes id) {
+        for (Map.Entry<EnumScenes, JPanel> entry : scenes.entrySet()) {
             entry.getValue().setVisible(entry.getKey() == id);
         }
         JPanel active = scenes.get(id);

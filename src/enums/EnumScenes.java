@@ -1,6 +1,6 @@
 package enums;
 
-public enum Scenes {
+public enum EnumScenes {
     MENU,
     GAME,
     PAUSE
