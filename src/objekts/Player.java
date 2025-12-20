@@ -6,6 +6,10 @@ import java.awt.*;
 
 public class Player extends Panel {
     public Player(Vektor3 position) {
-        super(position, new Color(0, 0, 0, 100));
+        super(position, new Color(150, 0, 150, 99));
+    }
+
+    public void moveTo(Vektor3 position) {
+        this.getTransform().position = position;
     }
 }

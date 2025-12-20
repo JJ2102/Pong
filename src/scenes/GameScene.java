@@ -2,10 +2,8 @@ package scenes;
 
 import math.Vektor3;
 import math.Vertex;
-import objekts.Ball;
-import objekts.Box;
+import objekts.*;
 import objekts.Panel;
-import objekts.Player;
 import rendering.Camera;
 import rendering.Renderer;
 import utility.MouseSettings;
@@ -20,7 +18,7 @@ public class GameScene extends Scene {
 
     // Objekte
     private Player player;
-    private Panel aiPlayer;
+    private Enemy aiPlayer;
     private Box box;
     private Ball ball;
 
@@ -47,7 +45,7 @@ public class GameScene extends Scene {
         // KI-Panel an spiegelverkehrte Position initialisieren
         Vektor3 playerPos = player.getTransform().position;
         Vektor3 aiPos = new Vektor3(playerPos.x, playerPos.y, -playerPosZ);
-        aiPlayer = new Panel(aiPos, Color.LIGHT_GRAY);
+        aiPlayer = new Enemy(aiPos);
 
         // Box und Ball initialisieren
         box = new Box();
@@ -56,10 +54,9 @@ public class GameScene extends Scene {
 
     public void update() {
         ball.move();
-        player.getTransform().position = mousePos;
+        player.moveTo(mousePos);
 
-        Vektor3 ballPos =  ball.getTransform().position;
-        aiPlayer.getTransform().position = new Vektor3(ballPos.x, ballPos.y, -playerPosZ);
+        aiPlayer.move(ball.getTransform().position);
     }
 
     public void paintComponent(Graphics g) {

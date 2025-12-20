@@ -1,6 +1,7 @@
 package scenes;
 
 import enums.EnumScenes;
+import overlays.PauseOverlay;
 
 import javax.swing.*;
 import java.awt.*;
