@@ -22,6 +22,10 @@ public class GameScene extends Scene {
     private Box box;
     private Ball ball;
 
+    // Score
+    public int playerScore = 0;
+    public int aiScore = 0;
+
     // Positionen
     final double playerPosZ = -2.8;
     private Vektor3 mousePos = new Vektor3(0,0,playerPosZ); // Aktuelle Mausposition
@@ -68,6 +72,14 @@ public class GameScene extends Scene {
         renderer.renderEntity(g2d, aiPlayer, camera);
         renderer.renderEntity(g2d, ball, camera);
         renderer.renderEntity(g2d, player, camera);
+
+        // Scores zeichnen
+        g2d.setFont(new Font("Arial", Font.BOLD, 36));
+        g2d.setColor(Color.WHITE);
+        String scoreText = playerScore + " : " + aiScore;
+        FontMetrics fm = g2d.getFontMetrics(); // Font-Metriken holen
+        int textWidth = fm.stringWidth(scoreText); // Breite des Score-Strings
+        g2d.drawString(scoreText, (getWidth() - textWidth) / 2, 50);
     }
 
     // ===== KeyListener Methoden =====

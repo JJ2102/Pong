@@ -4,18 +4,42 @@ import meshes.Ellipse;
 import rendering.Mesh;
 
 import java.awt.*;
+import java.util.Random;
 
 public class Ball extends Entity {
-    double speedX = 0.05; // 0.02
-    double speedY = 0.05; // 0.015
-    double speedZ = 0.05; // 0.01
-
+    double speedX, speedY, speedZ;
     double radius = 0.2;
 
     public Ball() {
         super(Color.GREEN);
         Mesh boxMesh = new Ellipse(radius, 10, 10);
         this.setMesh(boxMesh);
+
+        // Speed Setzen
+        speedX = randomSpeed();
+        speedY = randomSpeed();
+        speedZ = randomSpeed();
+        System.out.println("Ball speed: " + speedX + ", " + speedY + ", " + speedZ);
+    }
+
+    private double randomSpeed() {
+        double min = 0.03;
+        double max = 0.05;
+
+        // zufällige Richtung: -1 oder +1
+        double sign = Math.random() < 0.5 ? -1 : 1;
+
+        // zufällige Geschwindigkeit im Bereich [min, max]
+        double magnitude = min + Math.random() * (max - min);
+
+        return sign * magnitude;
+    }
+
+    public void reset() {
+        this.transform.position = new math.Vektor3(0,0,0);
+        speedX = randomSpeed();
+        speedY = randomSpeed();
+        speedZ = randomSpeed();
     }
 
     public void move() {
