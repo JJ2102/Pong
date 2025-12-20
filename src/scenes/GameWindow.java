@@ -14,12 +14,13 @@ public class GameWindow extends JFrame {
     private PauseOverlay pauseOverlay;
 
     public GameWindow(Dimension size) {
-        super("Pong 3D");
-        SIZE = size;
+        super("Pong 3D"); // Fenstertitel
+        SIZE = size; // Fenstergröße speichern
 
+        // Hauptpanel mit CardLayout
         cardLayout = new CardLayout();
         mainPanel = new JPanel(cardLayout);
-        this.add(mainPanel);
+        this.add(mainPanel); // Hauptpanel zum JFrame hinzufügen
 
         initScenes(); // Szenen initialisieren
         showScene();  // Anfangsszene anzeigen
@@ -33,6 +34,10 @@ public class GameWindow extends JFrame {
     }
 
     private void initScenes() {
+        /*
+         * Szenen initialisieren und zum Hauptpanel hinzufügen
+         */
+
         // MenuScene
         MenuScene menuScene = new MenuScene(this);
         mainPanel.add(menuScene, Scenes.MENU.name());

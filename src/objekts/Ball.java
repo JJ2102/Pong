@@ -16,6 +16,7 @@ public class Ball extends Entity {
         super(Color.GREEN);
         Mesh boxMesh = new Ellipse(radius, 10, 10);
         this.setMesh(boxMesh);
+        System.out.println(transform.position);
     }
 
     public void move() {
@@ -33,6 +34,7 @@ public class Ball extends Entity {
         if (this.transform.position.z > 4 - radius || this.transform.position.z < -4 + radius) {
             speedZ = -speedZ;
         }
+        System.out.println("[Ball]: " + transform.position);
     }
 
 

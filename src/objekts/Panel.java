@@ -14,7 +14,7 @@ public class Panel extends Entity {
 
     public Panel(Vektor3 position) {
         super(new Color(0, 0, 0, 150));
-        Mesh panalMesh = new Rectangle(xSize, ySize, 0.1);
+        Mesh panalMesh = new Rectangle(xSize, ySize, 0);
         this.setMesh(panalMesh);
     }
 

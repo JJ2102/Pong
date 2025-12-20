@@ -46,7 +46,6 @@ public class GameScene extends Scene {
         if(window.isPauseActive()) return; // Pausieren, wenn Overlay aktiv ist
         ball.move();
         player.getTransform().position = mousePos;
-        repaint();
     }
 
     public void paintComponent(Graphics g) {
@@ -54,7 +53,7 @@ public class GameScene extends Scene {
         Graphics2D g2d = (Graphics2D) g;
 
         renderer.updateSize(getWidth(), getHeight());
-        //renderer.renderEntity(g2d, box, camera);
+        renderer.renderEntity(g2d, box, camera);
         renderer.renderEntity(g2d, ball, camera);
         renderer.renderEntity(g2d, player, camera);
     }
