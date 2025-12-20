@@ -63,6 +63,14 @@ public class GameScene extends Scene {
         aiPlayer.move(ball.getTransform().position);
     }
 
+    public void addPointToPlayer() {
+        playerScore++;
+    }
+
+    public void addPointToAI() {
+        aiScore++;
+    }
+
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
