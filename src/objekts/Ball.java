@@ -30,7 +30,7 @@ public class Ball extends Entity {
         if (this.transform.position.y > 1 - radius || this.transform.position.y < -1 + radius) {
             speedY = -speedY;
         }
-        if (this.transform.position.z > 4 - radius || this.transform.position.z < -4 + radius) {
+        if (this.transform.position.z > 3 - radius || this.transform.position.z < -3 + radius) {
             speedZ = -speedZ;
         }
     }

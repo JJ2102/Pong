@@ -1,9 +1,11 @@
 package scenes;
 
 import math.Vektor3;
+import math.Vertex;
 import objekts.Ball;
 import objekts.Box;
 import objekts.Panel;
+import objekts.Player;
 import rendering.Camera;
 import rendering.Renderer;
 import utility.MouseSettings;
@@ -17,10 +19,14 @@ public class GameScene extends Scene {
     private Camera camera;
 
     // Objekte
-    private Panel player;
+    private Player player;
+    private Panel aiPlayer;
     private Box box;
     private Ball ball;
-    private Vektor3 mousePos = new Vektor3(0,0,0); // Aktuelle Mausposition
+
+    // Positionen
+    final double playerPosZ = -2.8;
+    private Vektor3 mousePos = new Vektor3(0,0,playerPosZ); // Aktuelle Mausposition
 
     public GameScene(GameWindow window) {
         super(window);
@@ -33,10 +39,17 @@ public class GameScene extends Scene {
         // Renderer initialisieren
         renderer = new Renderer(getWidth(), getHeight());
         camera = new Camera();
-        camera.setPosition(new Vektor3(0, 0, -5));
+        camera.setPosition(new Vektor3(0, 0, -4));
 
-        // Objekte initialisieren
-        player = new Panel(new Vektor3((double) getWidth() /2, (double) getHeight() /2, 0));
+        // Spieler-Panel an 0, 0 Initialisieren
+        player = new Player(new Vektor3(0,0,playerPosZ));
+
+        // KI-Panel an spiegelverkehrte Position initialisieren
+        Vektor3 playerPos = player.getTransform().position;
+        Vektor3 aiPos = new Vektor3(playerPos.x, playerPos.y, -playerPosZ);
+        aiPlayer = new Panel(aiPos, Color.LIGHT_GRAY);
+
+        // Box und Ball initialisieren
         box = new Box();
         ball = new Ball();
     }
@@ -44,6 +57,9 @@ public class GameScene extends Scene {
     public void update() {
         ball.move();
         player.getTransform().position = mousePos;
+
+        Vektor3 ballPos =  ball.getTransform().position;
+        aiPlayer.getTransform().position = new Vektor3(ballPos.x, ballPos.y, -playerPosZ);
     }
 
     public void paintComponent(Graphics g) {
@@ -52,16 +68,16 @@ public class GameScene extends Scene {
 
         renderer.updateSize(getWidth(), getHeight());
         renderer.renderEntity(g2d, box, camera);
+        renderer.renderEntity(g2d, aiPlayer, camera);
         renderer.renderEntity(g2d, ball, camera);
         renderer.renderEntity(g2d, player, camera);
     }
 
     // ===== KeyListener Methoden =====
     @Override
-    public void mouseMoved(MouseEvent e) { // TODO: Mausposition in Weltkoordinaten umrechnen
-        double mouseShiftX = player.getXSize() / 2.0;
-        double mouseShiftY = player.getYSize() / 2.0;
-        mousePos = new Vektor3(e.getX() - mouseShiftX, e.getY() - mouseShiftY, 0);
+    public void mouseMoved(MouseEvent e) {
+        Vertex mouseScreenPos = new Vertex(e.getX(), e.getY());
+        mousePos = renderer.screenToWorld(mouseScreenPos, playerPosZ, camera);
     }
 
     @Override

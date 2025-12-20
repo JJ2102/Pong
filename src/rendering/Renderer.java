@@ -41,7 +41,7 @@ public class Renderer {
         double y = v.y * t.scale.y;
         double z = v.z * t.scale.z;
 
-        // Rotation um y-Achse (Beispiel)
+        // Rotation um y-Achse
         double cosY = Math.cos(t.rotation.y);
         double sinY = Math.sin(t.rotation.y);
         double rx = cosY * x + sinY * z;
@@ -92,27 +92,64 @@ public class Renderer {
         return new Vektor3(rxx, ryy, rz);
     }
 
+    /**
+     * Konvertiert Bildschirmkoordinaten (pixels) in Weltkoordinaten auf einer Ebene z = planeZ.
+     * Vereinfacht: berücksichtigt Kamera-Position und FOV, nicht Kamera-Rotation.
+     */
+    public Vektor3 screenToWorld(Vertex screenPos, double planeZ, Camera cam) {
+        if (width <= 0 || height <= 0 || cam == null) {
+            return new Vektor3(screenPos.x, screenPos.y, planeZ);
+        }
+
+        // Normalisierte Bildschirmkoordinaten (gleiche Basis wie in project())
+        double normalizedX = (screenPos.x - width / 2.0) / scale;
+        double normalizedY = (screenPos.y - height / 2.0) / scale;
+
+        // Kamera-Parameter
+        Vektor3 camPos = cam.getPosition();
+        double fov = cam.getFov();
+
+        // Tiefe (Z der Ebene relativ zur Kamera)
+        double depth = planeZ - camPos.z; // Differenz der Z-Koordinaten von Kamera und Ziel-Ebene
+        if (depth <= 0) {
+            // Ebene ist hinter der Kamera, fallback auf Kameraposition
+            return new Vektor3(camPos.x, camPos.y, planeZ);
+        }
+
+        // invers der in project() verwendeten Projektion:
+        // project: x_screen = width/2 + (fov * worldX / worldZ) * scale
+        // => worldX = normalizedX * worldZ / fov
+        double worldX = camPos.x + normalizedX * depth / fov;
+        double worldY = camPos.y - normalizedY * depth / fov; // y umkehren (Bildschirm y wächst nach unten)
+
+        return new Vektor3(worldX, worldY, planeZ);
+    }
+
     public void renderEntity(Graphics2D g, Entity entity, Camera camera) {
         if (entity == null || entity.getMesh() == null || entity.getMesh().vertices == null) return;
 
         // Anti-Aliasing für sauberere Linien
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
+        // Mesh und Transformation des Objekts holen
         Mesh mesh = entity.getMesh();
         Transform transform = entity.getTransform();
 
-        // Flächen
-        if (mesh.faces != null) {
-            for (int[] face : mesh.faces) {
-                if (face == null || face.length == 0) continue;
+        // Flächen zeichnen
+        if (mesh.faces != null) { // Sicherheitscheck
+            for (int[] face : mesh.faces) { // faces = int[][]
+                if (face == null || face.length == 0) continue; // Leere Fläche überspringen
+
                 Polygon poly = new Polygon();
-                for (int idx : face) {
-                    if (idx < 0 || idx >= mesh.vertices.size()) continue;
 
+                for (int idx : face) { // face = int[]
+                    if (idx < 0 || idx >= mesh.vertices.size()) continue; // idx nicht kleiner 0 oder größer als Anzahl der Eckpunkte
 
-                    // Objekt-Transformation → Kamera-Transformation → Projektion
+                    // Transformieren der einzelnen Eckpunkte der Fläche
                     Vektor3 worldPos = applyTransform(mesh.vertices.get(idx), transform);
+                    // verschiebung der Eckpunkte relativ zur Kamera
                     Vektor3 cameraPos = worldToCamera(worldPos, camera);
+                    // Projektion auf 2D-Bildschirm → 2D-Koordinate
                     Vertex v = project(cameraPos, camera.getFov());
 
                     // Hinzufügen des projizierten Punkts zum Polygon
@@ -125,12 +162,11 @@ public class Renderer {
                     g.setColor(entity.getColor());
                     g.fillPolygon(poly);
                     g.setColor(Color.BLACK);
-//                    g.drawPolygon(poly);
                 }
             }
         }
 
-        // Kanten
+        // Kanten zeichnen
         if (mesh.edges != null) {
             for (int[] edge : mesh.edges) {
                 if (edge == null || edge.length < 2) continue;
