@@ -43,7 +43,6 @@ public class GameScene extends Scene {
     }
 
     public void update() {
-        if(window.isPauseActive()) return; // Pausieren, wenn Overlay aktiv ist
         ball.move();
         player.getTransform().position = mousePos;
     }
