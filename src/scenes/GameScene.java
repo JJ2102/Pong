@@ -3,7 +3,6 @@ package scenes;
 import math.Vektor3;
 import math.Vertex;
 import objekts.*;
-import objekts.Panel;
 import rendering.Camera;
 import rendering.Renderer;
 import utility.MouseSettings;
@@ -12,6 +11,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 public class GameScene extends Scene {
+    // Debug
+    public static boolean DEBUG_MODE = false;
+
     // Renderer
     private Renderer renderer;
     private Camera camera;
@@ -80,6 +82,13 @@ public class GameScene extends Scene {
         renderer.renderEntity(g2d, aiPlayer, camera);
         renderer.renderEntity(g2d, ball, camera);
         renderer.renderEntity(g2d, player, camera);
+
+        if (DEBUG_MODE) {
+            // Debug: Ball Hitbox zeichnen
+            renderer.renderBoxHitbox(g2d, ball.getHitbox(), camera, Color.YELLOW);
+            renderer.renderBoxHitbox(g2d, aiPlayer.getHitbox(), camera, Color.YELLOW);
+            renderer.renderBoxHitbox(g2d, player.getHitbox(), camera, Color.YELLOW);
+        }
 
         // Scores zeichnen
         g2d.setFont(new Font("Arial", Font.BOLD, 36));

@@ -4,8 +4,8 @@ import rendering.Mesh;
 import math.Vektor3;
 import java.util.Arrays;
 
-public class Rectangle extends Mesh {
-    public Rectangle(double xSize, double ySize, double zSize) {
+public class RectangleMesh extends Mesh {
+    public RectangleMesh(double xSize, double ySize, double zSize) {
         super(
                 Arrays.asList(
                         new Vektor3(-xSize, -ySize, zSize), // Ecke

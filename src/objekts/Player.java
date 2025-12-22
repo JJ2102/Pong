@@ -1,5 +1,6 @@
 package objekts;
 
+import hitboxes.BoxHitbox;
 import math.Vektor3;
 
 import java.awt.*;
@@ -10,6 +11,7 @@ public class Player extends Panel {
     }
 
     public void moveTo(Vektor3 position) {
-        this.getTransform().position = position;
+        transform.position = position;
+        hitbox.setPosition(transform.position);
     }
 }

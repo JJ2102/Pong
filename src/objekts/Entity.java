@@ -1,5 +1,6 @@
 package objekts;
 
+import hitboxes.BoxHitbox;
 import rendering.Mesh;
 import rendering.Transform;
 
@@ -9,6 +10,7 @@ public class Entity {
     protected Mesh mesh;
     protected Transform transform;
     protected Color color;
+    protected BoxHitbox hitbox;
 
     public Entity(Mesh mesh) {
         this.mesh = mesh;
@@ -36,5 +38,9 @@ public class Entity {
 
     public Color getColor() {
         return color;
+    }
+
+    public BoxHitbox getHitbox() {
+        return hitbox;
     }
 }

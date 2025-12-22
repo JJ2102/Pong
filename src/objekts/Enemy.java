@@ -11,5 +11,6 @@ public class Enemy extends Panel{
 
     public void move(Vektor3 ballPos) {
         transform.position = new Vektor3(ballPos.x, ballPos.y, transform.position.z);
+        hitbox.setPosition(transform.position);
     }
 }

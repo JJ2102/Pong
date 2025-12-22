@@ -6,8 +6,8 @@ import rendering.Mesh;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Ellipse extends Mesh {
-    public Ellipse(double radius, int segments, int rings) {
+public class EllipseMesh extends Mesh {
+    public EllipseMesh(double radius, int segments, int rings) {
         super(
                 generateVertices(radius, segments, rings),
                 generateEdges(segments, rings),

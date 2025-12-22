@@ -1,5 +1,6 @@
 package rendering;
 
+import hitboxes.BoxHitbox;
 import math.Vektor3;
 import math.Vertex;
 import objekts.Entity;
@@ -192,6 +193,74 @@ public class Renderer {
                     g.drawLine(v1.x, v1.y, v2.x, v2.y);
                 }
             }
+        }
+    }
+
+    public void renderBoxHitbox(Graphics2D g, BoxHitbox hitbox, Camera camera, Color color) {
+
+
+        // Anti-Aliasing für glattere Linien
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+        // SCHRITT 1: Die 8 Eckpunkte der Box berechnen
+        Vektor3 min = hitbox.getMin();
+        Vektor3 max = hitbox.getMax();
+
+        Vektor3[] corners = new Vektor3[8];
+        corners[0] = new Vektor3(min.x, min.y, min.z); // Vorne-unten-links
+        corners[1] = new Vektor3(max.x, min.y, min.z); // Vorne-unten-rechts
+        corners[2] = new Vektor3(max.x, max.y, min.z); // Vorne-oben-rechts
+        corners[3] = new Vektor3(min.x, max.y, min.z); // Vorne-oben-links
+        corners[4] = new Vektor3(min.x, min.y, max.z); // Hinten-unten-links
+        corners[5] = new Vektor3(max.x, min.y, max.z); // Hinten-unten-rechts
+        corners[6] = new Vektor3(max.x, max.y, max.z); // Hinten-oben-rechts
+        corners[7] = new Vektor3(min.x, max.y, max.z); // Hinten-oben-links
+
+        // SCHRITT 2: Alle Eckpunkte in Kamerakoordinaten umwandeln und auf 2D projizieren
+        Vertex[] projected = new Vertex[8];
+
+        for (int i = 0; i < 8; i++) {
+            // Weltkoordinaten → Kamerakoordinaten (relativ zur Kamera)
+            Vektor3 cameraPos = worldToCamera(corners[i], camera);
+
+            // Kamerakoordinaten → 2D-Bildschirmkoordinaten (perspektivische Projektion)
+            projected[i] = project(cameraPos, camera.getFov());
+        }
+
+        // SCHRITT 3: Kanten der Box zeichnen
+        g.setColor(color);
+        g.setStroke(new BasicStroke(2));
+
+        // Vordere Fläche (4 Kanten) - Indizes 0,1,2,3
+        drawEdge(g, projected, 0, 1); // Unten
+        drawEdge(g, projected, 1, 2); // Rechts
+        drawEdge(g, projected, 2, 3); // Oben
+        drawEdge(g, projected, 3, 0); // Links
+
+        // Hintere Fläche (4 Kanten) - Indizes 4,5,6,7
+        drawEdge(g, projected, 4, 5); // Unten
+        drawEdge(g, projected, 5, 6); // Rechts
+        drawEdge(g, projected, 6, 7); // Oben
+        drawEdge(g, projected, 7, 4); // Links
+
+        // Verbindende Kanten (4 Kanten) - von vorne nach hinten
+        drawEdge(g, projected, 0, 4); // Unten-links
+        drawEdge(g, projected, 1, 5); // Unten-rechts
+        drawEdge(g, projected, 2, 6); // Oben-rechts
+        drawEdge(g, projected, 3, 7); // Oben-links
+    }
+
+    /*
+    * Hilfsmethode: Zeichnet eine Kante zwischen zwei projizierten Punkten.
+    * Prüft, ob beide Punkte sichtbar sind (nicht null = nicht hinter Kamera).
+    * */
+    private void drawEdge(Graphics2D g, Vertex[] points, int index1, int index2) {
+        // Sicherheitscheck: Beide Punkte müssen existieren und sichtbar sein
+        if (points[index1] != null && points[index2] != null) {
+            g.drawLine(
+                    points[index1].x, points[index1].y,
+                    points[index2].x, points[index2].y
+            );
         }
     }
 }

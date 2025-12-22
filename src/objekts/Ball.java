@@ -1,10 +1,11 @@
 package objekts;
 
-import meshes.Ellipse;
+import hitboxes.BoxHitbox;
+import math.Vektor3;
+import meshes.EllipseMesh;
 import rendering.Mesh;
 
 import java.awt.*;
-import java.util.Random;
 
 public class Ball extends Entity {
     double speedX, speedY, speedZ;
@@ -12,8 +13,10 @@ public class Ball extends Entity {
 
     public Ball() {
         super(Color.GREEN);
-        Mesh boxMesh = new Ellipse(radius, 10, 10);
+        Mesh boxMesh = new EllipseMesh(radius, 10, 10);
         this.setMesh(boxMesh);
+
+        hitbox = new BoxHitbox(transform.position, new Vektor3(radius*2, radius*2, radius*2));
 
         // Speed Setzen
         speedX = randomSpeed();
@@ -57,6 +60,8 @@ public class Ball extends Entity {
         if (this.transform.position.z > 3 - radius || this.transform.position.z < -3 + radius) {
             speedZ = -speedZ;
         }
+
+        hitbox.setPosition(transform.position);
     }
 
 
