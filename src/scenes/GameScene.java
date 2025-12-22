@@ -15,6 +15,12 @@ public class GameScene extends Scene {
     // Debug
     public static boolean DEBUG_MODE = false;
 
+    // FPS
+    private long lastFrameTime = System.currentTimeMillis();
+    private int fps = 0;
+    private int frameCount = 0;
+    private long fpsTimer = System.currentTimeMillis();
+
     // Renderer
     private Renderer renderer;
     private Camera camera;
@@ -60,6 +66,8 @@ public class GameScene extends Scene {
     }
 
     public void update() {
+        calculateFPS();
+
         player.moveTo(mousePos);
         BoxHitbox[] paddleHitboxes = new BoxHitbox[]{player.getHitbox(), aiPlayer.getHitbox()};
 
@@ -102,6 +110,11 @@ public class GameScene extends Scene {
             renderer.renderBoxHitbox(g2d, ball.getHitbox(), camera, Color.YELLOW);
             renderer.renderBoxHitbox(g2d, aiPlayer.getHitbox(), camera, Color.YELLOW);
             renderer.renderBoxHitbox(g2d, player.getHitbox(), camera, Color.YELLOW);
+
+            // FPS anzeigen
+            g2d.setFont(new Font("Monospace", Font.BOLD, 20));
+            g2d.setColor(Color.GREEN);
+            g2d.drawString("FPS: " + fps, 10, 20); // Oben links
         }
 
         // Scores zeichnen
@@ -127,6 +140,18 @@ public class GameScene extends Scene {
         }
         if (e.getKeyCode() == KeyEvent.VK_F3) {
             DEBUG_MODE = !DEBUG_MODE;
+        }
+    }
+
+    // ===== Debug Methoden =====
+    private void calculateFPS() {
+        long currentTime = System.currentTimeMillis();
+        long deltaTime = currentTime - lastFrameTime;
+        lastFrameTime = currentTime;
+
+        // FPS aus der Frame-Zeit berechnen
+        if (deltaTime > 0) {
+            fps = (int) (1000 / deltaTime);
         }
     }
 }
