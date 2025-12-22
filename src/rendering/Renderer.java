@@ -126,7 +126,12 @@ public class Renderer {
         return new Vektor3(worldX, worldY, planeZ);
     }
 
+    // Render Entity
     public void renderEntity(Graphics2D g, Entity entity, Camera camera) {
+        renderEntity(g, entity, camera, true);
+    }
+
+    public void renderEntity(Graphics2D g, Entity entity, Camera camera, boolean renderFaces) {
         if (entity == null || entity.getMesh() == null || entity.getMesh().vertices == null) return;
 
         // Anti-Aliasing für sauberere Linien
@@ -137,7 +142,7 @@ public class Renderer {
         Transform transform = entity.getTransform();
 
         // Flächen zeichnen
-        if (mesh.faces != null) { // Sicherheitscheck
+        if (mesh.faces != null && renderFaces) { // Sicherheitscheck
             for (int[] face : mesh.faces) { // faces = int[][]
                 if (face == null || face.length == 0) continue; // Leere Fläche überspringen
 
@@ -189,7 +194,11 @@ public class Renderer {
 
                 // Zeichnen der Kante
                 if (v1 != null && v2 != null) {
-                    g.setColor(Color.BLACK);
+                    if (renderFaces) {
+                        g.setColor(Color.BLACK);
+                    } else {
+                        g.setColor(entity.getColor());
+                    }
                     g.drawLine(v1.x, v1.y, v2.x, v2.y);
                 }
             }

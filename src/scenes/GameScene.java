@@ -29,7 +29,9 @@ public class GameScene extends Scene {
     private Player player;
     private Enemy aiPlayer;
     private Box box;
+
     private Ball ball;
+    private BallIndikator ballIndikator;
 
     // Score
     public int playerScore = 0;
@@ -63,6 +65,7 @@ public class GameScene extends Scene {
         // Box und Ball initialisieren
         box = new Box();
         ball = new Ball();
+        ballIndikator = new BallIndikator();
     }
 
     public void update() {
@@ -74,6 +77,7 @@ public class GameScene extends Scene {
         // Ball bewegen
         ball.paddleHit(paddleHitboxes);
         ball.move();
+        ballIndikator.setZPos(ball.getTransform().position.z);
         if(ball.getTransform().position.z < playerPosZ - ball.getRadius()) {
             // Punkt für die KI
             addPointToAI();
@@ -103,6 +107,7 @@ public class GameScene extends Scene {
         renderer.renderEntity(g2d, box, camera);
         renderer.renderEntity(g2d, aiPlayer, camera);
         renderer.renderEntity(g2d, ball, camera);
+        renderer.renderEntity(g2d, ballIndikator, camera, false);
         renderer.renderEntity(g2d, player, camera);
 
         if (DEBUG_MODE) {
