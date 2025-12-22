@@ -1,5 +1,6 @@
 package scenes;
 
+import hitboxes.BoxHitbox;
 import math.Vektor3;
 import math.Vertex;
 import objekts.*;
@@ -59,8 +60,21 @@ public class GameScene extends Scene {
     }
 
     public void update() {
-        ball.move();
         player.moveTo(mousePos);
+        BoxHitbox[] paddleHitboxes = new BoxHitbox[]{player.getHitbox(), aiPlayer.getHitbox()};
+
+        // Ball bewegen
+        ball.paddleHit(paddleHitboxes);
+        ball.move();
+        if(ball.getTransform().position.z < playerPosZ - ball.getRadius()) {
+            // Punkt für die KI
+            addPointToAI();
+            ball.reset();
+        } else if(ball.getTransform().position.z > -playerPosZ + ball.getRadius()) {
+            // Punkt für den Spieler
+            addPointToPlayer();
+            ball.reset();
+        }
 
         aiPlayer.move(ball.getTransform().position);
     }
@@ -110,6 +124,9 @@ public class GameScene extends Scene {
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
             window.togglePauseOverlay();
+        }
+        if (e.getKeyCode() == KeyEvent.VK_F3) {
+            DEBUG_MODE = !DEBUG_MODE;
         }
     }
 }

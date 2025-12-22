@@ -9,7 +9,8 @@ import java.awt.*;
 
 public class Ball extends Entity {
     double speedX, speedY, speedZ;
-    double radius = 0.2;
+
+    private final double radius = 0.2;
 
     public Ball() {
         super(Color.GREEN);
@@ -45,7 +46,18 @@ public class Ball extends Entity {
         speedZ = randomSpeed();
     }
 
+    public boolean paddleHit(BoxHitbox[] paddles) {
+        for (BoxHitbox paddle : paddles) {
+            if (hitbox.intersects(paddle)) {
+                speedZ = -speedZ;
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void move() {
+        // Position basierend auf der Geschwindigkeit aktualisieren
         this.transform.position.x += speedX;
         this.transform.position.y += speedY;
         this.transform.position.z += speedZ;
@@ -57,12 +69,12 @@ public class Ball extends Entity {
         if (this.transform.position.y > 1 - radius || this.transform.position.y < -1 + radius) {
             speedY = -speedY;
         }
-        if (this.transform.position.z > 3 - radius || this.transform.position.z < -3 + radius) {
-            speedZ = -speedZ;
-        }
 
         hitbox.setPosition(transform.position);
     }
 
-
+    // Getter und Setter
+    public double getRadius() {
+        return radius;
+    }
 }
