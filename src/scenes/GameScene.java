@@ -5,6 +5,7 @@ import hitboxes.BoxHitbox;
 import math.Vektor3;
 import math.Vertex;
 import objekts.*;
+import objekts.SevenSegmentDisplay;
 import rendering.Camera;
 import rendering.Renderer;
 import utility.MouseSettings;
@@ -31,8 +32,9 @@ public class GameScene extends Scene {
     private Player player;
     private Enemy aiPlayer;
     private Box box;
-
     private Ball ball;
+
+    private SevenSegmentDisplay scoreDisplay;
 
     // Score
     public int playerScore = 0;
@@ -63,6 +65,12 @@ public class GameScene extends Scene {
         // Box und Ball initialisieren
         box = new Box(boxDepth);
         ball = new Ball();
+
+        // Score Display
+        scoreDisplay = new SevenSegmentDisplay();
+        scoreDisplay.getTransform().scale = new Vektor3(0.5, 0.5, 0.5);
+        scoreDisplay.getTransform().position = new Vektor3(box.getSize().x - 0.1, 0, -0.5);
+        scoreDisplay.getTransform().rotation = new Vektor3(0, Math.toRadians(90), 0);
 
         // Spieler-Panel an 0, 0 Initialisieren
         player = new Player(new Vektor3(0,0,playerPosZ));
@@ -102,10 +110,12 @@ public class GameScene extends Scene {
 
     public void addPointToPlayer() {
         playerScore++;
+        scoreDisplay.setScore(aiScore, playerScore);
     }
 
     public void addPointToAI() {
         aiScore++;
+        scoreDisplay.setScore(aiScore, playerScore);
     }
 
     public void paintComponent(Graphics g) {
@@ -115,6 +125,7 @@ public class GameScene extends Scene {
         renderer.updateSize(getWidth(), getHeight());
         renderer.renderEntity(g2d, box, camera);
         renderer.renderEntity(g2d, aiPlayer, camera);
+        renderer.renderEntity(g2d, scoreDisplay, camera);
         renderer.renderEntity(g2d, ball, camera);
         renderer.renderEntity(g2d, player, camera);
 
