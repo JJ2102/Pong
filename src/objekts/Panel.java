@@ -8,8 +8,8 @@ import rendering.Mesh;
 import java.awt.*;
 
 public class Panel extends Entity {
-    private final double xSize = 0.3;
-    private final double ySize = 0.3;
+    protected final double xSize = 0.3;
+    protected final double ySize = 0.3;
 
     public Panel(Vektor3 position, Color color) {
         super(color);

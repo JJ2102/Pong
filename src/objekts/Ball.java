@@ -83,4 +83,8 @@ public class Ball extends Entity {
     public double getRadius() {
         return radius;
     }
+
+    public Vektor3 getSpeed() {
+        return new Vektor3(speedX, speedY, speedZ);
+    }
 }

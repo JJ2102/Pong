@@ -1,5 +1,6 @@
 package scenes;
 
+import enums.Difficulty;
 import hitboxes.BoxHitbox;
 import math.Vektor3;
 import math.Vertex;
@@ -12,6 +13,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 public class GameScene extends Scene {
+    // Difficulty
+    Difficulty gameDifficulty = Difficulty.MEDIUM;
+
     // Debug
     public static boolean DEBUG_MODE = false;
 
@@ -56,24 +60,26 @@ public class GameScene extends Scene {
         camera = new Camera();
         camera.setPosition(new Vektor3(0, 0, cameraPosZ)); // 0, 0, -4
 
+        // Box und Ball initialisieren
+        box = new Box(boxDepth);
+        ball = new Ball();
+
         // Spieler-Panel an 0, 0 Initialisieren
         player = new Player(new Vektor3(0,0,playerPosZ));
 
         // KI-Panel an spiegelverkehrte Position initialisieren
         Vektor3 playerPos = player.getTransform().position;
         Vektor3 aiPos = new Vektor3(playerPos.x, playerPos.y, -playerPosZ);
-        aiPlayer = new Enemy(aiPos);
-
-        // Box und Ball initialisieren
-        box = new Box(boxDepth);
-        ball = new Ball();
+        aiPlayer = new Enemy(aiPos, box.getSize());
     }
 
     public void update() {
         calculateFPS();
 
         player.moveTo(mousePos);
-        camera.setPosition(new Vektor3(mousePos.x / 15, mousePos.y / 15, cameraPosZ));
+        Vektor3 targetCameraPos = mousePos.divide(15);
+        Vektor3 cameraPos = camera.getPosition().lerp(targetCameraPos, 0.5);
+        camera.setPosition(new Vektor3(cameraPos.x, cameraPos.y, cameraPosZ));
 
         BoxHitbox[] paddleHitboxes = new BoxHitbox[]{player.getHitbox(), aiPlayer.getHitbox()};
         // Ball bewegen
@@ -91,7 +97,7 @@ public class GameScene extends Scene {
             ball.reset();
         }
 
-        aiPlayer.move(ball.getTransform().position);
+        aiPlayer.move(ball.getTransform().position, gameDifficulty.getValue());
     }
 
     public void addPointToPlayer() {
