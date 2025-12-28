@@ -49,7 +49,13 @@ public class Ball extends Entity {
     public boolean paddleHit(BoxHitbox[] paddles) {
         for (BoxHitbox paddle : paddles) {
             if (hitbox.intersects(paddle)) {
+                speedX += Math.signum(speedX) * 0.001;
+                speedY += Math.signum(speedY) * 0.001;
+                speedZ += Math.signum(speedZ) * 0.001;
                 speedZ = -speedZ;
+
+                System.out.println("New ball speed: " + speedX + ", " + speedY + ", " + speedZ);
+
                 return true;
             }
         }
