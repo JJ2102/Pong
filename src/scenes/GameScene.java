@@ -18,8 +18,6 @@ public class GameScene extends Scene {
     // FPS
     private long lastFrameTime = System.currentTimeMillis();
     private int fps = 0;
-    private int frameCount = 0;
-    private long fpsTimer = System.currentTimeMillis();
 
     // Renderer
     private Renderer renderer;
@@ -31,14 +29,14 @@ public class GameScene extends Scene {
     private Box box;
 
     private Ball ball;
-    private BallIndikator ballIndikator;
 
     // Score
     public int playerScore = 0;
     public int aiScore = 0;
 
     // Positionen
-    final double playerPosZ = -2.8;
+    double playerPosZ;
+    double cameraPosZ;
     private Vektor3 mousePos = new Vektor3(0,0,playerPosZ); // Aktuelle Mausposition
 
     public GameScene(GameWindow window) {
@@ -49,10 +47,14 @@ public class GameScene extends Scene {
     protected void initScene() {
         setCursor(MouseSettings.getInvisibleCursor());
 
+        double boxDepth = 1.5;
+        cameraPosZ = -boxDepth - 1;
+        playerPosZ = -boxDepth + 0.2;
+
         // Renderer initialisieren
         renderer = new Renderer(getWidth(), getHeight());
         camera = new Camera();
-        camera.setPosition(new Vektor3(0, 0, -4));
+        camera.setPosition(new Vektor3(0, 0, cameraPosZ)); // 0, 0, -4
 
         // Spieler-Panel an 0, 0 Initialisieren
         player = new Player(new Vektor3(0,0,playerPosZ));
@@ -63,21 +65,22 @@ public class GameScene extends Scene {
         aiPlayer = new Enemy(aiPos);
 
         // Box und Ball initialisieren
-        box = new Box();
+        box = new Box(boxDepth);
         ball = new Ball();
-        ballIndikator = new BallIndikator();
     }
 
     public void update() {
         calculateFPS();
 
         player.moveTo(mousePos);
-        BoxHitbox[] paddleHitboxes = new BoxHitbox[]{player.getHitbox(), aiPlayer.getHitbox()};
+        camera.setPosition(new Vektor3(mousePos.x / 15, mousePos.y / 15, cameraPosZ));
 
+        BoxHitbox[] paddleHitboxes = new BoxHitbox[]{player.getHitbox(), aiPlayer.getHitbox()};
         // Ball bewegen
-        ball.paddleHit(paddleHitboxes);
+        ball.paddleHit(paddleHitboxes); // ToDo: seitliche Überschneidung führt zu glitch fixen
         ball.move();
-        ballIndikator.setZPos(ball.getTransform().position.z);
+
+        // Todo: Mit Hitbox erstätzen
         if(ball.getTransform().position.z < playerPosZ - ball.getRadius()) {
             // Punkt für die KI
             addPointToAI();
@@ -107,7 +110,6 @@ public class GameScene extends Scene {
         renderer.renderEntity(g2d, box, camera);
         renderer.renderEntity(g2d, aiPlayer, camera);
         renderer.renderEntity(g2d, ball, camera);
-        renderer.renderEntity(g2d, ballIndikator, camera, false);
         renderer.renderEntity(g2d, player, camera);
 
         if (DEBUG_MODE) {
