@@ -1,4 +1,3 @@
-// java
 package meshes;
 
 import rendering.Mesh;
@@ -8,20 +7,38 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SevenSegmentMeshes {
-    // Segmentgrößen (anpassbar)
-    private static final float H_WIDTH = 0.8f;   // horizontale Segmentbreite
-    private static final float V_HEIGHT = 0.6f;  // vertikale Segmenthöhe
-    private static final float THICK = 0.12f;    // Segmentdicke
-    // Positionen der Segmente relativ zum Ziffernmittelpunkt
-    private static final float A_Y = 0.5f;
-    private static final float G_Y = -0.05f;
-    private static final float D_Y = -0.6f;
-    private static final float R_X = 0.35f;
-    private static final float T_Y = 0.15f;
-    private static final float B_Y = -0.35f;
+    // ===== NUR DIESE WERTE ANPASSEN =====
+    private static final float DIGIT_WIDTH = 0.5f;           // Gesamtbreite der Ziffer
+    private static final float DIGIT_HEIGHT = 1.0f;          // Gesamthöhe der Ziffer
+    private static final float SEGMENT_THICKNESS = 0.12f;    // Dicke der Balken
+    // ====================================
+
+    // Alles andere wird automatisch berechnet:
+    private static final float HORIZONTAL_SEGMENT_WIDTH = DIGIT_WIDTH;
+    private static final float VERTICAL_SEGMENT_HEIGHT = (DIGIT_HEIGHT / 2f) - SEGMENT_THICKNESS;
+
+    // Y-Positionen (vertikal)
+    private static final float TOP_SEGMENT_Y = DIGIT_HEIGHT / 2f;
+    private static final float MIDDLE_SEGMENT_Y = 0.0f;
+    private static final float BOTTOM_SEGMENT_Y = -DIGIT_HEIGHT / 2f;
+
+    // Vertikale Segmente sitzen zwischen den horizontalen Segmenten
+    private static final float UPPER_VERTICAL_Y = (TOP_SEGMENT_Y + MIDDLE_SEGMENT_Y) / 2f;
+    private static final float LOWER_VERTICAL_Y = (MIDDLE_SEGMENT_Y + BOTTOM_SEGMENT_Y) / 2f;
+
+    // X-Position (horizontal) - vertikale Segmente an den Enden der horizontalen
+    private static final float RIGHT_SEGMENT_X = DIGIT_WIDTH / 2f;
+
+    // Segmentanordnung:
+    //  AAA
+    // F   B
+    //  GGG
+    // E   C
+    //  DDD
 
     // Segment-Bitmuster für 0-9: A B C D E F G (1=an)
     private static final boolean[][] DIGIT_SEGMENTS = {
+            // A     B      C      D      E      F      G
             {true,  true,  true,  true,  true,  true,  false}, //0
             {false, true,  true,  false, false, false, false}, //1
             {true,  true,  false, true,  true,  false, true }, //2
@@ -34,110 +51,144 @@ public class SevenSegmentMeshes {
             {true,  true,  true,  true,  false, true,  true }  //9
     };
 
-    // Hilfsmethode: Quad an Position (cx,cy) mit Breite w und Höhe h erzeugen
-    private static void addQuad(List<Vektor3> verts, List<int[]> edges, List<int[]> faces,
-                                float cx, float cy, float w, float h) {
-        int base = verts.size();
-        float hw = w / 2f;
-        float hh = h / 2f;
-        verts.add(new Vektor3(cx - hw, cy + hh, 0)); // 0
-        verts.add(new Vektor3(cx + hw, cy + hh, 0)); // 1
-        verts.add(new Vektor3(cx + hw, cy - hh, 0)); // 2
-        verts.add(new Vektor3(cx - hw, cy - hh, 0)); // 3
+    // Hilfsmethode: Quad an Position (centerX, centerY) mit Breite width und Höhe height erzeugen
+    private static void addQuad(List<Vektor3> vertices, List<int[]> edges, List<int[]> faces,
+                                float centerX, float centerY, float width, float height) {
+        int baseIndex = vertices.size();
+        float halfWidth = width / 2f;
+        float halfHeight = height / 2f;
 
-        edges.add(new int[] {base, base + 1});
-        edges.add(new int[] {base + 1, base + 2});
-        edges.add(new int[] {base + 2, base + 3});
-        edges.add(new int[] {base + 3, base});
+        vertices.add(new Vektor3(centerX - halfWidth, centerY + halfHeight, 0)); // oben links
+        vertices.add(new Vektor3(centerX + halfWidth, centerY + halfHeight, 0)); // oben rechts
+        vertices.add(new Vektor3(centerX + halfWidth, centerY - halfHeight, 0)); // unten rechts
+        vertices.add(new Vektor3(centerX - halfWidth, centerY - halfHeight, 0)); // unten links
 
-        faces.add(new int[] {base, base + 1, base + 2, base + 3});
+        edges.add(new int[] {baseIndex, baseIndex + 1});
+        edges.add(new int[] {baseIndex + 1, baseIndex + 2});
+        edges.add(new int[] {baseIndex + 2, baseIndex + 3});
+        edges.add(new int[] {baseIndex + 3, baseIndex});
+
+        faces.add(new int[] {baseIndex, baseIndex + 1, baseIndex + 2, baseIndex + 3});
     }
 
     // Erzeuge Mesh für eine einzelne Ziffer (mit Mittelpunkt bei x=0)
     public static Mesh getDigitMesh(int digit) {
         if (digit < 0 || digit > 9) digit = 0;
-        List<Vektor3> verts = new ArrayList<>();
+
+        List<Vektor3> vertices = new ArrayList<>();
         List<int[]> edges = new ArrayList<>();
         List<int[]> faces = new ArrayList<>();
 
-        boolean[] seg = DIGIT_SEGMENTS[digit];
+        boolean[] activeSegments = DIGIT_SEGMENTS[digit];
 
-        // A (oben, horizontal)
-        if (seg[0]) addQuad(verts, edges, faces, 0f, A_Y, H_WIDTH, THICK);
-        // B (oben rechts, vertikal)
-        if (seg[1]) addQuad(verts, edges, faces, R_X, T_Y, THICK, V_HEIGHT);
-        // C (unten rechts, vertikal)
-        if (seg[2]) addQuad(verts, edges, faces, R_X, B_Y, THICK, V_HEIGHT);
-        // D (unten, horizontal)
-        if (seg[3]) addQuad(verts, edges, faces, 0f, D_Y, H_WIDTH, THICK);
-        // E (unten links, vertikal)
-        if (seg[4]) addQuad(verts, edges, faces, -R_X, B_Y, THICK, V_HEIGHT);
-        // F (oben links, vertikal)
-        if (seg[5]) addQuad(verts, edges, faces, -R_X, T_Y, THICK, V_HEIGHT);
-        // G (mittig, horizontal)
-        if (seg[6]) addQuad(verts, edges, faces, 0f, G_Y, H_WIDTH, THICK);
+        // Segment A (oben, horizontal)
+        if (activeSegments[0]) {
+            addQuad(vertices, edges, faces, 0f, TOP_SEGMENT_Y,
+                    HORIZONTAL_SEGMENT_WIDTH, SEGMENT_THICKNESS);
+        }
+        // Segment B (oben rechts, vertikal)
+        if (activeSegments[1]) {
+            addQuad(vertices, edges, faces, RIGHT_SEGMENT_X, UPPER_VERTICAL_Y,
+                    SEGMENT_THICKNESS, VERTICAL_SEGMENT_HEIGHT);
+        }
+        // Segment C (unten rechts, vertikal)
+        if (activeSegments[2]) {
+            addQuad(vertices, edges, faces, RIGHT_SEGMENT_X, LOWER_VERTICAL_Y,
+                    SEGMENT_THICKNESS, VERTICAL_SEGMENT_HEIGHT);
+        }
+        // Segment D (unten, horizontal)
+        if (activeSegments[3]) {
+            addQuad(vertices, edges, faces, 0f, BOTTOM_SEGMENT_Y,
+                    HORIZONTAL_SEGMENT_WIDTH, SEGMENT_THICKNESS);
+        }
+        // Segment E (unten links, vertikal)
+        if (activeSegments[4]) {
+            addQuad(vertices, edges, faces, -RIGHT_SEGMENT_X, LOWER_VERTICAL_Y,
+                    SEGMENT_THICKNESS, VERTICAL_SEGMENT_HEIGHT);
+        }
+        // Segment F (oben links, vertikal)
+        if (activeSegments[5]) {
+            addQuad(vertices, edges, faces, -RIGHT_SEGMENT_X, UPPER_VERTICAL_Y,
+                    SEGMENT_THICKNESS, VERTICAL_SEGMENT_HEIGHT);
+        }
+        // Segment G (mittig, horizontal)
+        if (activeSegments[6]) {
+            addQuad(vertices, edges, faces, 0f, MIDDLE_SEGMENT_Y,
+                    HORIZONTAL_SEGMENT_WIDTH, SEGMENT_THICKNESS);
+        }
 
-        return new Mesh(verts, edges.toArray(new int[edges.size()][]), faces.toArray(new int[faces.size()][]));
+        return new Mesh(vertices, edges.toArray(new int[edges.size()][]),
+                faces.toArray(new int[faces.size()][]));
     }
 
     // Doppelpunkt als zwei kleine Quadrate
     public static Mesh getColonMesh() {
-        List<Vektor3> verts = new ArrayList<>();
+        List<Vektor3> vertices = new ArrayList<>();
         List<int[]> edges = new ArrayList<>();
         List<int[]> faces = new ArrayList<>();
 
-        float dotSize = THICK * 0.8f;
-        addQuad(verts, edges, faces, 0f, 0.22f, dotSize, dotSize);
-        addQuad(verts, edges, faces, 0f, -0.22f, dotSize, dotSize);
+        float dotSize = SEGMENT_THICKNESS * 0.8f;
+        addQuad(vertices, edges, faces, 0f, 0.22f, dotSize, dotSize);  // oberer Punkt
+        addQuad(vertices, edges, faces, 0f, -0.22f, dotSize, dotSize); // unterer Punkt
 
-        return new Mesh(verts, edges.toArray(new int[edges.size()][]), faces.toArray(new int[faces.size()][]));
+        return new Mesh(vertices, edges.toArray(new int[edges.size()][]),
+                faces.toArray(new int[faces.size()][]));
     }
 
     // Kombiniertes Mesh für "L : R" mit Positionsoffsets
     public static Mesh getDisplayMesh(int leftDigit, int rightDigit) {
-        List<Vektor3> verts = new ArrayList<>();
+        List<Vektor3> vertices = new ArrayList<>();
         List<int[]> edges = new ArrayList<>();
         List<int[]> faces = new ArrayList<>();
 
-        float spacing = 0.85f; // Abstand zwischen Zeichen
+        float characterSpacing = 0.85f; // Abstand zwischen Zeichen
 
         // linke Ziffer
-        addMeshTranslated(verts, edges, faces, getDigitMesh(leftDigit), -spacing, 0f);
+        addMeshTranslated(vertices, edges, faces, getDigitMesh(leftDigit), -characterSpacing, 0f);
         // Doppelpunkt
-        addMeshTranslated(verts, edges, faces, getColonMesh(), 0f, 0f);
+        addMeshTranslated(vertices, edges, faces, getColonMesh(), 0f, 0f);
         // rechte Ziffer
-        addMeshTranslated(verts, edges, faces, getDigitMesh(rightDigit), spacing, 0f);
+        addMeshTranslated(vertices, edges, faces, getDigitMesh(rightDigit), characterSpacing, 0f);
 
-        return new Mesh(verts, edges.toArray(new int[edges.size()][]), faces.toArray(new int[faces.size()][]));
+        return new Mesh(vertices, edges.toArray(new int[edges.size()][]),
+                faces.toArray(new int[faces.size()][]));
     }
 
-    // Kopiert ein Mesh und verschiebt die Vektoren um (tx,ty)
-    private static void addMeshTranslated(List<Vektor3> verts, List<int[]> edges, List<int[]> faces, Mesh mesh, float tx, float ty) {
-        // Mesh hat in deinem Projekt öffentliche Felder: vertices, edges, faces
-        if (mesh == null) return;
-        List<Vektor3> srcVerts = mesh.vertices;
-        int[][] srcEdges = mesh.edges;
-        int[][] srcFaces = mesh.faces;
+    // Kopiert ein Mesh und verschiebt die Vektoren um (translateX, translateY)
+    private static void addMeshTranslated(List<Vektor3> targetVertices, List<int[]> targetEdges,
+                                          List<int[]> targetFaces, Mesh sourceMesh,
+                                          float translateX, float translateY) {
+        if (sourceMesh == null) return;
 
-        int base = verts.size();
-        if (srcVerts != null) {
-            for (Vektor3 v : srcVerts) {
-                verts.add(new Vektor3((float)(v.x + tx), (float)(v.y + ty), (float)v.z));
+        List<Vektor3> sourceVertices = sourceMesh.vertices;
+        int[][] sourceEdges = sourceMesh.edges;
+        int[][] sourceFaces = sourceMesh.faces;
+
+        int baseIndex = targetVertices.size();
+
+        if (sourceVertices != null) {
+            for (Vektor3 vertex : sourceVertices) {
+                targetVertices.add(new Vektor3((float)(vertex.x + translateX),
+                        (float)(vertex.y + translateY),
+                        (float)vertex.z));
             }
         }
 
-        if (srcEdges != null) {
-            for (int[] e : srcEdges) {
-                // Erwartet immer Paare
-                if (e.length >= 2) edges.add(new int[] {base + e[0], base + e[1]});
+        if (sourceEdges != null) {
+            for (int[] edge : sourceEdges) {
+                if (edge.length >= 2) {
+                    targetEdges.add(new int[] {baseIndex + edge[0], baseIndex + edge[1]});
+                }
             }
         }
 
-        if (srcFaces != null) {
-            for (int[] f : srcFaces) {
-                int[] ff = new int[f.length];
-                for (int i = 0; i < f.length; i++) ff[i] = base + f[i];
-                faces.add(ff);
+        if (sourceFaces != null) {
+            for (int[] face : sourceFaces) {
+                int[] newFace = new int[face.length];
+                for (int i = 0; i < face.length; i++) {
+                    newFace[i] = baseIndex + face[i];
+                }
+                targetFaces.add(newFace);
             }
         }
     }
