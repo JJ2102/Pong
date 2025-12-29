@@ -36,9 +36,14 @@ public class GameScene extends Scene {
 
     private SevenSegmentDisplay scoreDisplay;
 
+    // Hitboxes
+    private BoxHitbox goalPlayerHitbox;
+    private BoxHitbox goalAIHitbox;
+
     // Score
     public int playerScore = 0;
     public int aiScore = 0;
+    private enum PlayerType { PLAYER, AI }
 
     // Positionen
     double playerPosZ;
@@ -54,13 +59,13 @@ public class GameScene extends Scene {
         setCursor(MouseSettings.getInvisibleCursor());
 
         double boxDepth = 1.5;
-        cameraPosZ = -boxDepth - 1;
-        playerPosZ = -boxDepth + 0.2;
+        cameraPosZ = -boxDepth - 1; // -boxDepth - 1
+        playerPosZ = -boxDepth + 0.2; // -boxDepth + 0.2
 
         // Renderer initialisieren
         renderer = new Renderer(getWidth(), getHeight());
         camera = new Camera();
-        camera.setPosition(new Vektor3(0, 0, cameraPosZ)); // 0, 0, -4
+        camera.setPosition(new Vektor3(0, 0, cameraPosZ)); // 0, 0, cameraPosZ
 
         // Box und Ball initialisieren
         box = new Box(boxDepth);
@@ -71,6 +76,12 @@ public class GameScene extends Scene {
         scoreDisplay.getTransform().scale = new Vektor3(0.5, 0.5, 0.5);
         scoreDisplay.getTransform().position = new Vektor3(box.getSize().x - 0.1, 0, -0.5);
         scoreDisplay.getTransform().rotation = new Vektor3(0, Math.toRadians(90), 0);
+
+        // Hitboxen für Tore
+        Vektor3 boxSize = box.getSize();
+        Vektor3 hitboxSize = new Vektor3(boxSize.x * 2, boxSize.y * 2, 0);
+        goalPlayerHitbox = new BoxHitbox(new Vektor3(0, 0, -boxDepth), hitboxSize);
+        goalAIHitbox = new BoxHitbox(new Vektor3(0, 0, boxDepth), hitboxSize);
 
         // Spieler-Panel an 0, 0 Initialisieren
         player = new Player(new Vektor3(0,0,playerPosZ));
@@ -94,28 +105,25 @@ public class GameScene extends Scene {
         ball.paddleHit(paddleHitboxes); // ToDo: seitliche Überschneidung führt zu glitch fixen
         ball.move();
 
-        // Todo: Mit Hitbox erstätzen
-        if(ball.getTransform().position.z < playerPosZ - ball.getRadius()) {
-            // Punkt für die KI
-            addPointToAI();
-            ball.reset();
-        } else if(ball.getTransform().position.z > -playerPosZ + ball.getRadius()) {
-            // Punkt für den Spieler
-            addPointToPlayer();
-            ball.reset();
+        // Tore prüfen
+        if(goalPlayerHitbox.intersects(ball.getHitbox())) { // Punkt für KI
+            addPoint(PlayerType.AI);
+        }
+        if(goalAIHitbox.intersects(ball.getHitbox())) { // Punkt für Spieler
+            addPoint(PlayerType.PLAYER);
         }
 
         aiPlayer.move(ball.getTransform().position, gameDifficulty.getValue());
     }
 
-    public void addPointToPlayer() {
-        playerScore++;
+    private void addPoint(PlayerType scorer) {
+        if(scorer == PlayerType.AI) {
+            aiScore++;
+        } else {
+            playerScore++;
+        }
         scoreDisplay.setScore(aiScore, playerScore);
-    }
-
-    public void addPointToAI() {
-        aiScore++;
-        scoreDisplay.setScore(aiScore, playerScore);
+        ball.reset();
     }
 
     public void paintComponent(Graphics g) {
@@ -133,7 +141,9 @@ public class GameScene extends Scene {
             // Debug: Ball Hitbox zeichnen
             renderer.renderBoxHitbox(g2d, ball.getHitbox(), camera, Color.YELLOW);
             renderer.renderBoxHitbox(g2d, aiPlayer.getHitbox(), camera, Color.YELLOW);
+            renderer.renderBoxHitbox(g2d, goalAIHitbox, camera, Color.RED);
             renderer.renderBoxHitbox(g2d, player.getHitbox(), camera, Color.YELLOW);
+            renderer.renderBoxHitbox(g2d, goalPlayerHitbox, camera, Color.RED);
 
             // FPS anzeigen
             g2d.setFont(new Font("Monospace", Font.BOLD, 20));
