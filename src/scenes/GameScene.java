@@ -133,6 +133,7 @@ public class GameScene extends Scene {
     }
 
     private void addPoint(PlayerType scorer) {
+        //TODO: Spielende bei 9 Punkten
         if(scorer == PlayerType.AI) {
             aiScore++;
         } else {

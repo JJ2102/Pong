@@ -1,8 +1,9 @@
 package enums;
 
 public enum Difficulty {
-    EASY(0.1),
-    MEDIUM(0.2),
+    //TODO: adjust values as necessary
+    EASY(0.05),
+    MEDIUM(0.1),
     HARD(0.5),
     INSANE(0.9);
 

@@ -8,6 +8,7 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public class Overlay extends JPanel {
+    //TODO: make it possible to close overlay by pressing esc
     protected final GameWindow window;
     private final ArrayList<Button> buttons = new ArrayList<>();
     private final int transparency;
