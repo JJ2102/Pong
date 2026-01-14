@@ -195,6 +195,11 @@ public class GameScene extends Scene {
         }
     }
 
+    // ===== Getter und Setter =====
+    public void setDifficulty(Difficulty difficulty) {
+        this.gameDifficulty = difficulty;
+    }
+
     // ===== Debug Methoden =====
     private void calculateFPS() {
         long currentTime = System.currentTimeMillis();

@@ -1,5 +1,6 @@
 package scenes;
 
+import enums.Difficulty;
 import enums.EnumScenes;
 import utility.Button;
 
@@ -22,23 +23,18 @@ public class MenuScene extends Scene {
         title.setFont(new Font("Arial", Font.BOLD, 72));
         title.setForeground(Color.BLACK);
 
-        // Start Button
+        // Start Buttons
         Button startButton = new Button("Start Game");
-        startButton.addActionListener(_ -> {
-            window.setCurrentScene(EnumScenes.GAME);
-            window.getGameScene().startScene();
-        });
-        add(startButton);
+        startButton.addActionListener(_ -> window.toggleDifficultyOverlay());
 
         // Exit Button
         Button exitButton = new Button("Exit");
         exitButton.addActionListener(_ -> System.exit(0));
-        add(exitButton);
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.anchor = GridBagConstraints.CENTER;
-        gbc.insets = new Insets(20, 0, 20, 0);
+        gbc.insets = new Insets(10, 0, 10, 0);
 
         gbc.gridy = 0;
         add(title, gbc);

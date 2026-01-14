@@ -1,6 +1,7 @@
 package scenes;
 
 import enums.EnumScenes;
+import scenes.overlays.DifficultyOverlay;
 import scenes.overlays.PauseOverlay;
 
 import javax.swing.*;
@@ -13,6 +14,7 @@ public class GameWindow extends JFrame {
 
     // Overlays
     private PauseOverlay pauseOverlay;
+    private DifficultyOverlay difficultyOverlay;
 
     // Scenen
     private MenuScene menuScene;
@@ -44,6 +46,7 @@ public class GameWindow extends JFrame {
 
         // Overlay erstellen (wird über SceneManager angezeigt/verdeckt)
         pauseOverlay = new PauseOverlay(this);
+        difficultyOverlay = new DifficultyOverlay(this);
 
         currentScene = EnumScenes.MENU; // Standard-Szene festlegen
     }
@@ -54,7 +57,7 @@ public class GameWindow extends JFrame {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
-    // Szene-Pause Overlay Methoden
+    // Overlay Methoden
     public void togglePauseOverlay() {
         if (!sceneManager.isOverlayVisible(pauseOverlay)) {
             if (currentScene == EnumScenes.GAME && gameScene != null) { // Spielszene pausieren
@@ -66,6 +69,14 @@ public class GameWindow extends JFrame {
             if (currentScene == EnumScenes.GAME && gameScene != null) { // Spielszene fortsetzen
                 gameScene.startScene();
             }
+        }
+    }
+
+    public void toggleDifficultyOverlay() {
+        if (!sceneManager.isOverlayVisible(difficultyOverlay)) {
+            sceneManager.showOverlay(difficultyOverlay);
+        } else {
+            sceneManager.hideOverlay(difficultyOverlay);
         }
     }
 
