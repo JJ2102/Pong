@@ -1,5 +1,6 @@
 package scenes;
 
+import Sound.SoundManager;
 import enums.Difficulty;
 import hitboxes.BoxHitbox;
 import math.Vektor3;
@@ -23,6 +24,9 @@ public class GameScene extends Scene {
     // FPS
     private long lastFrameTime = System.currentTimeMillis();
     private int fps = 0;
+
+    // Sound
+    private SoundManager soundManager;
 
     // Renderer
     private Renderer renderer;
@@ -57,6 +61,10 @@ public class GameScene extends Scene {
     @Override
     protected void initScene() {
         setCursor(MouseSettings.getInvisibleCursor());
+
+        // Soundeffekte laden
+        soundManager = new SoundManager();
+        soundManager.loadSoundEffekt("pong", "res/sounds/pong2.wav");
 
         double boxDepth = 1.5;
         cameraPosZ = -boxDepth - 1; // -boxDepth - 1
@@ -102,7 +110,9 @@ public class GameScene extends Scene {
 
         BoxHitbox[] paddleHitboxes = new BoxHitbox[]{player.getHitbox(), aiPlayer.getHitbox()};
         // Ball bewegen
-        ball.paddleHit(paddleHitboxes); // ToDo: seitliche Überschneidung führt zu glitch fixen
+        if (ball.paddleHit(paddleHitboxes)) { // ToDo: seitliche Überschneidung führt zu glitch fixen
+            soundManager.playSoundEffekt("pong");
+        }
         ball.move();
 
         // Tore prüfen
