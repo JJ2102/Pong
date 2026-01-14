@@ -62,9 +62,13 @@ public class GameScene extends Scene {
     protected void initScene() {
         setCursor(MouseSettings.getInvisibleCursor());
 
-        // Soundeffekte laden
+
         soundManager = new SoundManager();
+        // Soundeffekte laden
         soundManager.loadSoundEffekt("pong", "res/sounds/pong.wav");
+        soundManager.loadSoundEffekt("score", "res/sounds/score.wav");
+
+        // Hintergrundmusik laden und abspielen
         soundManager.loadBackgroundMusik("bg1", "res/musik/BgSong1.wav");
         soundManager.playBackgroundMusik("bg1");
 
@@ -135,6 +139,7 @@ public class GameScene extends Scene {
             playerScore++;
         }
         scoreDisplay.setScore(aiScore, playerScore);
+        soundManager.playSoundEffekt("score");
         ball.reset();
     }
 
