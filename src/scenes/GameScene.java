@@ -64,7 +64,9 @@ public class GameScene extends Scene {
 
         // Soundeffekte laden
         soundManager = new SoundManager();
-        soundManager.loadSoundEffekt("pong", "res/sounds/pong2.wav");
+        soundManager.loadSoundEffekt("pong", "res/sounds/pong.wav");
+        soundManager.loadBackgroundMusik("bg1", "res/musik/BgSong1.wav");
+        soundManager.playBackgroundMusik("bg1");
 
         double boxDepth = 1.5;
         cameraPosZ = -boxDepth - 1; // -boxDepth - 1
