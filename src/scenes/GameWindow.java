@@ -57,6 +57,18 @@ public class GameWindow extends JFrame {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
+    // start / stop Game
+    public void startGame() {
+        setCurrentScene(EnumScenes.GAME);
+        gameScene.startScene();
+    }
+
+    public void returnToMenu() {
+        gameScene.stopScene();
+        gameScene.reset();
+        setCurrentScene(EnumScenes.MENU);
+    }
+
     // Overlay Methoden
     public void togglePauseOverlay() {
         if (!sceneManager.isOverlayVisible(pauseOverlay)) {

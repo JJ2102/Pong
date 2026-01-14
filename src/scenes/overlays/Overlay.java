@@ -1,0 +1,55 @@
+package scenes.overlays;
+
+import scenes.GameWindow;
+import utility.Button;
+
+import javax.swing.*;
+import java.awt.*;
+import java.util.ArrayList;
+
+public class Overlay extends JPanel {
+    protected final GameWindow window;
+    private final ArrayList<Button> buttons = new ArrayList<>();
+    private final int transparency;
+    protected JLabel titleLabel;
+
+    public Overlay(GameWindow window, String title, int transparency) {
+        this.window = window;
+        setOpaque(false); // Hintergrund transparent
+        setLayout(new GridBagLayout()); // Zentrierte Inhalte
+
+        this.transparency = Math.max(0, Math.min(transparency, 255)); // Transparenzwert begrenzen
+
+        titleLabel = new JLabel(title);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 72));
+        titleLabel.setForeground(Color.WHITE);
+    }
+
+    protected void addButton(Button button) {
+        buttons.add(button);
+    }
+
+    protected void positionComponents(JLabel titleLabel) {
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.anchor = GridBagConstraints.CENTER;
+        gbc.insets = new Insets(10, 0, 10, 0);
+
+        gbc.gridy = 0;
+        add(titleLabel, gbc);
+
+        int yPos = 1;
+        for (Button button : buttons) {
+            gbc.gridy = yPos++;
+            add(button, gbc);
+        }
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        // Halbtransparenter Hintergrund
+        g.setColor(new Color(0, 0, 0, transparency));
+        g.fillRect(0, 0, getWidth(), getHeight());
+    }
+}

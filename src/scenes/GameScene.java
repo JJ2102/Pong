@@ -141,7 +141,13 @@ public class GameScene extends Scene {
         scoreDisplay.setScore(aiScore, playerScore);
         soundManager.playSoundEffekt("score");
         ball.reset();
+    }
 
+    public void reset() {
+        playerScore = 0;
+        aiScore = 0;
+        scoreDisplay.setScore(aiScore, playerScore);
+        ball.reset();
     }
 
     public void paintComponent(Graphics g) {
