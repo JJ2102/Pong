@@ -1,4 +1,4 @@
-package scenes;
+package sceneManagement.scenes;
 
 import enums.EnumScenes;
 

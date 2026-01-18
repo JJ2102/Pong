@@ -1,9 +1,12 @@
-package scenes;
+package sceneManagement;
 
 import Sound.SoundManager;
 import enums.EnumScenes;
-import scenes.overlays.DifficultyOverlay;
-import scenes.overlays.PauseOverlay;
+import sceneManagement.overlays.DifficultyOverlay;
+import sceneManagement.overlays.PauseOverlay;
+import sceneManagement.scenes.GameScene;
+import sceneManagement.scenes.MenuScene;
+import sceneManagement.scenes.SceneManager;
 
 import javax.swing.*;
 import java.awt.*;

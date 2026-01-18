@@ -1,4 +1,4 @@
-package scenes;
+package sceneManagement.scenes;
 
 import enums.Difficulty;
 import hitboxes.BoxHitbox;
@@ -8,6 +8,7 @@ import objekts.*;
 import objekts.SevenSegmentDisplay;
 import rendering.Camera;
 import rendering.Renderer;
+import sceneManagement.GameWindow;
 import utility.MouseSettings;
 import java.awt.*;
 import java.awt.event.KeyEvent;

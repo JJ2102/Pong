@@ -1,6 +1,7 @@
-package scenes;
+package sceneManagement.scenes;
 
 import enums.EnumScenes;
+import sceneManagement.GameWindow;
 import utility.Button;
 
 import javax.swing.*;

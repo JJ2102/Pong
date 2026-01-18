@@ -1,6 +1,6 @@
-package scenes.overlays;
+package sceneManagement.overlays;
 
-import scenes.GameWindow;
+import sceneManagement.GameWindow;
 import utility.Button;
 
 import javax.swing.*;

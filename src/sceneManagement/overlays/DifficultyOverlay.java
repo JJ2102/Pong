@@ -1,14 +1,10 @@
-package scenes.overlays;
+package sceneManagement.overlays;
 
 import enums.Difficulty;
-import enums.EnumScenes;
-import scenes.GameWindow;
+import sceneManagement.GameWindow;
 import utility.Button;
 
-import javax.swing.*;
-import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 
 public class DifficultyOverlay extends Overlay {
     public DifficultyOverlay(GameWindow window) {

@@ -1,4 +1,4 @@
-import scenes.GameWindow;
+import sceneManagement.GameWindow;
 
 import java.awt.*;
 

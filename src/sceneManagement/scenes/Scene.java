@@ -1,4 +1,6 @@
-package scenes;
+package sceneManagement.scenes;
+
+import sceneManagement.GameWindow;
 
 import javax.swing.*;
 import java.awt.*;
