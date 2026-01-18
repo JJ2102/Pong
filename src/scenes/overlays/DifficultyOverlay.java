@@ -40,4 +40,12 @@ public class DifficultyOverlay extends Overlay {
         window.getGameScene().setDifficulty(difficulty);
         window.startGame();
     }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+            System.out.println("Difficulty selection canceled.");
+            window.toggleDifficultyOverlay();
+        }
+    }
 }

@@ -28,7 +28,6 @@ public class GameScene extends Scene {
 
     // Sound
     private SoundManager soundManager;
-    private SoundSettings soundSettings;
 
     // Renderer
     private Renderer renderer;
@@ -65,7 +64,6 @@ public class GameScene extends Scene {
         setCursor(MouseSettings.getInvisibleCursor());
 
         soundManager = new SoundManager();
-        soundSettings = soundManager.getSoundSettings();
 
         // Soundeffekte laden
         soundManager.loadSoundEffekt("pong", "res/sounds/pong.wav");

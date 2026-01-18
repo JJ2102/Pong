@@ -5,9 +5,11 @@ import utility.Button;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.ArrayList;
 
-public class Overlay extends JPanel {
+public class Overlay extends JPanel implements KeyListener {
     //TODO: make it possible to close overlay by pressing esc
     protected final GameWindow window;
     private final ArrayList<Button> buttons = new ArrayList<>();
@@ -52,5 +54,20 @@ public class Overlay extends JPanel {
         // Halbtransparenter Hintergrund
         g.setColor(new Color(0, 0, 0, transparency));
         g.fillRect(0, 0, getWidth(), getHeight());
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+
     }
 }
