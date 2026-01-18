@@ -6,6 +6,7 @@ import sceneManagement.overlays.DifficultyOverlay;
 import sceneManagement.overlays.PauseOverlay;
 import sceneManagement.scenes.GameScene;
 import sceneManagement.scenes.MenuScene;
+import sceneManagement.scenes.SettingsScene;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,6 +28,7 @@ public class GameWindow extends JFrame {
     // Scenen
     private MenuScene menuScene;
     private GameScene gameScene;
+    private SettingsScene settingsScene;
 
     public GameWindow(Dimension size) {
         super("Pong 3D"); // Fenstertitel
@@ -51,9 +53,11 @@ public class GameWindow extends JFrame {
         // Scenes Erstellen und registrieren
         menuScene = new MenuScene(this);
         gameScene = new GameScene(this);
+        settingsScene = new SettingsScene(this);
 
         sceneManager.registerScene(EnumScenes.MENU, menuScene);
         sceneManager.registerScene(EnumScenes.GAME, gameScene);
+        sceneManager.registerScene(EnumScenes.SETTINGS, settingsScene);
 
         // Overlay erstellen (wird über SceneManager angezeigt/verdeckt)
         pauseOverlay = new PauseOverlay(this);
