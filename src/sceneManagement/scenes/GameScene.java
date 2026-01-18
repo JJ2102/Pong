@@ -117,8 +117,18 @@ public class GameScene extends Scene {
             playerScore++;
         }
         scoreDisplay.setScore(aiScore, playerScore);
-        window.getSoundManager().playSoundEffekt("score");
-        ball.reset();
+
+        // Überprüfen ob jemand gewonnen hat
+        if (aiScore == 9) {
+            // TODO: Lose Screen
+            window.getSoundManager().playSoundEffekt("lose");
+        } else if (playerScore == 9) {
+            // TODO: Win Screen
+            window.getSoundManager().playSoundEffekt("win");
+        } else {
+            window.getSoundManager().playSoundEffekt("score");
+            ball.reset();
+        }
     }
 
     public void reset() {

@@ -69,6 +69,8 @@ public class GameWindow extends JFrame {
         // Soundeffekte laden
         soundManager.loadSoundEffekt("pong", "res/sounds/pong.wav");
         soundManager.loadSoundEffekt("score", "res/sounds/score.wav");
+        soundManager.loadSoundEffekt("win", "res/sounds/win.wav");
+        soundManager.loadSoundEffekt("lose", "res/sounds/lose.wav");
 
         // Hintergrundmusik laden und abspielen
         soundManager.loadBackgroundMusik("bg1", "res/musik/BgSong1.wav");
