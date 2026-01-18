@@ -122,9 +122,11 @@ public class GameScene extends Scene {
         if (aiScore == 9) {
             // TODO: Lose Screen
             window.getSoundManager().playSoundEffekt("lose");
+            window.returnToMenu();
         } else if (playerScore == 9) {
             // TODO: Win Screen
             window.getSoundManager().playSoundEffekt("win");
+            window.returnToMenu();
         } else {
             window.getSoundManager().playSoundEffekt("score");
             ball.reset();
