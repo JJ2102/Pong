@@ -1,6 +1,7 @@
 package scenes;
 
 import Sound.SoundManager;
+import Sound.SoundSettings;
 import enums.Difficulty;
 import hitboxes.BoxHitbox;
 import math.Vektor3;
@@ -27,6 +28,7 @@ public class GameScene extends Scene {
 
     // Sound
     private SoundManager soundManager;
+    private SoundSettings soundSettings;
 
     // Renderer
     private Renderer renderer;
@@ -62,8 +64,9 @@ public class GameScene extends Scene {
     protected void initScene() {
         setCursor(MouseSettings.getInvisibleCursor());
 
-
         soundManager = new SoundManager();
+        soundSettings = soundManager.getSoundSettings();
+
         // Soundeffekte laden
         soundManager.loadSoundEffekt("pong", "res/sounds/pong.wav");
         soundManager.loadSoundEffekt("score", "res/sounds/score.wav");
