@@ -22,20 +22,20 @@ public class GameScene extends Scene {
     private int fps = 0;
 
     // Renderer
-    private Renderer renderer;
-    private Camera camera;
+    private final Renderer renderer;
+    private final Camera camera;
 
     // Objekte
-    private Player player;
-    private Enemy aiPlayer;
-    private Box box;
-    private Ball ball;
+    private final Player player;
+    private final Enemy aiPlayer;
+    private final Box box;
+    private final Ball ball;
 
-    private SevenSegmentDisplay scoreDisplay;
+    private final SevenSegmentDisplay scoreDisplay;
 
     // Hitboxes
-    private BoxHitbox goalPlayerHitbox;
-    private BoxHitbox goalAIHitbox;
+    private final BoxHitbox goalPlayerHitbox;
+    private final BoxHitbox goalAIHitbox;
 
     // Score
     public int playerScore = 0;
@@ -43,21 +43,14 @@ public class GameScene extends Scene {
     private enum PlayerType { PLAYER, AI }
 
     // Positionen
-    double playerPosZ;
-    double cameraPosZ;
+    private final double boxDepth = 1.5;
+    private final double playerPosZ = -boxDepth + 0.2;
+    double cameraPosZ = -boxDepth - 1;
     private Vektor3 mousePos = new Vektor3(0,0,playerPosZ); // Aktuelle Mausposition
 
     public GameScene(GameWindow window) {
         super(window);
-    }
-
-    @Override
-    protected void initScene() {
         setCursor(MouseSettings.getInvisibleCursor());
-
-        double boxDepth = 1.5;
-        cameraPosZ = -boxDepth - 1; // -boxDepth - 1
-        playerPosZ = -boxDepth + 0.2; // -boxDepth + 0.2
 
         // Renderer initialisieren
         renderer = new Renderer(getWidth(), getHeight());
@@ -68,13 +61,13 @@ public class GameScene extends Scene {
         box = new Box(boxDepth);
         ball = new Ball();
 
-        // Score Display
+        // Score Display initialisieren
         scoreDisplay = new SevenSegmentDisplay();
         scoreDisplay.getTransform().scale = new Vektor3(0.5, 0.5, 0.5);
         scoreDisplay.getTransform().position = new Vektor3(box.getSize().x - 0.1, 0, -0.5);
         scoreDisplay.getTransform().rotation = new Vektor3(0, Math.toRadians(90), 0);
 
-        // Hitboxen für Tore
+        // Hitboxes für Tore
         Vektor3 boxSize = box.getSize();
         Vektor3 hitboxSize = new Vektor3(boxSize.x * 2, boxSize.y * 2, 0);
         goalPlayerHitbox = new BoxHitbox(new Vektor3(0, 0, -boxDepth), hitboxSize);

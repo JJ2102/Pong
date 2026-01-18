@@ -1,6 +1,5 @@
 package scenes;
 
-import enums.Difficulty;
 import enums.EnumScenes;
 import utility.Button;
 
@@ -12,9 +11,9 @@ public class MenuScene extends Scene {
 
     public MenuScene(GameWindow window) {
         super(window);
+        initScene();
     }
 
-    @Override
     protected void initScene() {
         setLayout(new GridBagLayout()); // Zentrierte Inhalte
 

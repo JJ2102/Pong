@@ -18,11 +18,9 @@ public abstract class Scene extends JPanel implements KeyListener, MouseMotionLi
         setFocusable(true);
         addKeyListener(this);
         addMouseMotionListener(this);
-        initScene();
     }
 
     // Lebenszyklus
-    protected abstract void initScene();
     protected abstract void update();
 
     @Override
