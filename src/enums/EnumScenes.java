@@ -2,5 +2,6 @@ package enums;
 
 public enum EnumScenes {
     MENU,
-    GAME
+    GAME,
+    SETTINGS
 }

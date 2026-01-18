@@ -24,10 +24,6 @@ public class PauseOverlay extends Overlay {
         addButton(menuBtn);
         addButton(quitBtn);
 
-        positionComponents(titleLabel);
-    }
-
-    private void initButtons() {
-
+        positionComponents();
     }
 }

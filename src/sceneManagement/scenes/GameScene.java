@@ -184,6 +184,10 @@ public class GameScene extends Scene {
         this.gameDifficulty = difficulty;
     }
 
+    public boolean isRunning() {
+        return timer != null && timer.isRunning();
+    }
+
     // ===== Debug Methoden =====
     private void calculateFPS() {
         long currentTime = System.currentTimeMillis();

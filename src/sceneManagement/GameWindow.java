@@ -6,7 +6,6 @@ import sceneManagement.overlays.DifficultyOverlay;
 import sceneManagement.overlays.PauseOverlay;
 import sceneManagement.scenes.GameScene;
 import sceneManagement.scenes.MenuScene;
-import sceneManagement.scenes.SceneManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -85,8 +84,10 @@ public class GameWindow extends JFrame {
     }
 
     public void returnToMenu() {
-        gameScene.stopScene();
-        gameScene.reset();
+        if (gameScene.isRunning()) {
+            gameScene.stopScene();
+            gameScene.reset();
+        }
         setCurrentScene(EnumScenes.MENU);
     }
 

@@ -4,54 +4,29 @@ import enums.EnumScenes;
 import sceneManagement.GameWindow;
 import utility.Button;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 
-public class MenuScene extends Scene {
+public class MenuScene extends ButtonScene {
 
     public MenuScene(GameWindow window) {
-        super(window);
-        initScene();
-    }
+        super(window, "Pong 3D");
 
-    protected void initScene() {
-        setLayout(new GridBagLayout()); // Zentrierte Inhalte
-
-        // Titel-Label
-        JLabel title = new JLabel("Pong 3D");
-        title.setFont(new Font("Arial", Font.BOLD, 72));
-        title.setForeground(Color.BLACK);
-
-        // Start Buttons
+        // Buttons
         Button startButton = new Button("Start Game");
-        startButton.addActionListener(_ -> window.toggleDifficultyOverlay());
-
-        // Exit Button
+        Button settingsButton = new Button("Settings");
         Button exitButton = new Button("Exit");
+
+        // Aktionen
+        startButton.addActionListener(_ -> window.toggleDifficultyOverlay());
+        settingsButton.addActionListener(_ -> window.setCurrentScene(EnumScenes.SETTINGS));
         exitButton.addActionListener(_ -> System.exit(0));
 
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.anchor = GridBagConstraints.CENTER;
-        gbc.insets = new Insets(20, 0, 20, 0);
+        addComponent(startButton);
+        addComponent(settingsButton);
+        addComponent(exitButton);
 
-        gbc.gridy = 0;
-        add(title, gbc);
-
-        gbc.gridy = 1;
-        add(startButton, gbc);
-
-        gbc.gridy = 2;
-        add(exitButton, gbc);
-    }
-
-    @Override
-    protected void update() {}
-
-    @Override
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
+        positionComponents();
     }
 
     @Override

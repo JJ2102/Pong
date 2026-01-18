@@ -20,7 +20,6 @@ public class DifficultyOverlay extends Overlay {
         easyBtn.addActionListener(_ -> startGame(Difficulty.EASY));
         mediumBtn.addActionListener(_ -> startGame(Difficulty.MEDIUM));
         hardBtn.addActionListener(_ -> startGame(Difficulty.HARD));
-
         cancelBtn.addActionListener(_ -> window.toggleDifficultyOverlay());
 
         addButton(easyBtn);
@@ -28,7 +27,7 @@ public class DifficultyOverlay extends Overlay {
         addButton(hardBtn);
         addButton(cancelBtn);
 
-        positionComponents(titleLabel);
+        positionComponents();
     }
 
     private void startGame(Difficulty difficulty) {
