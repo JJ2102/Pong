@@ -32,7 +32,7 @@ public class SoundManager {
         if (clip == null) return;
         try {
             FloatControl gain = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-            float vol = settings.isMuted() ? 0f : (isMusic ? settings.getMusicVolume() : settings.getEffectsVolume());
+            float vol = isMusic ? settings.getMusicVolume() : settings.getEffectsVolume();
             if (vol <= 0f) { // Stumm
                 gain.setValue(gain.getMinimum());
             } else { // volume in dB umrechnen
@@ -100,7 +100,7 @@ public class SoundManager {
         }
     }
 
-    private void applyVolumes() {
+    public void applyVolumes() {
         for (Clip clip : soundEffekts.values()) {
             setVolume(clip, false);
         }
@@ -118,10 +118,6 @@ public class SoundManager {
     public void setMusicVolume(float v) {
         settings.setMusicVolume(v);
         applyVolumes();
-    }
-
-    public void setMuted(boolean muted) {
-        settings.setMuted(muted);
     }
 
     public SoundSettings getSoundSettings() {

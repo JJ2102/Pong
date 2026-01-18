@@ -3,7 +3,6 @@ package Sound;
 public class SoundSettings {
     private float effectsVolume = 1.0f; // Lautstärke für Soundeffekte (0.0 bis 1.0)
     private float musicVolume = 0.1f;   // Lautstärke für Hintergrundmusik (0.0 bis 1.0)
-    private boolean muted = false;    // Stummschaltung
 
     // Effects Volume
     public float getEffectsVolume() {
@@ -19,14 +18,6 @@ public class SoundSettings {
     }
     public void setMusicVolume(float musicVolume) {
         this.musicVolume = clamp(musicVolume);
-    }
-
-    // Muted
-    public boolean isMuted() {
-        return muted;
-    }
-    public void setMuted(boolean muted) {
-        this.muted = muted;
     }
 
     // Hilfsmethode zum Begrenzen der Lautstärke auf den Bereich [0.0, 1.0]
