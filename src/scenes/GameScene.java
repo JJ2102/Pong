@@ -1,7 +1,5 @@
 package scenes;
 
-import Sound.SoundManager;
-import Sound.SoundSettings;
 import enums.Difficulty;
 import hitboxes.BoxHitbox;
 import math.Vektor3;
@@ -19,15 +17,9 @@ public class GameScene extends Scene {
     // Difficulty
     Difficulty gameDifficulty = Difficulty.MEDIUM;
 
-    // Debug
-    public static boolean DEBUG_MODE = false;
-
     // FPS
     private long lastFrameTime = System.currentTimeMillis();
     private int fps = 0;
-
-    // Sound
-    private SoundManager soundManager;
 
     // Renderer
     private Renderer renderer;
@@ -62,16 +54,6 @@ public class GameScene extends Scene {
     @Override
     protected void initScene() {
         setCursor(MouseSettings.getInvisibleCursor());
-
-        soundManager = new SoundManager();
-
-        // Soundeffekte laden
-        soundManager.loadSoundEffekt("pong", "res/sounds/pong.wav");
-        soundManager.loadSoundEffekt("score", "res/sounds/score.wav");
-
-        // Hintergrundmusik laden und abspielen
-        soundManager.loadBackgroundMusik("bg1", "res/musik/BgSong1.wav");
-        soundManager.playBackgroundMusik("bg1");
 
         double boxDepth = 1.5;
         cameraPosZ = -boxDepth - 1; // -boxDepth - 1
@@ -118,7 +100,7 @@ public class GameScene extends Scene {
         BoxHitbox[] paddleHitboxes = new BoxHitbox[]{player.getHitbox(), aiPlayer.getHitbox()};
         // Ball bewegen
         if (ball.paddleHit(paddleHitboxes)) { // ToDo: seitliche Überschneidung führt zu glitch fixen
-            soundManager.playSoundEffekt("pong");
+            window.getSoundManager().playSoundEffekt("pong");
         }
         ball.move();
 
@@ -141,7 +123,7 @@ public class GameScene extends Scene {
             playerScore++;
         }
         scoreDisplay.setScore(aiScore, playerScore);
-        soundManager.playSoundEffekt("score");
+        window.getSoundManager().playSoundEffekt("score");
         ball.reset();
     }
 
@@ -163,7 +145,7 @@ public class GameScene extends Scene {
         renderer.renderEntity(g2d, ball, camera);
         renderer.renderEntity(g2d, player, camera);
 
-        if (DEBUG_MODE) {
+        if (window.isDebug()) {
             // Debug: Ball Hitbox zeichnen
             renderer.renderBoxHitbox(g2d, ball.getHitbox(), camera, Color.YELLOW);
             renderer.renderBoxHitbox(g2d, aiPlayer.getHitbox(), camera, Color.YELLOW);
@@ -199,7 +181,7 @@ public class GameScene extends Scene {
             window.togglePauseOverlay();
         }
         if (e.getKeyCode() == KeyEvent.VK_F3) {
-            DEBUG_MODE = !DEBUG_MODE;
+            window.toggleDebug();
         }
     }
 

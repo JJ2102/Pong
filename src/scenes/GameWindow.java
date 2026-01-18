@@ -1,5 +1,6 @@
 package scenes;
 
+import Sound.SoundManager;
 import enums.EnumScenes;
 import scenes.overlays.DifficultyOverlay;
 import scenes.overlays.PauseOverlay;
@@ -10,7 +11,12 @@ import java.awt.*;
 public class GameWindow extends JFrame {
     private EnumScenes currentScene;
     private final Dimension SIZE;
+
+    private boolean DEBUG = false;
+
+    // Manager
     private final SceneManager sceneManager;
+    private final SoundManager soundManager;
 
     // Overlays
     private PauseOverlay pauseOverlay;
@@ -24,11 +30,13 @@ public class GameWindow extends JFrame {
         super("Pong 3D"); // Fenstertitel
         SIZE = size; // Fenstergröße speichern
 
-        // SceneManager mit LayeredPane initialisieren
+        // Manager initialisieren
         sceneManager = new SceneManager(SIZE);
         this.setContentPane(sceneManager.getLayeredPane());
 
-        initScenes(); // Szenen initialisieren
+        soundManager = new SoundManager();
+
+        initManagers(); // Szenen initialisieren
         setDefaultWindowOptions();
         sceneManager.setScene(currentScene); // Startszene anzeigen
         pack();
@@ -36,7 +44,8 @@ public class GameWindow extends JFrame {
         setVisible(true);
     }
 
-    private void initScenes() {
+    private void initManagers() {
+        // ===== sceneManager =====
         // Scenes Erstellen und registrieren
         menuScene = new MenuScene(this);
         gameScene = new GameScene(this);
@@ -49,6 +58,15 @@ public class GameWindow extends JFrame {
         difficultyOverlay = new DifficultyOverlay(this);
 
         currentScene = EnumScenes.MENU; // Standard-Szene festlegen
+
+        // ===== soundManager =====
+        // Soundeffekte laden
+        soundManager.loadSoundEffekt("pong", "res/sounds/pong.wav");
+        soundManager.loadSoundEffekt("score", "res/sounds/score.wav");
+
+        // Hintergrundmusik laden und abspielen
+        soundManager.loadBackgroundMusik("bg1", "res/musik/BgSong1.wav");
+        soundManager.playBackgroundMusik("bg1");
     }
 
     private void setDefaultWindowOptions() {
@@ -108,5 +126,17 @@ public class GameWindow extends JFrame {
 
     public GameScene getGameScene() {
         return gameScene;
+    }
+
+    public SoundManager getSoundManager() {
+        return soundManager;
+    }
+
+    public boolean isDebug() {
+        return DEBUG;
+    }
+
+    public void toggleDebug() {
+        this.DEBUG = !this.DEBUG;
     }
 }
