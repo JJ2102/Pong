@@ -13,19 +13,17 @@ public class InfoOverlay extends Overlay {
         JLabel controlsLabel = new JLabel( //TODO: Update controls to correct ones
                 "<html>" +
                         "<div style='text-align: center;'>" +
-                            "Use Arrow Keys to Move" +
-                            "<br>Press 'P' to Pause" +
-                            "<br>Press 'Esc' to Exit" +
+                            "Use Mouse to move the paddle.<br>" +
+                            "Press 'ESC' to pause the game.<br>" +
                         "</div>" +
                     "</html>");
         controlsLabel.setFont(controlsLabel.getFont().deriveFont(24f));
         controlsLabel.setForeground(java.awt.Color.WHITE);
+        addComponent(controlsLabel);
 
         Button cancelBtn = new Button("Close");
         cancelBtn.addActionListener(_ -> window.toggleOverlay(EnumOverlays.INFO));
         addComponent(cancelBtn);
-
-        addComponent(controlsLabel);
 
         positionComponents();
     }

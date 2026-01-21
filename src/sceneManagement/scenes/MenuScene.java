@@ -15,7 +15,7 @@ public class MenuScene extends ButtonScene {
         // Buttons
         Button startButton = new Button("Start Game");
         Button settingsButton = new Button("Settings");
-        Button infoButton = new Button("Info");
+        Button infoButton = new Button("Information");
         Button exitButton = new Button("Exit");
 
         // Aktionen
@@ -25,8 +25,8 @@ public class MenuScene extends ButtonScene {
         exitButton.addActionListener(_ -> System.exit(0));
 
         addComponent(startButton);
-        addComponent(infoButton);
         addComponent(settingsButton);
+        addComponent(infoButton);
         addComponent(exitButton);
 
         positionComponents();

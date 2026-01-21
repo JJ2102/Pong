@@ -20,6 +20,11 @@ public abstract class Scene extends JPanel implements KeyListener, MouseMotionLi
         setFocusable(true);
         addKeyListener(this);
         addMouseMotionListener(this);
+
+        timer = new Timer(20, _ -> {
+            update();
+            repaint();
+        });
     }
 
     // Lebenszyklus
@@ -31,12 +36,6 @@ public abstract class Scene extends JPanel implements KeyListener, MouseMotionLi
     }
 
     public void startScene() {
-        if (timer == null) {
-            timer = new Timer(20, _ -> {
-                update();
-                repaint();
-            });
-        }
         timer.start();
     }
 

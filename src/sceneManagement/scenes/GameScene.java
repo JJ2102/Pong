@@ -9,6 +9,7 @@ import objekts.SevenSegmentDisplay;
 import rendering.Camera;
 import rendering.Renderer;
 import sceneManagement.GameWindow;
+import utility.Countdown;
 import utility.MouseSettings;
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -43,6 +44,11 @@ public class GameScene extends Scene {
     public int aiScore = 0;
     private enum PlayerType { PLAYER, AI }
 
+    // Scoring
+    private final Countdown countdown;
+    private enum  GameState { PLAYING, COUNTING_DOWN }
+    private GameState gameState = GameState.COUNTING_DOWN;
+
     // Positionen
     private final double boxDepth = 1.5;
     private final double playerPosZ = -boxDepth + 0.2;
@@ -68,6 +74,16 @@ public class GameScene extends Scene {
         scoreDisplay.getTransform().position = new Vektor3(box.getSize().x - 0.1, 0, -0.5);
         scoreDisplay.getTransform().rotation = new Vektor3(0, Math.toRadians(90), 0);
 
+        // 3 Sekunden Countdown erstellen
+        countdown = new Countdown(3);
+        countdown.addTickListener(e -> repaint());
+        // Nach dem Countdown Spiel starten
+        countdown.addTickListener(e -> {
+            if ("finished".equals(e.getActionCommand())) {
+                gameState = GameState.PLAYING;
+            }
+        });
+
         // Hitboxes für Tore
         Vektor3 boxSize = box.getSize();
         Vektor3 hitboxSize = new Vektor3(boxSize.x * 2, boxSize.y * 2, 0);
@@ -91,6 +107,9 @@ public class GameScene extends Scene {
         Vektor3 cameraPos = camera.getPosition().lerp(targetCameraPos, 0.5);
         camera.setPosition(new Vektor3(cameraPos.x, cameraPos.y, cameraPosZ));
 
+        // Nur Spieler kann sich bewegen
+        if (gameState == GameState.COUNTING_DOWN) return;
+
         BoxHitbox[] paddleHitboxes = new BoxHitbox[]{player.getHitbox(), aiPlayer.getHitbox()};
         // Ball bewegen
         if (ball.paddleHit(paddleHitboxes)) { // ToDo: seitliche Überschneidung führt zu glitch fixen
@@ -110,7 +129,6 @@ public class GameScene extends Scene {
     }
 
     private void addPoint(PlayerType scorer) {
-        //TODO: Spielende bei 9 Punkten
         if(scorer == PlayerType.AI) {
             aiScore++;
         } else {
@@ -118,19 +136,20 @@ public class GameScene extends Scene {
         }
         scoreDisplay.setScore(aiScore, playerScore);
 
-        // Überprüfen ob jemand gewonnen hat
-        if (aiScore == 9) {
-            // TODO: Lose Screen
-            window.getSoundManager().playSoundEffekt("lose");
+        // Überprüfen, ob jemand gewonnen hat
+        if (aiScore == 9 || playerScore == 9) {
+            window.getSoundManager().playSoundEffekt(aiScore == 9 ? "lose" : "win");
             window.returnToMenu();
-        } else if (playerScore == 9) {
-            // TODO: Win Screen
-            window.getSoundManager().playSoundEffekt("win");
-            window.returnToMenu();
-        } else {
-            window.getSoundManager().playSoundEffekt("score");
-            ball.reset();
+            return;
         }
+
+        window.getSoundManager().playSoundEffekt("score");
+        ball.reset();
+        aiPlayer.reset();
+
+        // Countdown starten
+        gameState = GameState.COUNTING_DOWN;
+        countdown.restart();
     }
 
     public void reset() {
@@ -138,6 +157,7 @@ public class GameScene extends Scene {
         aiScore = 0;
         scoreDisplay.setScore(aiScore, playerScore);
         ball.reset();
+        aiPlayer.reset();
     }
 
     public void paintComponent(Graphics g) {
@@ -172,6 +192,24 @@ public class GameScene extends Scene {
         FontMetrics fm = g2d.getFontMetrics(); // Font-Metriken holen
         int textWidth = fm.stringWidth(scoreText); // Breite des Score-Strings
         g2d.drawString(scoreText, (getWidth() - textWidth) / 2, 50);
+
+        // Countdown anzeigen
+        if (gameState == GameState.COUNTING_DOWN && countdown.isRunning()) {
+            g2d.setFont(new Font("Arial", Font.BOLD, 120));
+            g2d.setColor(new Color(255, 255, 255, 200));
+            String text = String.valueOf(countdown.getCurrentSecond());
+
+            fm = g2d.getFontMetrics();
+            textWidth = fm.stringWidth(text);
+            g2d.drawString(text, (getWidth() - textWidth) / 2, getHeight() / 2);
+        }
+    }
+
+    // Start
+    @Override
+    public void startScene() {
+        countdown.start();
+        timer.start();
     }
 
     // ===== KeyListener Methoden =====
