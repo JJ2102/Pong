@@ -17,7 +17,8 @@ public class Ball extends Entity {
         Mesh boxMesh = new EllipseMesh(radius, 10, 10);
         this.setMesh(boxMesh);
 
-        hitbox = new BoxHitbox(transform.position, new Vektor3(radius*2, radius*2, radius*2));
+        double size = radius * 1.5;
+        hitbox = new BoxHitbox(transform.position, new Vektor3(size, size, size));
 
         // Speed Setzen
         speedX = randomSpeed();

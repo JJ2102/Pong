@@ -1,5 +1,6 @@
 package sceneManagement;
 
+import enums.Difficulty;
 import enums.EnumOverlays;
 import enums.EnumScenes;
 import sceneManagement.overlays.Overlay;
@@ -30,6 +31,7 @@ public class SceneManager {
         return layeredPane;
     }
 
+    // Scene Methoden
     public void registerScene(EnumScenes id, Scene panel) {
         panel.setBounds(0, 0, size.width, size.height);
         panel.setVisible(false);
@@ -38,15 +40,12 @@ public class SceneManager {
     }
 
     public void setScene(EnumScenes id) {
-        for (Map.Entry<EnumScenes, Scene> entry : scenes.entrySet()) { // alle Szenen durchgehen und nur die ausgewählte sichtbar machen
-            entry.getValue().setVisible(entry.getKey() == id);
-        }
+        updateVisibility(scenes, id);
         Scene active = scenes.get(id);
         if (active != null) {
             active.requestFocusInWindow();
         }
-        layeredPane.revalidate();
-        layeredPane.repaint();
+        refreshLayout();
     }
 
     // Overlay Methoden
@@ -58,16 +57,13 @@ public class SceneManager {
     }
 
     public void showOverlay(EnumOverlays id) {
-        for (Map.Entry<EnumOverlays, Overlay> entry : overlays.entrySet()) { // alle Overlays durchgehen und nur die ausgewählte sichtbar machen
-            entry.getValue().setVisible(entry.getKey() == id);
-        }
+        updateVisibility(overlays, id);
         Overlay overlay = overlays.get(id);
         if (overlay != null && !activeOverlays.contains(id)) {
             overlay.requestFocusInWindow();
             activeOverlays.add(id);
         }
-        layeredPane.revalidate();
-        layeredPane.repaint();
+        refreshLayout();
     }
 
     public void hideOverlay(EnumOverlays id) {
@@ -75,21 +71,34 @@ public class SceneManager {
         if (overlay != null && activeOverlays.contains(id)) {
             overlay.setVisible(false);
             activeOverlays.remove(id);
-
-            // focus zurück auf die aktive Szene
-            for (JPanel scene : scenes.values()) {
-                if (scene.isVisible()) {
-                    scene.requestFocusInWindow();
-                    break;
-                }
-            }
-
-            layeredPane.revalidate();
-            layeredPane.repaint();
+            focusActiveScene();
+            refreshLayout();
         }
     }
 
     public boolean isOverlayVisible(EnumOverlays id) {
         return activeOverlays.contains(id);
     }
+
+    // Helpers
+    public <K, V extends JComponent> void updateVisibility(Map<K, V> components, K targetKey) {
+        for (Map.Entry<K, V> entry : components.entrySet()) {
+            entry.getValue().setVisible(entry.getKey().equals(targetKey));
+        }
+    }
+
+    private void refreshLayout() {
+        layeredPane.revalidate();
+        layeredPane.repaint();
+    }
+
+    private void focusActiveScene() {
+        for (Scene scene : scenes.values()) {
+            if (scene.isVisible()) {
+                scene.requestFocusInWindow();
+                return;
+            }
+        }
+    }
+
 }
