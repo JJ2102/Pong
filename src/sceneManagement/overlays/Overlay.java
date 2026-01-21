@@ -29,8 +29,8 @@ public class Overlay extends JPanel implements KeyListener {
         components.add(titleLabel);
     }
 
-    protected void addButton(Button button) {
-        components.add(button);
+    protected void addComponent(Component component) {
+        components.add(component);
     }
 
     protected void positionComponents() {

@@ -20,9 +20,9 @@ public class PauseOverlay extends Overlay {
         });
         quitBtn.addActionListener(_ -> System.exit(0));
 
-        addButton(resumeBtn);
-        addButton(menuBtn);
-        addButton(quitBtn);
+        addComponent(resumeBtn);
+        addComponent(menuBtn);
+        addComponent(quitBtn);
 
         positionComponents();
     }

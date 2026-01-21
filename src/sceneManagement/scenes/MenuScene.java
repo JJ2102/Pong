@@ -15,10 +15,12 @@ public class MenuScene extends ButtonScene {
         // Buttons
         Button startButton = new Button("Start Game");
         Button settingsButton = new Button("Settings");
+        Button infoButton = new Button("Info");
         Button exitButton = new Button("Exit");
 
         // Aktionen
         startButton.addActionListener(_ -> window.toggleDifficultyOverlay());
+
         settingsButton.addActionListener(_ -> window.setCurrentScene(EnumScenes.SETTINGS));
         exitButton.addActionListener(_ -> System.exit(0));
 

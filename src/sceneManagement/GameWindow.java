@@ -1,8 +1,11 @@
 package sceneManagement;
 
 import Sound.SoundManager;
+import enums.EnumOverlays;
 import enums.EnumScenes;
 import sceneManagement.overlays.DifficultyOverlay;
+import sceneManagement.overlays.InfoOverlay;
+import sceneManagement.overlays.Overlay;
 import sceneManagement.overlays.PauseOverlay;
 import sceneManagement.scenes.GameScene;
 import sceneManagement.scenes.MenuScene;
@@ -10,6 +13,7 @@ import sceneManagement.scenes.SettingsScene;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class GameWindow extends JFrame {
     private EnumScenes currentScene;
@@ -24,6 +28,7 @@ public class GameWindow extends JFrame {
     // Overlays
     private PauseOverlay pauseOverlay;
     private DifficultyOverlay difficultyOverlay;
+    private InfoOverlay infoOverlay;
 
     // Scenen
     private MenuScene menuScene;
@@ -62,6 +67,11 @@ public class GameWindow extends JFrame {
         // Overlay erstellen (wird über SceneManager angezeigt/verdeckt)
         pauseOverlay = new PauseOverlay(this);
         difficultyOverlay = new DifficultyOverlay(this);
+        infoOverlay = new InfoOverlay(this);
+
+        sceneManager.registerOverlay(EnumOverlays.PAUSE, pauseOverlay);
+        sceneManager.registerOverlay(EnumOverlays.DIFFICULTY, difficultyOverlay);
+        sceneManager.registerOverlay(EnumOverlays.INFO, infoOverlay);
 
         currentScene = EnumScenes.MENU; // Standard-Szene festlegen
 
@@ -99,13 +109,13 @@ public class GameWindow extends JFrame {
 
     // Overlay Methoden
     public void togglePauseOverlay() {
-        if (!sceneManager.isOverlayVisible(pauseOverlay)) {
+        if (!sceneManager.isOverlayVisible(EnumOverlays.PAUSE)) {
             if (currentScene == EnumScenes.GAME && gameScene != null) { // Spielszene pausieren
                 gameScene.stopScene();
             }
-            sceneManager.showOverlay(pauseOverlay);
+            sceneManager.showOverlay(EnumOverlays.PAUSE);
         } else {
-            sceneManager.hideOverlay(pauseOverlay);
+            sceneManager.hideOverlay(EnumOverlays.PAUSE);
             if (currentScene == EnumScenes.GAME && gameScene != null) { // Spielszene fortsetzen
                 gameScene.startScene();
             }
@@ -113,10 +123,10 @@ public class GameWindow extends JFrame {
     }
 
     public void toggleDifficultyOverlay() {
-        if (!sceneManager.isOverlayVisible(difficultyOverlay)) {
-            sceneManager.showOverlay(difficultyOverlay);
+        if (!sceneManager.isOverlayVisible(EnumOverlays.DIFFICULTY)) {
+            sceneManager.showOverlay(EnumOverlays.DIFFICULTY);
         } else {
-            sceneManager.hideOverlay(difficultyOverlay);
+            sceneManager.hideOverlay(EnumOverlays.DIFFICULTY);
         }
     }
 

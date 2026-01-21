@@ -22,10 +22,10 @@ public class DifficultyOverlay extends Overlay {
         hardBtn.addActionListener(_ -> startGame(Difficulty.HARD));
         cancelBtn.addActionListener(_ -> window.toggleDifficultyOverlay());
 
-        addButton(easyBtn);
-        addButton(mediumBtn);
-        addButton(hardBtn);
-        addButton(cancelBtn);
+        addComponent(easyBtn);
+        addComponent(mediumBtn);
+        addComponent(hardBtn);
+        addComponent(cancelBtn);
 
         positionComponents();
     }

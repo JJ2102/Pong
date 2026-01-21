@@ -1,6 +1,8 @@
 package sceneManagement;
 
+import enums.EnumOverlays;
 import enums.EnumScenes;
+import sceneManagement.overlays.Overlay;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,7 +15,8 @@ public class SceneManager {
     private final JLayeredPane layeredPane;
     private final Dimension size;
     private final Map<EnumScenes, JPanel> scenes = new EnumMap<>(EnumScenes.class);
-    private final List<JComponent> activeOverlays = new ArrayList<>();
+    private final List<EnumOverlays> activeOverlays = new ArrayList<>();
+    private final Map<EnumOverlays, Overlay> overlays = new EnumMap<>(EnumOverlays.class);
 
     public SceneManager(Dimension size) {
         this.size = size;
@@ -34,7 +37,7 @@ public class SceneManager {
     }
 
     public void setScene(EnumScenes id) {
-        for (Map.Entry<EnumScenes, JPanel> entry : scenes.entrySet()) {
+        for (Map.Entry<EnumScenes, JPanel> entry : scenes.entrySet()) { // alle Szenen durchgehen und nur die ausgewählte sichtbar machen
             entry.getValue().setVisible(entry.getKey() == id);
         }
         JPanel active = scenes.get(id);
@@ -45,25 +48,32 @@ public class SceneManager {
         layeredPane.repaint();
     }
 
-    public void showOverlay(JComponent overlay) {
-        if (!activeOverlays.contains(overlay)) {
-            overlay.setBounds(0, 0, size.width, size.height);
-            layeredPane.add(overlay, JLayeredPane.PALETTE_LAYER);
-            overlay.setVisible(true);
-            activeOverlays.add(overlay);
-            overlay.requestFocusInWindow();
-            layeredPane.revalidate();
-            layeredPane.repaint();
-        }
+    public void registerOverlay(EnumOverlays id, Overlay overlay) {
+        overlay.setBounds(0, 0, size.width, size.height);
+        overlay.setVisible(false);
+        overlays.put(id, overlay);
+        layeredPane.add(overlay, JLayeredPane.PALETTE_LAYER);
     }
 
-    public void hideOverlay(JComponent overlay) {
-        if (activeOverlays.contains(overlay)) {
+    public void showOverlay(EnumOverlays id) {
+        for (Map.Entry<EnumOverlays, Overlay> entry : overlays.entrySet()) { // alle Overlays durchgehen und nur die ausgewählte sichtbar machen
+            entry.getValue().setVisible(entry.getKey() == id);
+        }
+        Overlay overlay = overlays.get(id);
+        if (overlay != null && !activeOverlays.contains(id)) {
+            overlay.requestFocusInWindow();
+            activeOverlays.add(id);
+        }
+        layeredPane.revalidate();
+        layeredPane.repaint();
+    }
+
+    public void hideOverlay(EnumOverlays id) {
+        Overlay overlay = overlays.get(id);
+        if (overlay != null && activeOverlays.contains(id)) {
             overlay.setVisible(false);
-            layeredPane.remove(overlay);
-            activeOverlays.remove(overlay);
-            layeredPane.revalidate();
-            layeredPane.repaint();
+            activeOverlays.remove(id);
+
             // focus zurück auf die aktive Szene
             for (JPanel scene : scenes.values()) {
                 if (scene.isVisible()) {
@@ -71,10 +81,13 @@ public class SceneManager {
                     break;
                 }
             }
+
+            layeredPane.revalidate();
+            layeredPane.repaint();
         }
     }
 
-    public boolean isOverlayVisible(JComponent overlay) {
-        return activeOverlays.contains(overlay);
+    public boolean isOverlayVisible(EnumOverlays id) {
+        return activeOverlays.contains(id);
     }
 }
