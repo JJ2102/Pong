@@ -11,6 +11,7 @@ public class MenuScene extends ButtonScene {
 
     public MenuScene(GameWindow window) {
         super(window, "Pong 3D");
+        // TODO: COLOR-UPDATE
 
         // Buttons
         Button startButton = new Button("Start Game");

@@ -165,7 +165,7 @@ public class Renderer {
                 }
                 // Nur zeichnen, wenn mindestens ein Dreieck möglich ist
                 if (poly.npoints >= 3) {
-                    g.setColor(entity.getColor());
+                    g.setColor(entity.getFaceColor());
                     g.fillPolygon(poly);
                     g.setColor(Color.BLACK);
                 }
@@ -195,10 +195,11 @@ public class Renderer {
                 // Zeichnen der Kante
                 if (v1 != null && v2 != null) {
                     if (renderFaces) {
-                        g.setColor(Color.BLACK);
+                        g.setColor(entity.getEdgeColor());
                     } else {
-                        g.setColor(entity.getColor());
+                        g.setColor(entity.getFaceColor());
                     }
+                    g.setStroke(new BasicStroke(1.0f));
                     g.drawLine(v1.x, v1.y, v2.x, v2.y);
                 }
             }

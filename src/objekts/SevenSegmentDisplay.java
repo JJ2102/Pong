@@ -9,7 +9,7 @@ public class SevenSegmentDisplay extends Entity {
     private int right = 0;
 
     public SevenSegmentDisplay() {
-        super(Color.BLACK);
+        super(Color.GREEN, Color.GREEN);
         this.setMesh(SevenSegmentMeshes.getDisplayMesh(0, 0));
     }
 

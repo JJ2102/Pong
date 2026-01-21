@@ -14,7 +14,7 @@ public class Enemy extends Panel{
     private final double posZ;
 
     public Enemy(Vektor3 position, Vektor3 boxSize) {
-        super(position, new Color(255, 0, 0, 100));
+        super(position, Color.RED, new Color(255, 0, 255));
 
         this.posZ = position.z;
 

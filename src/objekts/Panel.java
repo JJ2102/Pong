@@ -11,8 +11,8 @@ public class Panel extends Entity {
     protected final double xSize = 0.3;
     protected final double ySize = 0.3;
 
-    public Panel(Vektor3 position, Color color) {
-        super(color);
+    public Panel(Vektor3 position, Color colorFace, Color colorEdge) {
+        super(colorFace, colorEdge);
         Mesh panalMesh = new RectangleMesh(xSize, ySize, 0);
         this.setMesh(panalMesh);
         transform.position = position;

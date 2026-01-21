@@ -13,7 +13,7 @@ public class Ball extends Entity {
     private final double radius = 0.2;
 
     public Ball() {
-        super(Color.GREEN);
+        super(Color.YELLOW, Color.ORANGE);
         Mesh boxMesh = new EllipseMesh(radius, 10, 10);
         this.setMesh(boxMesh);
 

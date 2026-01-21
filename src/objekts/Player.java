@@ -7,7 +7,7 @@ import java.awt.*;
 
 public class Player extends Panel {
     public Player(Vektor3 position) {
-        super(position, new Color(150, 0, 150, 99));
+        super(position, new Color(0, 0, 255, 100), new Color(0, 255, 255));
     }
 
     public void moveTo(Vektor3 position) {

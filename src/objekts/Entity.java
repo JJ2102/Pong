@@ -9,18 +9,15 @@ import java.awt.*;
 public class Entity {
     protected Mesh mesh;
     protected Transform transform;
-    protected Color color;
+    protected Color colorFace;
+    protected  Color colorEdge;
     protected BoxHitbox hitbox;
 
-    public Entity(Mesh mesh) {
-        this.mesh = mesh;
-        this.transform = new Transform();
-    }
-
-    public Entity(Color color) {
+    public Entity(Color colorFace, Color colorEdge) {
         this.mesh = null;
         this.transform = new Transform();
-        this.color = color;
+        this.colorFace = colorFace;
+        this.colorEdge = colorEdge;
     }
 
     // Getter und Setter
@@ -36,9 +33,11 @@ public class Entity {
         this.mesh = mesh;
     }
 
-    public Color getColor() {
-        return color;
+    public Color getFaceColor() {
+        return colorFace;
     }
+
+    public  Color getEdgeColor() {return colorEdge;}
 
     public BoxHitbox getHitbox() {
         return hitbox;
