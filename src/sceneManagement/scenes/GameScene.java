@@ -208,7 +208,7 @@ public class GameScene extends Scene {
     // Laufzeit
     @Override
     public void startScene() {
-        countdown.start();
+        countdown.restart();
         timer.start();
     }
 
@@ -216,10 +216,13 @@ public class GameScene extends Scene {
         if (timer.isRunning()) {
             timer.stop();
         }
+        if (countdown.isRunning()) {
+            countdown.stop();
+        }
     }
 
     public void continueGame() {
-        stopScene();
+        startScene();
     }
 
     public boolean isRunning() {
