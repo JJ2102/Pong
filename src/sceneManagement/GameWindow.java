@@ -107,17 +107,12 @@ public class GameWindow extends JFrame {
 
     // Overlay Methoden
     public void togglePauseOverlay() {
-        if (!sceneManager.isOverlayVisible(EnumOverlays.PAUSE)) {
-            if (currentScene == EnumScenes.GAME && gameScene != null) { // Spielszene pausieren
-                gameScene.stopScene();
-            }
-            sceneManager.showOverlay(EnumOverlays.PAUSE);
+        if (gameScene.isRunning()) {
+            gameScene.pauseGame();
         } else {
-            sceneManager.hideOverlay(EnumOverlays.PAUSE);
-            if (currentScene == EnumScenes.GAME && gameScene != null) { // Spielszene fortsetzen
-                gameScene.startScene();
-            }
+            gameScene.continueGame();
         }
+        toggleOverlay(EnumOverlays.PAUSE);
     }
 
     public void toggleOverlay(EnumOverlays overlayID) {

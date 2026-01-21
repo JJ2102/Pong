@@ -205,11 +205,25 @@ public class GameScene extends Scene {
         }
     }
 
-    // Start
+    // Laufzeit
     @Override
     public void startScene() {
         countdown.start();
         timer.start();
+    }
+
+    public void pauseGame() {
+        if (timer.isRunning()) {
+            timer.stop();
+        }
+    }
+
+    public void continueGame() {
+        stopScene();
+    }
+
+    public boolean isRunning() {
+        return timer.isRunning();
     }
 
     // ===== KeyListener Methoden =====
@@ -232,10 +246,6 @@ public class GameScene extends Scene {
     // ===== Getter und Setter =====
     public void setDifficulty(Difficulty difficulty) {
         this.gameDifficulty = difficulty;
-    }
-
-    public boolean isRunning() {
-        return timer != null && timer.isRunning();
     }
 
     // ===== Debug Methoden =====
