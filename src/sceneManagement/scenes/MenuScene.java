@@ -1,10 +1,10 @@
 package sceneManagement.scenes;
 
+import enums.EnumOverlays;
 import enums.EnumScenes;
 import sceneManagement.GameWindow;
 import utility.Button;
 
-import java.awt.*;
 import java.awt.event.KeyEvent;
 
 public class MenuScene extends ButtonScene {
@@ -19,12 +19,13 @@ public class MenuScene extends ButtonScene {
         Button exitButton = new Button("Exit");
 
         // Aktionen
-        startButton.addActionListener(_ -> window.toggleDifficultyOverlay());
-
+        startButton.addActionListener(_ -> window.toggleOverlay(EnumOverlays.DIFFICULTY));
+        infoButton.addActionListener(_ -> window.toggleOverlay(EnumOverlays.INFO));
         settingsButton.addActionListener(_ -> window.setCurrentScene(EnumScenes.SETTINGS));
         exitButton.addActionListener(_ -> System.exit(0));
 
         addComponent(startButton);
+        addComponent(infoButton);
         addComponent(settingsButton);
         addComponent(exitButton);
 

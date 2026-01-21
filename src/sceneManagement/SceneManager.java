@@ -3,6 +3,7 @@ package sceneManagement;
 import enums.EnumOverlays;
 import enums.EnumScenes;
 import sceneManagement.overlays.Overlay;
+import sceneManagement.scenes.Scene;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,7 +15,7 @@ import java.util.Map;
 public class SceneManager {
     private final JLayeredPane layeredPane;
     private final Dimension size;
-    private final Map<EnumScenes, JPanel> scenes = new EnumMap<>(EnumScenes.class);
+    private final Map<EnumScenes, Scene> scenes = new EnumMap<>(EnumScenes.class);
     private final List<EnumOverlays> activeOverlays = new ArrayList<>();
     private final Map<EnumOverlays, Overlay> overlays = new EnumMap<>(EnumOverlays.class);
 
@@ -29,7 +30,7 @@ public class SceneManager {
         return layeredPane;
     }
 
-    public void registerScene(EnumScenes id, JPanel panel) {
+    public void registerScene(EnumScenes id, Scene panel) {
         panel.setBounds(0, 0, size.width, size.height);
         panel.setVisible(false);
         scenes.put(id, panel);
@@ -37,10 +38,10 @@ public class SceneManager {
     }
 
     public void setScene(EnumScenes id) {
-        for (Map.Entry<EnumScenes, JPanel> entry : scenes.entrySet()) { // alle Szenen durchgehen und nur die ausgewählte sichtbar machen
+        for (Map.Entry<EnumScenes, Scene> entry : scenes.entrySet()) { // alle Szenen durchgehen und nur die ausgewählte sichtbar machen
             entry.getValue().setVisible(entry.getKey() == id);
         }
-        JPanel active = scenes.get(id);
+        Scene active = scenes.get(id);
         if (active != null) {
             active.requestFocusInWindow();
         }
@@ -48,6 +49,7 @@ public class SceneManager {
         layeredPane.repaint();
     }
 
+    // Overlay Methoden
     public void registerOverlay(EnumOverlays id, Overlay overlay) {
         overlay.setBounds(0, 0, size.width, size.height);
         overlay.setVisible(false);

@@ -5,7 +5,6 @@ import enums.EnumOverlays;
 import enums.EnumScenes;
 import sceneManagement.overlays.DifficultyOverlay;
 import sceneManagement.overlays.InfoOverlay;
-import sceneManagement.overlays.Overlay;
 import sceneManagement.overlays.PauseOverlay;
 import sceneManagement.scenes.GameScene;
 import sceneManagement.scenes.MenuScene;
@@ -13,7 +12,6 @@ import sceneManagement.scenes.SettingsScene;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 
 public class GameWindow extends JFrame {
     private EnumScenes currentScene;
@@ -122,11 +120,11 @@ public class GameWindow extends JFrame {
         }
     }
 
-    public void toggleDifficultyOverlay() {
-        if (!sceneManager.isOverlayVisible(EnumOverlays.DIFFICULTY)) {
-            sceneManager.showOverlay(EnumOverlays.DIFFICULTY);
+    public void toggleOverlay(EnumOverlays overlayID) {
+        if (!sceneManager.isOverlayVisible(overlayID)) {
+            sceneManager.showOverlay(overlayID);
         } else {
-            sceneManager.hideOverlay(EnumOverlays.DIFFICULTY);
+            sceneManager.hideOverlay(overlayID);
         }
     }
 

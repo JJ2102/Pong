@@ -1,6 +1,7 @@
 package sceneManagement.overlays;
 
 import enums.Difficulty;
+import enums.EnumOverlays;
 import sceneManagement.GameWindow;
 import utility.Button;
 
@@ -20,7 +21,7 @@ public class DifficultyOverlay extends Overlay {
         easyBtn.addActionListener(_ -> startGame(Difficulty.EASY));
         mediumBtn.addActionListener(_ -> startGame(Difficulty.MEDIUM));
         hardBtn.addActionListener(_ -> startGame(Difficulty.HARD));
-        cancelBtn.addActionListener(_ -> window.toggleDifficultyOverlay());
+        cancelBtn.addActionListener(_ -> window.toggleOverlay(EnumOverlays.DIFFICULTY));
 
         addComponent(easyBtn);
         addComponent(mediumBtn);
@@ -31,7 +32,7 @@ public class DifficultyOverlay extends Overlay {
     }
 
     private void startGame(Difficulty difficulty) {
-        window.toggleDifficultyOverlay();
+        window.toggleOverlay(EnumOverlays.DIFFICULTY);
         window.getGameScene().setDifficulty(difficulty);
         window.startGame();
     }
@@ -40,7 +41,7 @@ public class DifficultyOverlay extends Overlay {
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
             System.out.println("Difficulty selection canceled.");
-            window.toggleDifficultyOverlay();
+            window.toggleOverlay(EnumOverlays.DIFFICULTY);
         }
     }
 }
