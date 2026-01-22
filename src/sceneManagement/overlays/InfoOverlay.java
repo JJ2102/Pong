@@ -3,10 +3,9 @@ package sceneManagement.overlays;
 import enums.EnumOverlays;
 import sceneManagement.GameWindow;
 import utility.Button;
-import utility.Settings;
+import utility.Globals;
 
 import javax.swing.*;
-import java.awt.*;
 
 public class InfoOverlay extends Overlay {
     public InfoOverlay(GameWindow window) {
@@ -20,7 +19,7 @@ public class InfoOverlay extends Overlay {
                         "</div>" +
                     "</html>");
         controlsLabel.setFont(controlsLabel.getFont().deriveFont(24f));
-        controlsLabel.setForeground(Settings.getFontColor());
+        controlsLabel.setForeground(Globals.getFontColor());
         addComponent(controlsLabel);
 
         Button cancelBtn = new Button("Close");

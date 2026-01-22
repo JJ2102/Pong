@@ -10,7 +10,7 @@ import rendering.Camera;
 import rendering.Renderer;
 import sceneManagement.GameWindow;
 import utility.Countdown;
-import utility.Settings;
+import utility.Globals;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -57,7 +57,7 @@ public class GameScene extends Scene {
 
     public GameScene(GameWindow window) {
         super(window);
-        setCursor(Settings.getInvisibleCursor());
+        setCursor(Globals.getInvisibleCursor());
 
         // Renderer initialisieren
         renderer = new Renderer(getWidth(), getHeight());

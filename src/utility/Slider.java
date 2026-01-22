@@ -1,7 +1,6 @@
 package utility;
 
 import javax.swing.*;
-import java.awt.*;
 
 public class Slider extends JSlider {
     public Slider(int min, int max, int value) {
@@ -10,6 +9,6 @@ public class Slider extends JSlider {
         setMinorTickSpacing((max - min) / 20);
         setPaintTicks(true);
         setPaintLabels(true);
-        setBackground(Settings.getBackgroundColor());
+        setBackground(Globals.getBackgroundColor());
     }
 }

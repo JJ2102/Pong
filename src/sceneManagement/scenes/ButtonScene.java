@@ -1,7 +1,7 @@
 package sceneManagement.scenes;
 
 import sceneManagement.GameWindow;
-import utility.Settings;
+import utility.Globals;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,11 +14,11 @@ public class ButtonScene extends Scene {
     public ButtonScene(GameWindow window, String title) {
         super(window);
         setLayout(new GridBagLayout()); // Zentrierte Inhalte
-        setBackground(Settings.getBackgroundColor());
+        setBackground(Globals.getBackgroundColor());
 
         titleLabel = new JLabel(title);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 72));
-        titleLabel.setForeground(Settings.getFontColor());
+        titleLabel.setForeground(Globals.getFontColor());
         components.add(titleLabel);
     }
 

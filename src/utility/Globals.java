@@ -3,18 +3,30 @@ package utility;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public class Settings {
+public class Globals {
     public static Cursor getInvisibleCursor() {
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         BufferedImage cursorImage = new BufferedImage(1, 1, BufferedImage.TRANSLUCENT);
         return toolkit.createCustomCursor(cursorImage, new Point(0, 0), "invisibleCursor");
     }
 
+    // Farbe
     public static Color getBackgroundColor() {
         return Color.BLACK;
     }
 
     public static Color getFontColor() {
         return Color.GREEN;
+    }
+
+    // Random Values
+    public static double randomSpeed(double min, double max) {
+        // zufällige Richtung: -1 oder +1
+        double sign = Math.random() < 0.5 ? -1 : 1;
+
+        // zufällige Geschwindigkeit im Bereich [min, max]
+        double magnitude = min + Math.random() * (max - min);
+
+        return sign * magnitude;
     }
 }

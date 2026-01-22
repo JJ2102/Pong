@@ -4,6 +4,7 @@ import hitboxes.BoxHitbox;
 import math.Vektor3;
 import meshes.EllipseMesh;
 import rendering.Mesh;
+import utility.Globals;
 
 import java.awt.*;
 
@@ -28,16 +29,7 @@ public class Ball extends Entity {
     }
 
     private double randomSpeed() {
-        double min = 0.03;
-        double max = 0.05;
-
-        // zufällige Richtung: -1 oder +1
-        double sign = Math.random() < 0.5 ? -1 : 1;
-
-        // zufällige Geschwindigkeit im Bereich [min, max]
-        double magnitude = min + Math.random() * (max - min);
-
-        return sign * magnitude;
+        return Globals.randomSpeed(0.03, 0.05);
     }
 
     public void reset() {
