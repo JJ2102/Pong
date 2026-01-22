@@ -6,6 +6,7 @@ import utility.InfoLabel;
 import utility.Slider;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class SettingsScene extends ButtonScene {
     public SettingsScene(GameWindow window) {

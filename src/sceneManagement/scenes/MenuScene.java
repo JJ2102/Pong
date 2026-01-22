@@ -5,6 +5,7 @@ import enums.EnumScenes;
 import sceneManagement.GameWindow;
 import utility.Button;
 
+import java.awt.*;
 import java.awt.event.KeyEvent;
 
 public class MenuScene extends ButtonScene {

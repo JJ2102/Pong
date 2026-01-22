@@ -10,7 +10,7 @@ import rendering.Camera;
 import rendering.Renderer;
 import sceneManagement.GameWindow;
 import utility.Countdown;
-import utility.MouseSettings;
+import utility.Settings;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -57,7 +57,7 @@ public class GameScene extends Scene {
 
     public GameScene(GameWindow window) {
         super(window);
-        setCursor(MouseSettings.getInvisibleCursor());
+        setCursor(Settings.getInvisibleCursor());
 
         // Renderer initialisieren
         renderer = new Renderer(getWidth(), getHeight());
@@ -187,7 +187,7 @@ public class GameScene extends Scene {
 
         // Scores zeichnen
         g2d.setFont(new Font("Arial", Font.BOLD, 36));
-        g2d.setColor(Color.WHITE);
+        g2d.setColor(Color.GREEN);
         String scoreText = playerScore + " : " + aiScore;
         FontMetrics fm = g2d.getFontMetrics(); // Font-Metriken holen
         int textWidth = fm.stringWidth(scoreText); // Breite des Score-Strings

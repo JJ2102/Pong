@@ -2,6 +2,7 @@ package sceneManagement.overlays;
 
 import sceneManagement.GameWindow;
 import utility.Button;
+import utility.Settings;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,6 +16,7 @@ public class Overlay extends JPanel implements KeyListener {
     private final ArrayList<Component> components = new ArrayList<>();
     private final int transparency;
     protected JLabel titleLabel;
+    private Color bgColor = Settings.getBackgroundColor();
 
     public Overlay(GameWindow window, String title, int transparency) {
         this.window = window;
@@ -25,7 +27,7 @@ public class Overlay extends JPanel implements KeyListener {
 
         titleLabel = new JLabel(title);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 72));
-        titleLabel.setForeground(Color.WHITE);
+        titleLabel.setForeground(Settings.getFontColor());
         components.add(titleLabel);
     }
 
@@ -50,7 +52,7 @@ public class Overlay extends JPanel implements KeyListener {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         // Halbtransparenter Hintergrund
-        g.setColor(new Color(0, 0, 0, transparency));
+        g.setColor(new Color(bgColor.getRed(), bgColor.getGreen(), bgColor.getBlue(), transparency));
         g.fillRect(0, 0, getWidth(), getHeight());
     }
 

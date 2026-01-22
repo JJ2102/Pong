@@ -9,5 +9,6 @@ public class InfoLabel extends JLabel {
     public InfoLabel(String text) {
         super(text);
         setFont(labelFont);
+        setForeground(Settings.getFontColor());
     }
 }
