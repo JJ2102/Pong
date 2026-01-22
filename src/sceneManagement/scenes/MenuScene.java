@@ -66,7 +66,7 @@ public class MenuScene extends ButtonScene {
 
         Ellipse2D.Double ball = new Ellipse2D.Double(pos.x, pos.y, radius*2, radius*2);
 
-        g2d.setColor(Color.YELLOW);
+        g2d.setColor(Color.WHITE);
         g2d.draw(ball);
         g2d.fill(ball);
     }

@@ -9,8 +9,8 @@ public class Button extends JButton {
     public Button(String text) {
         super(text);
         setFont(btnFont);
-        setBackground(Globals.getFontColor());
-        setForeground(Globals.getBackgroundColor());
+        setBackground(new Color(0, 68,68));
+        setForeground(new Color(255, 255, 255, 179));
     }
 
     public Button(String text, Color color) {
