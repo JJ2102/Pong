@@ -23,21 +23,6 @@ public class Objekt2D {
         this.pos = pos;
     }
 
-    public Direction isOut(Dimension windowSize) {
-        boolean outLeft   = pos.x <= width;
-        boolean outRight  = pos.x >= windowSize.width  - width;
-        boolean outTop    = pos.y <= height;
-        boolean outBottom = pos.y >= windowSize.height - height;
-
-        if (outLeft || outRight) {
-            return Direction.X;
-        } else if (outTop || outBottom) {
-            return Direction.Y;
-        } else  {
-            return Direction.NONE;
-        }
-    }
-
 
     public void setPos(Vektor2 pos) {
         this.pos = pos;
@@ -57,5 +42,9 @@ public class Objekt2D {
 
     public int getHeight() {
         return height;
+    }
+
+    public int getWidth() {
+        return width;
     }
 }

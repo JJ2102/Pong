@@ -21,10 +21,4 @@ public class Vektor2 {
         this.y += v.y;
         return this;
     }
-
-    public Vektor2 multiply(int faktor) {
-        this.x *= faktor;
-        this.y *= faktor;
-        return this;
-    }
 }

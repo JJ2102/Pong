@@ -2,6 +2,7 @@ package sceneManagement.scenes;
 
 import enums.EnumOverlays;
 import enums.EnumScenes;
+import math.Vektor2;
 import objekts.animation2D.Ball2D;
 import objekts.animation2D.Paddle2D;
 import sceneManagement.GameWindow;
@@ -11,16 +12,19 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 
 public class MenuScene extends ButtonScene {
-    // TODO: ADD PADDELS
+    // TODO: Refactor animation Classes
 
     private final Ball2D ball;
 
-    private Paddle2D p1;
+    private final Paddle2D p1;
+    private final Paddle2D p2;
 
     public MenuScene(GameWindow window) {
         super(window, "Pong 3D");
 
         ball = new Ball2D(window.getSIZE());
+        p1 = new Paddle2D(new Vektor2(10, (double) window.getSIZE().height / 2));
+        p2 = new Paddle2D(new Vektor2(window.getSIZE().width - 10, (double) window.getSIZE().height / 2));
 
         // Buttons
         Button startButton = new Button("Start Game");
@@ -44,7 +48,9 @@ public class MenuScene extends ButtonScene {
 
     @Override
     protected void update() {
-        ball.setPos(ball.getPos().add(ball.getVel()));
+        ball.move();
+        p1.move(ball.getPos().y);
+        p2.move(ball.getPos().y);
         switch (ball.isOut(window.getSIZE())) {
             case X -> ball.switchXDirection();
             case Y -> ball.switchYDirection();
@@ -57,6 +63,8 @@ public class MenuScene extends ButtonScene {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
 
+        p1.paintMe(g2d);
+        p2.paintMe(g2d);
         ball.paintMe(g2d);
     }
 

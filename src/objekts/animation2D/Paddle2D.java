@@ -5,8 +5,8 @@ import math.Vektor2;
 import java.awt.*;
 
 public class Paddle2D extends Objekt2D {
-    public Paddle2D(Vektor2 pos, Vektor2 vel) {
-        super(pos, 10, 30);
+    public Paddle2D(Vektor2 pos) {
+        super(pos, 5, 70);
     }
 
     public void paintMe(Graphics2D g2d) {
@@ -17,5 +17,9 @@ public class Paddle2D extends Objekt2D {
         g2d.setColor(Color.WHITE);
         g2d.draw(r);
         g2d.fill(r);
+    }
+
+    public void move(double y) {
+        pos = new Vektor2(pos.getX(), y);
     }
 }
