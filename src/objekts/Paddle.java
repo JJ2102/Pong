@@ -7,11 +7,11 @@ import rendering.Mesh;
 
 import java.awt.*;
 
-public class Panel extends Entity {
+public class Paddle extends Entity {
     protected final double xSize = 0.3;
     protected final double ySize = 0.3;
 
-    public Panel(Vektor3 position, Color colorFace, Color colorEdge) {
+    public Paddle(Vektor3 position, Color colorFace, Color colorEdge) {
         super(colorFace, colorEdge);
         Mesh panalMesh = new RectangleMesh(xSize, ySize, 0);
         this.setMesh(panalMesh);

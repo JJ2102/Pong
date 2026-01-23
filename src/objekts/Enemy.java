@@ -4,7 +4,7 @@ import math.Vektor3;
 
 import java.awt.*;
 
-public class Enemy extends Panel{
+public class Enemy extends Paddle {
     // Min und Max-Werte für die Bewegung
     private final double MIN_X;
     private final double MAX_X;
