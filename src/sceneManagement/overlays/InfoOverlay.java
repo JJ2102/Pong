@@ -18,7 +18,7 @@ public class InfoOverlay extends Overlay {
                             "Press 'ESC' to pause the game.<br>" +
                         "</div>" +
                     "</html>");
-        controlsLabel.setFont(controlsLabel.getFont().deriveFont(24f));
+        controlsLabel.setFont(Globals.getMainFont(24));
         controlsLabel.setForeground(Globals.getFontColor());
         addComponent(controlsLabel);
 

@@ -25,7 +25,7 @@ public class Overlay extends JPanel implements KeyListener {
         this.transparency = Math.max(0, Math.min(transparency, 255)); // Transparenzwert begrenzen
 
         titleLabel = new JLabel(title);
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 72));
+        titleLabel.setFont(Globals.getMainFont(72));
         titleLabel.setForeground(Globals.getFontColor());
         components.add(titleLabel);
     }

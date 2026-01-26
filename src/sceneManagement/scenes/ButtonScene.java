@@ -17,7 +17,7 @@ public class ButtonScene extends Scene {
         setBackground(Globals.getBackgroundColor());
 
         titleLabel = new JLabel(title);
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 72));
+        titleLabel.setFont(Globals.getMainFont(72));
         titleLabel.setForeground(Globals.getFontColor());
         components.add(titleLabel);
     }

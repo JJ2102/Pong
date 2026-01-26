@@ -186,7 +186,7 @@ public class GameScene extends Scene {
         }
 
         // Scores zeichnen
-        g2d.setFont(new Font("Arial", Font.BOLD, 36));
+        g2d.setFont(Globals.getMainFont(36));
         g2d.setColor(Color.GREEN);
         String scoreText = playerScore + " : " + aiScore;
         FontMetrics fm = g2d.getFontMetrics(); // Font-Metriken holen
@@ -195,8 +195,8 @@ public class GameScene extends Scene {
 
         // Countdown anzeigen
         if (gameState == GameState.COUNTING_DOWN && countdown.isRunning()) {
-            g2d.setFont(new Font("Arial", Font.BOLD, 120));
-            g2d.setColor(new Color(255, 255, 255, 200));
+            g2d.setFont(Globals.getMainFont(120));
+            g2d.setColor(Globals.getFontColor(200));
             String text = String.valueOf(countdown.getCurrentSecond());
 
             fm = g2d.getFontMetrics();

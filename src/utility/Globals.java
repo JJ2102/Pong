@@ -18,6 +18,13 @@ public class Globals {
     public static Color getFontColor() {
         return Color.GREEN;
     }
+    public static Color getFontColor(int transparency) {
+        return new Color(0, 255, 0, transparency);
+    }
+
+    public static Font getMainFont(int size) {
+        return new Font("Arial", Font.BOLD, (int) size); // Arial
+    }
 
     // Random Values
     public static double randomSpeed(double min, double max) {
