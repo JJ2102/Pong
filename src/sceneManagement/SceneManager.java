@@ -1,6 +1,5 @@
 package sceneManagement;
 
-import enums.Difficulty;
 import enums.EnumOverlays;
 import enums.EnumScenes;
 import sceneManagement.overlays.Overlay;
@@ -19,7 +18,7 @@ public class SceneManager {
     private final Map<EnumScenes, Scene> scenes = new EnumMap<>(EnumScenes.class);
     private final Map<EnumOverlays, Overlay> overlays = new EnumMap<>(EnumOverlays.class);
     private EnumScenes activeSceneID = null;
-    private final List<EnumOverlays> activeOverlays = new ArrayList<>();
+    private EnumOverlays activeOverlayID = null;
 
     public SceneManager(Dimension size) {
         this.size = size;
@@ -65,9 +64,14 @@ public class SceneManager {
     }
 
     public void showOverlay(EnumOverlays id) {
+        if (activeOverlayID != null && !activeOverlayID.equals(id)) {
+            hideOverlay(activeOverlayID);
+        }
+
         Overlay overlay = overlays.get(id);
-        if (overlay != null && !activeOverlays.contains(id)) {
-            updateVisibility(overlays, id);
+        if (overlay != null) {
+            activeOverlayID = id;
+            overlay.setVisible(true);
 
             // Pause underlying scene if needed
             if (overlay.shouldPauseUnderlying()) {
@@ -75,23 +79,18 @@ public class SceneManager {
                 if (active != null) active.onPause();
             }
             overlay.requestFocusInWindow();
-            activeOverlays.add(id);
         }
         refreshLayout();
     }
 
     public void hideOverlay(EnumOverlays id) {
-        Overlay overlay = overlays.get(id);
-        if (overlay != null && activeOverlays.contains(id)) {
-            overlay.setVisible(false);
-            activeOverlays.remove(id);
+        if (isOverlayVisible(id)) {
+            Overlay overlay = overlays.get(id);
+            if  (overlay != null) {
+                overlay.setVisible(false);
+                activeOverlayID = null;
 
-            if (overlay.shouldPauseUnderlying()) {
-                boolean anyPauseRemaining = activeOverlays.stream()
-                        .map(overlays::get)
-                        .anyMatch(o -> o != null && o.shouldPauseUnderlying());
-
-                if (!anyPauseRemaining) {
+                if (overlay.shouldPauseUnderlying()) {
                     Scene active = getActiveScene();
                     if (active != null) active.onResume();
                 }
@@ -103,7 +102,7 @@ public class SceneManager {
     }
 
     public boolean isOverlayVisible(EnumOverlays id) {
-        return activeOverlays.contains(id);
+        return activeOverlayID != null && activeOverlayID.equals(id);
     }
 
     // Helpers

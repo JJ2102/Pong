@@ -40,6 +40,6 @@ public class Enemy extends Paddle {
     }
 
     public void reset() {
-        transform.position = new Vektor3(0, 0, 0);
+        transform.position = new Vektor3(0, 0, transform.position.z);
     }
 }
