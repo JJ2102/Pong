@@ -11,7 +11,7 @@ public class InfoOverlay extends Overlay {
     public InfoOverlay(GameWindow window) {
         super(window, "Information", 225, false);
 
-        JLabel controlsLabel = new JLabel( //TODO: Update controls to correct ones
+        JLabel controlsLabel = new JLabel(
                 "<html>" +
                         "<div style='text-align: center;'>" +
                             "Use Mouse to move the paddle.<br>" +

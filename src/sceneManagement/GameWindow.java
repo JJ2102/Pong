@@ -47,7 +47,6 @@ public class GameWindow extends JFrame {
         soundManager = new SoundManager();
 
         initManagers(); // Szenen initialisieren
-        //TODO: Game starten nur wenn GameScene aktiv ist
 
         setDefaultWindowOptions();
         sceneManager.setScene(currentScene); // Startszene anzeigen

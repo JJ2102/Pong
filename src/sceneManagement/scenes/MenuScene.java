@@ -12,8 +12,6 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 
 public class MenuScene extends ButtonScene {
-    // TODO: Refactor animation Classes
-
     private final Ball2D ball;
 
     private final Paddle2D p1;

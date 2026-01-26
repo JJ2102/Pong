@@ -78,7 +78,7 @@ public class GameScene extends Scene {
 
         // 3 Sekunden Countdown erstellen
         countdown = new Countdown(3);
-        countdown.addTickListener(e -> repaint());
+        countdown.addTickListener(_ -> repaint());
         // Nach dem Countdown Spiel starten
         countdown.addTickListener(e -> {
             if ("finished".equals(e.getActionCommand())) {
@@ -136,7 +136,9 @@ public class GameScene extends Scene {
         } else {
             playerScore++;
         }
+        window.getSoundManager().playSoundEffekt("score");
         scoreDisplay.setScore(aiScore, playerScore);
+        ball.reset();
 
         // Überprüfen, ob jemand gewonnen hat
         if (aiScore == winningScore || playerScore == winningScore) {
@@ -151,9 +153,6 @@ public class GameScene extends Scene {
             }
             return;
         }
-
-        window.getSoundManager().playSoundEffekt("score");
-        ball.reset();
         aiPlayer.reset();
 
         // Countdown starten
@@ -167,6 +166,28 @@ public class GameScene extends Scene {
         scoreDisplay.setScore(aiScore, playerScore);
         ball.reset();
         aiPlayer.reset();
+    }
+
+    // Laufzeit
+    @Override
+    public void onPause() {
+        if (timer.isRunning()) timer.stop();
+        if (countdown.isRunning()) countdown.stop();
+    }
+
+    @Override
+    public void onResume() {
+        if (!timer.isRunning()) timer.start();
+        if (gameState == GameState.COUNTING_DOWN && !countdown.isRunning()) {
+            countdown.start();
+        }
+    }
+
+    public void restart() {
+        reset();
+        gameState = GameState.COUNTING_DOWN;
+        countdown.restart();
+        onResume();
     }
 
     public void paintComponent(Graphics g) {
@@ -212,32 +233,6 @@ public class GameScene extends Scene {
             textWidth = fm.stringWidth(text);
             g2d.drawString(text, (getWidth() - textWidth) / 2, getHeight() / 2);
         }
-    }
-
-    // Laufzeit
-    @Override
-    public void onPause() {
-        if (timer.isRunning()) timer.stop();
-        if (countdown.isRunning()) countdown.stop();
-    }
-
-    @Override
-    public void onResume() {
-        if (!timer.isRunning()) timer.start();
-        if (gameState == GameState.COUNTING_DOWN && !countdown.isRunning()) {
-            countdown.start();
-        }
-    }
-
-    public void restart() {
-        reset();
-        gameState = GameState.COUNTING_DOWN;
-        countdown.restart();
-        onResume();
-    }
-
-    public boolean isRunning() {
-        return timer.isRunning();
     }
 
     // ===== KeyListener Methoden =====
