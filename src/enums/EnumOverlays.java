@@ -3,5 +3,7 @@ package enums;
 public enum EnumOverlays {
     PAUSE,
     DIFFICULTY,
-    INFO
+    INFO,
+    WIN,
+    LOSE
 }

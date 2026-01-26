@@ -1,6 +1,7 @@
 package sceneManagement.scenes;
 
 import enums.Difficulty;
+import enums.EnumOverlays;
 import hitboxes.BoxHitbox;
 import math.Vektor3;
 import math.Vertex;
@@ -43,6 +44,7 @@ public class GameScene extends Scene {
     public int playerScore = 0;
     public int aiScore = 0;
     private enum PlayerType { PLAYER, AI }
+    private int winningScore = 1;
 
     // Scoring
     private final Countdown countdown;
@@ -137,9 +139,14 @@ public class GameScene extends Scene {
         scoreDisplay.setScore(aiScore, playerScore);
 
         // Überprüfen, ob jemand gewonnen hat
-        if (aiScore == 9 || playerScore == 9) {
-            window.getSoundManager().playSoundEffekt(aiScore == 9 ? "lose" : "win");
-            window.returnToMenu();
+        if (aiScore == winningScore || playerScore == winningScore) {
+            if (aiScore == winningScore) {
+                window.toggleOverlay(EnumOverlays.LOSE, true);
+                window.getSoundManager().playSoundEffekt("lose");
+            } else {
+                window.toggleOverlay(EnumOverlays.WIN, true);
+                window.getSoundManager().playSoundEffekt("win");
+            }
             return;
         }
 
@@ -213,15 +220,16 @@ public class GameScene extends Scene {
     }
 
     public void pauseGame() {
-        if (timer.isRunning()) {
-            timer.stop();
-        }
-        if (countdown.isRunning()) {
-            countdown.stop();
-        }
+        if (timer.isRunning()) timer.stop();
+        if (countdown.isRunning()) countdown.stop();
     }
 
     public void continueGame() {
+        startScene();
+    }
+
+    public void restart() {
+        reset();
         startScene();
     }
 
@@ -239,7 +247,7 @@ public class GameScene extends Scene {
     @Override
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-            window.togglePauseOverlay();
+            window.toggleOverlay(EnumOverlays.PAUSE, true);
         }
         if (e.getKeyCode() == KeyEvent.VK_F3) {
             window.toggleDebug();

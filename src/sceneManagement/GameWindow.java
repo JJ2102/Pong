@@ -6,6 +6,7 @@ import enums.EnumScenes;
 import sceneManagement.overlays.DifficultyOverlay;
 import sceneManagement.overlays.InfoOverlay;
 import sceneManagement.overlays.PauseOverlay;
+import sceneManagement.overlays.WinOverlay;
 import sceneManagement.scenes.GameScene;
 import sceneManagement.scenes.MenuScene;
 import sceneManagement.scenes.SettingsScene;
@@ -27,6 +28,8 @@ public class GameWindow extends JFrame {
     private PauseOverlay pauseOverlay;
     private DifficultyOverlay difficultyOverlay;
     private InfoOverlay infoOverlay;
+    private WinOverlay winOverlay;
+    private WinOverlay loseOverlay;
 
     // Scenen
     private MenuScene menuScene;
@@ -69,10 +72,14 @@ public class GameWindow extends JFrame {
         pauseOverlay = new PauseOverlay(this);
         difficultyOverlay = new DifficultyOverlay(this);
         infoOverlay = new InfoOverlay(this);
+        winOverlay = new WinOverlay(this, "You Win!");
+        loseOverlay = new WinOverlay(this, "You Lose!");
 
         sceneManager.registerOverlay(EnumOverlays.PAUSE, pauseOverlay);
         sceneManager.registerOverlay(EnumOverlays.DIFFICULTY, difficultyOverlay);
         sceneManager.registerOverlay(EnumOverlays.INFO, infoOverlay);
+        sceneManager.registerOverlay(EnumOverlays.WIN, winOverlay);
+        sceneManager.registerOverlay(EnumOverlays.LOSE, loseOverlay);
 
         currentScene = EnumScenes.MENU; // Standard-Szene festlegen
 
@@ -102,28 +109,28 @@ public class GameWindow extends JFrame {
 
     public void returnToMenu() {
         if (gameScene.isRunning()) {
-            gameScene.stopScene();
+            gameScene.pauseGame();
             gameScene.reset();
         }
         setCurrentScene(EnumScenes.MENU);
     }
 
     // Overlay Methoden
-    public void togglePauseOverlay() {
-        if (gameScene.isRunning()) {
+    public void toggleOverlay(EnumOverlays overlayID, boolean pauseGame) {
+        if (gameScene.isRunning() && pauseGame) {
             gameScene.pauseGame();
         } else {
             gameScene.continueGame();
         }
-        toggleOverlay(EnumOverlays.PAUSE);
-    }
-
-    public void toggleOverlay(EnumOverlays overlayID) {
         if (!sceneManager.isOverlayVisible(overlayID)) {
             sceneManager.showOverlay(overlayID);
         } else {
             sceneManager.hideOverlay(overlayID);
         }
+    }
+
+    public void toggleOverlay(EnumOverlays overlayID) {
+        toggleOverlay(overlayID, false);
     }
 
     // Getters und Setters
