@@ -44,7 +44,7 @@ public class GameScene extends Scene {
     public int playerScore = 0;
     public int aiScore = 0;
     private enum PlayerType { PLAYER, AI }
-    private final int winningScore = 1;
+    private final int winningScore = 4;
 
     // Scoring
     private final Countdown countdown;

@@ -5,8 +5,6 @@ import enums.EnumOverlays;
 import sceneManagement.GameWindow;
 import utility.Button;
 
-import java.awt.event.KeyEvent;
-
 public class DifficultyOverlay extends Overlay {
     public DifficultyOverlay(GameWindow window) {
         super(window, "Select Difficulty", 200, true);
