@@ -1,5 +1,6 @@
 package sceneManagement.overlays;
 
+import enums.EnumOverlays;
 import sceneManagement.GameWindow;
 import utility.Globals;
 
@@ -9,13 +10,12 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
 
-public class Overlay extends JPanel implements KeyListener {
-    //TODO: make it possible to close overlay by pressing esc
+public abstract class Overlay extends JPanel {
     protected final GameWindow window;
     private final ArrayList<Component> components = new ArrayList<>();
     private final int transparency;
     protected JLabel titleLabel;
-    private Color bgColor = Globals.getBackgroundColor();
+    private final Color bgColor = Globals.getBackgroundColor();
     private final boolean pauseUnderlying;
 
     public Overlay(GameWindow window, String title, int transparency, boolean pauseUnderlying) {
@@ -30,10 +30,6 @@ public class Overlay extends JPanel implements KeyListener {
         titleLabel.setFont(Globals.getMainFont(72));
         titleLabel.setForeground(Globals.getFontColor());
         components.add(titleLabel);
-    }
-
-    protected void setTitle(String title) {
-        titleLabel.setText(title);
     }
 
     protected void addComponent(Component component) {
@@ -63,20 +59,5 @@ public class Overlay extends JPanel implements KeyListener {
         // Halbtransparenter Hintergrund
         g.setColor(new Color(bgColor.getRed(), bgColor.getGreen(), bgColor.getBlue(), transparency));
         g.fillRect(0, 0, getWidth(), getHeight());
-    }
-
-    @Override
-    public void keyTyped(KeyEvent e) {
-
-    }
-
-    @Override
-    public void keyPressed(KeyEvent e) {
-
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-
     }
 }
