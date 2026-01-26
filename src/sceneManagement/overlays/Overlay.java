@@ -30,6 +30,10 @@ public class Overlay extends JPanel implements KeyListener {
         components.add(titleLabel);
     }
 
+    protected void setTitle(String title) {
+        titleLabel.setText(title);
+    }
+
     protected void addComponent(Component component) {
         components.add(component);
     }

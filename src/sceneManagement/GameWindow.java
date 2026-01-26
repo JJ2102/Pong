@@ -72,8 +72,8 @@ public class GameWindow extends JFrame {
         pauseOverlay = new PauseOverlay(this);
         difficultyOverlay = new DifficultyOverlay(this);
         infoOverlay = new InfoOverlay(this);
-        winOverlay = new WinOverlay(this, "You Win!");
-        loseOverlay = new WinOverlay(this, "You Lose!");
+        winOverlay = new WinOverlay(this, EnumOverlays.WIN);
+        loseOverlay = new WinOverlay(this, EnumOverlays.LOSE);
 
         sceneManager.registerOverlay(EnumOverlays.PAUSE, pauseOverlay);
         sceneManager.registerOverlay(EnumOverlays.DIFFICULTY, difficultyOverlay);

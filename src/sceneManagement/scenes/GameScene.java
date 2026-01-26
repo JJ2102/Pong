@@ -44,7 +44,7 @@ public class GameScene extends Scene {
     public int playerScore = 0;
     public int aiScore = 0;
     private enum PlayerType { PLAYER, AI }
-    private int winningScore = 1;
+    private final int winningScore = 4;
 
     // Scoring
     private final Countdown countdown;
@@ -141,9 +141,11 @@ public class GameScene extends Scene {
         // Überprüfen, ob jemand gewonnen hat
         if (aiScore == winningScore || playerScore == winningScore) {
             if (aiScore == winningScore) {
+                System.out.println("AI wins!");
                 window.toggleOverlay(EnumOverlays.LOSE, true);
                 window.getSoundManager().playSoundEffekt("lose");
             } else {
+                System.out.println("Player wins!");
                 window.toggleOverlay(EnumOverlays.WIN, true);
                 window.getSoundManager().playSoundEffekt("win");
             }
