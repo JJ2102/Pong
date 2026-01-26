@@ -17,8 +17,9 @@ public class SceneManager {
     private final JLayeredPane layeredPane;
     private final Dimension size;
     private final Map<EnumScenes, Scene> scenes = new EnumMap<>(EnumScenes.class);
-    private final List<EnumOverlays> activeOverlays = new ArrayList<>();
     private final Map<EnumOverlays, Overlay> overlays = new EnumMap<>(EnumOverlays.class);
+    private EnumScenes activeSceneID = null;
+    private final List<EnumOverlays> activeOverlays = new ArrayList<>();
 
     public SceneManager(Dimension size) {
         this.size = size;
@@ -40,10 +41,17 @@ public class SceneManager {
     }
 
     public void setScene(EnumScenes id) {
+        if (activeSceneID != null && !activeSceneID.equals(id)) {
+            Scene previous = scenes.get(activeSceneID);
+            if (previous != null) previous.onPause();
+        }
+
+        activeSceneID = id;
         updateVisibility(scenes, id);
         Scene active = scenes.get(id);
         if (active != null) {
             active.requestFocusInWindow();
+            active.onResume();
         }
         refreshLayout();
     }
@@ -57,9 +65,15 @@ public class SceneManager {
     }
 
     public void showOverlay(EnumOverlays id) {
-        updateVisibility(overlays, id);
         Overlay overlay = overlays.get(id);
         if (overlay != null && !activeOverlays.contains(id)) {
+            updateVisibility(overlays, id);
+
+            // Pause underlying scene if needed
+            if (overlay.shouldPauseUnderlying()) {
+                Scene active = getActiveScene();
+                if (active != null) active.onPause();
+            }
             overlay.requestFocusInWindow();
             activeOverlays.add(id);
         }
@@ -71,9 +85,21 @@ public class SceneManager {
         if (overlay != null && activeOverlays.contains(id)) {
             overlay.setVisible(false);
             activeOverlays.remove(id);
+
+            if (overlay.shouldPauseUnderlying()) {
+                boolean anyPauseRemaining = activeOverlays.stream()
+                        .map(overlays::get)
+                        .anyMatch(o -> o != null && o.shouldPauseUnderlying());
+
+                if (!anyPauseRemaining) {
+                    Scene active = getActiveScene();
+                    if (active != null) active.onResume();
+                }
+            }
+
             focusActiveScene();
-            refreshLayout();
         }
+        refreshLayout();
     }
 
     public boolean isOverlayVisible(EnumOverlays id) {
@@ -101,4 +127,10 @@ public class SceneManager {
         }
     }
 
+    private Scene getActiveScene() {
+        for (Scene scene : scenes.values()) {
+            if (scene.isVisible()) return scene;
+        }
+        return null;
+    }
 }

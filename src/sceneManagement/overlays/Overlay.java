@@ -16,13 +16,15 @@ public class Overlay extends JPanel implements KeyListener {
     private final int transparency;
     protected JLabel titleLabel;
     private Color bgColor = Globals.getBackgroundColor();
+    private final boolean pauseUnderlying;
 
-    public Overlay(GameWindow window, String title, int transparency) {
+    public Overlay(GameWindow window, String title, int transparency, boolean pauseUnderlying) {
         this.window = window;
         setOpaque(false); // Hintergrund transparent
         setLayout(new GridBagLayout()); // Zentrierte Inhalte
 
         this.transparency = Math.max(0, Math.min(transparency, 255)); // Transparenzwert begrenzen
+        this.pauseUnderlying = pauseUnderlying;
 
         titleLabel = new JLabel(title);
         titleLabel.setFont(Globals.getMainFont(72));
@@ -49,6 +51,10 @@ public class Overlay extends JPanel implements KeyListener {
             gbc.gridy = yPos++;
             add(component, gbc);
         }
+    }
+
+    public boolean shouldPauseUnderlying() {
+        return pauseUnderlying;
     }
 
     @Override

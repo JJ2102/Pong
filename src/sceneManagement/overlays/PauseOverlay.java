@@ -6,7 +6,7 @@ import utility.Button;
 
 public class PauseOverlay extends Overlay {
     public PauseOverlay(GameWindow window) {
-        super(window, "Paused", 150);
+        super(window, "Paused", 150, true);
 
         // Buttons
         Button resumeBtn = new Button("Resume");
@@ -14,9 +14,9 @@ public class PauseOverlay extends Overlay {
         Button quitBtn = new Button("Quit Game");
 
         // Aktionen
-        resumeBtn.addActionListener(_ -> window.toggleOverlay(EnumOverlays.PAUSE, true));
+        resumeBtn.addActionListener(_ -> window.toggleOverlay(EnumOverlays.PAUSE));
         menuBtn.addActionListener(_ -> {
-            window.toggleOverlay(EnumOverlays.PAUSE, true);
+            window.toggleOverlay(EnumOverlays.PAUSE);
             window.returnToMenu();
         });
         quitBtn.addActionListener(_ -> System.exit(0));

@@ -45,6 +45,14 @@ public abstract class Scene extends JPanel implements KeyListener, MouseMotionLi
         }
     }
 
+    public void onPause() {
+        stopScene();
+    }
+
+    public void onResume() {
+        startScene();
+    }
+
     // Default Input-Handling
     @Override public void keyTyped(KeyEvent e) {}
     @Override public void keyPressed(KeyEvent e) {}

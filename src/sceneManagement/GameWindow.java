@@ -47,8 +47,7 @@ public class GameWindow extends JFrame {
         soundManager = new SoundManager();
 
         initManagers(); // Szenen initialisieren
-
-        menuScene.startScene(); // TODO: Nur Laufen wenn angezeigt
+        //TODO: Game starten nur wenn GameScene aktiv ist
 
         setDefaultWindowOptions();
         sceneManager.setScene(currentScene); // Startszene anzeigen
@@ -104,33 +103,24 @@ public class GameWindow extends JFrame {
     // start / stop Game
     public void startGame() {
         setCurrentScene(EnumScenes.GAME);
-        gameScene.startScene();
     }
 
     public void returnToMenu() {
-        if (gameScene.isRunning()) {
-            gameScene.pauseGame();
-            gameScene.reset();
-        }
+        sceneManager.hideOverlay(EnumOverlays.PAUSE);
+        sceneManager.hideOverlay(EnumOverlays.WIN);
+        sceneManager.hideOverlay(EnumOverlays.LOSE);
+
+        gameScene.reset();
         setCurrentScene(EnumScenes.MENU);
     }
 
     // Overlay Methoden
-    public void toggleOverlay(EnumOverlays overlayID, boolean pauseGame) {
-        if (gameScene.isRunning() && pauseGame) {
-            gameScene.pauseGame();
-        } else {
-            gameScene.continueGame();
-        }
+    public void toggleOverlay(EnumOverlays overlayID) {
         if (!sceneManager.isOverlayVisible(overlayID)) {
             sceneManager.showOverlay(overlayID);
         } else {
             sceneManager.hideOverlay(overlayID);
         }
-    }
-
-    public void toggleOverlay(EnumOverlays overlayID) {
-        toggleOverlay(overlayID, false);
     }
 
     // Getters und Setters

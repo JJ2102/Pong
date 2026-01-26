@@ -142,11 +142,11 @@ public class GameScene extends Scene {
         if (aiScore == winningScore || playerScore == winningScore) {
             if (aiScore == winningScore) {
                 System.out.println("AI wins!");
-                window.toggleOverlay(EnumOverlays.LOSE, true);
+                window.toggleOverlay(EnumOverlays.LOSE);
                 window.getSoundManager().playSoundEffekt("lose");
             } else {
                 System.out.println("Player wins!");
-                window.toggleOverlay(EnumOverlays.WIN, true);
+                window.toggleOverlay(EnumOverlays.WIN);
                 window.getSoundManager().playSoundEffekt("win");
             }
             return;
@@ -216,23 +216,24 @@ public class GameScene extends Scene {
 
     // Laufzeit
     @Override
-    public void startScene() {
-        countdown.restart();
-        timer.start();
-    }
-
-    public void pauseGame() {
+    public void onPause() {
         if (timer.isRunning()) timer.stop();
         if (countdown.isRunning()) countdown.stop();
     }
 
-    public void continueGame() {
-        startScene();
+    @Override
+    public void onResume() {
+        if (!timer.isRunning()) timer.start();
+        if (gameState == GameState.COUNTING_DOWN && !countdown.isRunning()) {
+            countdown.start();
+        }
     }
 
     public void restart() {
         reset();
-        startScene();
+        gameState = GameState.COUNTING_DOWN;
+        countdown.restart();
+        onResume();
     }
 
     public boolean isRunning() {
@@ -249,7 +250,7 @@ public class GameScene extends Scene {
     @Override
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-            window.toggleOverlay(EnumOverlays.PAUSE, true);
+            window.toggleOverlay(EnumOverlays.PAUSE);
         }
         if (e.getKeyCode() == KeyEvent.VK_F3) {
             window.toggleDebug();

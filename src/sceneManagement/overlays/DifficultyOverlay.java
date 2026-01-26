@@ -9,7 +9,7 @@ import java.awt.event.KeyEvent;
 
 public class DifficultyOverlay extends Overlay {
     public DifficultyOverlay(GameWindow window) {
-        super(window, "Select Difficulty", 200);
+        super(window, "Select Difficulty", 200, true);
 
         // Buttons
         Button easyBtn = new Button("Easy");

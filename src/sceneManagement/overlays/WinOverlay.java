@@ -5,17 +5,8 @@ import sceneManagement.GameWindow;
 import utility.Button;
 
 public class WinOverlay extends Overlay {
-    EnumOverlays overlayType = EnumOverlays.WIN;
-
     public WinOverlay(GameWindow window, EnumOverlays overlayType) {
-        super(window, "NULL", 150);
-
-        this.overlayType = overlayType;
-        if (overlayType == EnumOverlays.LOSE) {
-            setTitle("You Lose!");
-        } else {
-            setTitle("You Win!");
-        }
+        super(window, overlayType == EnumOverlays.LOSE ? "You Lose!" : "You Win!", 150, true);
 
         // Buttons
         Button playAgainBtn = new Button("Play Again");
@@ -23,13 +14,12 @@ public class WinOverlay extends Overlay {
 
         // Aktionen
         playAgainBtn.addActionListener(_ -> {
-            window.toggleOverlay(overlayType, true);
+            window.toggleOverlay(overlayType);
             window.getGameScene().restart();
         });
         menuBtn.addActionListener(_ -> {
-            window.toggleOverlay(overlayType, true);
+            window.toggleOverlay(overlayType);
             window.returnToMenu();
-            System.out.println(window.getGameScene().isRunning());
         });
 
         addComponent(playAgainBtn);

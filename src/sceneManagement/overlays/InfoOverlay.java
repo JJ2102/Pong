@@ -9,7 +9,7 @@ import javax.swing.*;
 
 public class InfoOverlay extends Overlay {
     public InfoOverlay(GameWindow window) {
-        super(window, "Information", 225);
+        super(window, "Information", 225, false);
 
         JLabel controlsLabel = new JLabel( //TODO: Update controls to correct ones
                 "<html>" +
