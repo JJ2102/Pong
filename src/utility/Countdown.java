@@ -7,26 +7,39 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Countdown {
-    private final int durationSeconds;
-    private int currentSecond;
+    private final double durationMs;
+    private double currentMs;
     private final Timer timer;
     private final List<ActionListener> listeners;
     private boolean isRunning;
+    private final int delay; // Intervall des Timers in Millisekunden
 
     public Countdown(int seconds) {
-        this.durationSeconds = seconds;
+        this.durationMs = seconds * 1000;
+        this.delay = 1000; // 1 Sekunde
         this.listeners = new ArrayList<>();
-        this.timer = new Timer(1000, e -> {
-            currentSecond--;
+        this.timer = createTimer();
+    }
 
-            // Alle Listener über jeden Tick informieren
+    public Countdown(double Seconds) {
+        this.durationMs = Seconds * 1000;
+        this.delay = 10; // 10 Millisekunden
+        this.listeners = new ArrayList<>();
+        this.timer = createTimer();
+    }
+
+    private Timer createTimer() {
+        return new Timer(delay, e -> {
+            currentMs -= delay;
+
+            // Alle Listener informieren
             for (ActionListener listener : listeners) {
-                listener.actionPerformed(new ActionEvent(this, 0, "tick:" + currentSecond));
+                listener.actionPerformed(new ActionEvent(this, 0, "tick:" + getCurrentTime()));
             }
 
-            if (currentSecond <= 0) {
+            if (currentMs <= 0) {
+                currentMs = 0;
                 stop();
-                // Alle Listener über das Ende informieren
                 for (ActionListener listener : listeners) {
                     listener.actionPerformed(new ActionEvent(this, 1, "finished"));
                 }
@@ -37,7 +50,7 @@ public class Countdown {
     // Start und Stopp
     public void start() {
         if (!isRunning) {
-            currentSecond = durationSeconds;
+            currentMs = durationMs;
             timer.start();
             isRunning = true;
         }
@@ -63,7 +76,16 @@ public class Countdown {
     }
 
     // Getter
-    public int getCurrentSecond() {
-        return currentSecond;
+    /**
+     * Gibt die verbleibende Zeit zurück.
+     * Wenn mit int (Sekunden) initialisiert, ist der Wert glatt.
+     * Wenn mit double (ms) initialisiert, sind die ms enthalten.
+     */
+    public double getCurrentTime() {
+        if (delay == 1000) {
+            return (currentMs / 1000); // Gibt ganze Sekunden zurück
+        } else {
+            return currentMs; // Gibt Millisekunden zurück
+        }
     }
 }

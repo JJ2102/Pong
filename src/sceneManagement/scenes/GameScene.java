@@ -40,6 +40,10 @@ public class GameScene extends Scene {
     private final BoxHitbox goalPlayerHitbox;
     private final BoxHitbox goalAIHitbox;
 
+    // Hit Cooldown
+    private final Countdown hitCooldown;
+    private boolean hitCooldownActive = false;
+
     // Score
     public int playerScore = 0;
     public int aiScore = 0;
@@ -86,6 +90,15 @@ public class GameScene extends Scene {
             }
         });
 
+        // Hit Cooldown initialisieren
+        hitCooldown = new Countdown(0.01); // 10 ms Cooldown
+        hitCooldown.addTickListener(e -> {
+            if ("finished".equals(e.getActionCommand())) {
+                hitCooldownActive = false;
+                System.out.println("Hit cooldown ended.");
+            }
+        });
+
         // Hitboxes für Tore
         Vektor3 boxSize = box.getSize();
         Vektor3 hitboxSize = new Vektor3(boxSize.x * 2, boxSize.y * 2, 0);
@@ -114,8 +127,13 @@ public class GameScene extends Scene {
 
         BoxHitbox[] paddleHitboxes = new BoxHitbox[]{player.getHitbox(), aiPlayer.getHitbox()};
         // Ball bewegen
-        if (ball.paddleHit(paddleHitboxes)) { // ToDo: seitliche Überschneidung führt zu glitch fixen
-            window.getSoundManager().playSoundEffekt("pong");
+        if (!hitCooldownActive) {
+            if (ball.paddleHit(paddleHitboxes)) {
+                window.getSoundManager().playSoundEffekt("pong");
+                hitCooldownActive = true;
+                System.out.println("Hit cooldown started.");
+                hitCooldown.restart();
+            }
         }
         ball.move();
 
@@ -203,7 +221,7 @@ public class GameScene extends Scene {
 
         if (window.isDebug()) {
             // Debug: Ball Hitbox zeichnen
-            renderer.renderBoxHitbox(g2d, ball.getHitbox(), camera, Color.YELLOW);
+            renderer.renderBoxHitbox(g2d, ball.getHitbox(), camera, Color.BLUE);
             renderer.renderBoxHitbox(g2d, aiPlayer.getHitbox(), camera, Color.YELLOW);
             renderer.renderBoxHitbox(g2d, goalAIHitbox, camera, Color.RED);
             renderer.renderBoxHitbox(g2d, player.getHitbox(), camera, Color.YELLOW);
@@ -227,7 +245,7 @@ public class GameScene extends Scene {
         if (gameState == GameState.COUNTING_DOWN && countdown.isRunning()) {
             g2d.setFont(Globals.getMainFont(120));
             g2d.setColor(Globals.getFontColor(200));
-            String text = String.valueOf(countdown.getCurrentSecond());
+            String text = String.valueOf((int) countdown.getCurrentTime());
 
             fm = g2d.getFontMetrics();
             textWidth = fm.stringWidth(text);
