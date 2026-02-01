@@ -25,7 +25,6 @@ public class Ball extends Entity {
         speedX = randomSpeed();
         speedY = randomSpeed();
         speedZ = randomSpeed();
-        System.out.println("Ball speed: " + speedX + ", " + speedY + ", " + speedZ);
     }
 
     private double randomSpeed() {
@@ -46,8 +45,6 @@ public class Ball extends Entity {
                 speedY += Math.signum(speedY) * 0.001;
                 speedZ += Math.signum(speedZ) * 0.001;
                 speedZ = -speedZ;
-
-                System.out.println("New ball speed: " + speedX + ", " + speedY + ", " + speedZ);
 
                 return true;
             }
@@ -79,5 +76,10 @@ public class Ball extends Entity {
 
     public Vektor3 getSpeed() {
         return new Vektor3(speedX, speedY, speedZ);
+    }
+
+    // Debugging
+    public String toString() {
+        return "[Ball] Pos: " + transform.position + " Speed: " + getSpeed();
     }
 }

@@ -95,7 +95,6 @@ public class GameScene extends Scene {
         hitCooldown.addTickListener(e -> {
             if ("finished".equals(e.getActionCommand())) {
                 hitCooldownActive = false;
-                System.out.println("Hit cooldown ended.");
             }
         });
 
@@ -131,7 +130,6 @@ public class GameScene extends Scene {
             if (ball.paddleHit(paddleHitboxes)) {
                 window.getSoundManager().playSoundEffekt("pong");
                 hitCooldownActive = true;
-                System.out.println("Hit cooldown started.");
                 hitCooldown.restart();
             }
         }

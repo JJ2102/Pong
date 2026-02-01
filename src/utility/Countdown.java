@@ -23,7 +23,7 @@ public class Countdown {
 
     public Countdown(double Seconds) {
         this.durationMs = Seconds * 1000;
-        this.delay = 10; // 10 Millisekunden
+        this.delay = 1; // 1 Millisekunden
         this.listeners = new ArrayList<>();
         this.timer = createTimer();
     }
@@ -87,5 +87,11 @@ public class Countdown {
         } else {
             return currentMs; // Gibt Millisekunden zurück
         }
+    }
+
+    // Debug
+    @Override
+    public String toString() {
+        return "[Countdown] " + getCurrentTime() + "ms";
     }
 }
