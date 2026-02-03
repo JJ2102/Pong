@@ -87,6 +87,7 @@ public class GameScene extends Scene {
         countdown.addTickListener(e -> {
             if ("finished".equals(e.getActionCommand())) {
                 gameState = GameState.PLAYING;
+                window.showOverlay(EnumOverlays.SHATTERED_GLASS, false);
             }
         });
 
@@ -149,6 +150,8 @@ public class GameScene extends Scene {
     private void addPoint(PlayerType scorer) {
         if(scorer == PlayerType.AI) {
             aiScore++;
+            window.getShatteredGlassOverlay().generateShatter(0, 0); // Todo: Position des Balls als Center verwenden
+            window.showOverlay(EnumOverlays.SHATTERED_GLASS, true);
         } else {
             playerScore++;
         }

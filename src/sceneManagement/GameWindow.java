@@ -3,10 +3,7 @@ package sceneManagement;
 import Sound.SoundManager;
 import enums.EnumOverlays;
 import enums.EnumScenes;
-import sceneManagement.overlays.DifficultyOverlay;
-import sceneManagement.overlays.InfoOverlay;
-import sceneManagement.overlays.PauseOverlay;
-import sceneManagement.overlays.WinOverlay;
+import sceneManagement.overlays.*;
 import sceneManagement.scenes.GameScene;
 import sceneManagement.scenes.MenuScene;
 import sceneManagement.scenes.SettingsScene;
@@ -30,6 +27,7 @@ public class GameWindow extends JFrame {
     private InfoOverlay infoOverlay;
     private WinOverlay winOverlay;
     private WinOverlay loseOverlay;
+    private ShatteredGlassOverlay shatteredGlassOverlay;
 
     // Scenen
     private MenuScene menuScene;
@@ -72,12 +70,14 @@ public class GameWindow extends JFrame {
         infoOverlay = new InfoOverlay(this);
         winOverlay = new WinOverlay(this, EnumOverlays.WIN);
         loseOverlay = new WinOverlay(this, EnumOverlays.LOSE);
+        shatteredGlassOverlay = new ShatteredGlassOverlay(this);
 
         sceneManager.registerOverlay(EnumOverlays.PAUSE, pauseOverlay);
         sceneManager.registerOverlay(EnumOverlays.DIFFICULTY, difficultyOverlay);
         sceneManager.registerOverlay(EnumOverlays.INFO, infoOverlay);
         sceneManager.registerOverlay(EnumOverlays.WIN, winOverlay);
         sceneManager.registerOverlay(EnumOverlays.LOSE, loseOverlay);
+        sceneManager.registerOverlay(EnumOverlays.SHATTERED_GLASS, shatteredGlassOverlay);
 
         currentScene = EnumScenes.MENU; // Standard-Szene festlegen
 
@@ -122,6 +122,14 @@ public class GameWindow extends JFrame {
         }
     }
 
+    public void showOverlay(EnumOverlays overlayID, boolean show) {
+        if (show && !sceneManager.isOverlayVisible(overlayID)) {
+            sceneManager.showOverlay(overlayID);
+        } else if (sceneManager.isOverlayVisible(overlayID)) {
+            sceneManager.hideOverlay(overlayID);
+        }
+    }
+
     // Getters und Setters
     public void setCurrentScene(EnumScenes scene) {
         this.currentScene = scene;
@@ -138,6 +146,10 @@ public class GameWindow extends JFrame {
 
     public GameScene getGameScene() {
         return gameScene;
+    }
+
+    public ShatteredGlassOverlay getShatteredGlassOverlay() {
+        return shatteredGlassOverlay;
     }
 
     public SoundManager getSoundManager() {

@@ -5,5 +5,6 @@ public enum EnumOverlays {
     DIFFICULTY,
     INFO,
     WIN,
-    LOSE
+    LOSE,
+    SHATTERED_GLASS
 }
