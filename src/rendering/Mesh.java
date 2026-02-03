@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Mesh {
     // 3D-Punkte
-    public List<Vektor3> vertices;
+    public List<Vektor3> vertices; // Eckpunkte
 
     // Kanten (für Drahtgitterdarstellung)
     public int[][] edges;

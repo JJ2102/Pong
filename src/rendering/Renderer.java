@@ -38,21 +38,19 @@ public class Renderer {
     // Transformation anwenden (Scale, Rotation, Translation)
     private Vektor3 applyTransform(Vektor3 v, Transform t) {
         // Skalierung
-        double x = v.x * t.scale.x;
-        double y = v.y * t.scale.y;
-        double z = v.z * t.scale.z;
+        Vektor3 scaled = v.multiply(t.scale);
 
         // Rotation um y-Achse
         double cosY = Math.cos(t.rotation.y);
         double sinY = Math.sin(t.rotation.y);
-        double rx = cosY * x + sinY * z;
-        double rz = -sinY * x + cosY * z;
+        double rx = cosY * scaled.x + sinY * scaled.z;
+        double rz = -sinY * scaled.x + cosY * scaled.z;
 
         // Rotation um x-Achse
         double cosX = Math.cos(t.rotation.x);
         double sinX = Math.sin(t.rotation.x);
-        double ry = cosX * y - sinX * rz;
-        rz = sinX * y + cosX * rz;
+        double ry = cosX * scaled.y - sinX * rz;
+        rz = sinX * scaled.y + cosX * rz;
 
         // Rotation um Z-Achse
         double cosZ = Math.cos(t.rotation.z);
@@ -143,12 +141,12 @@ public class Renderer {
 
         // Flächen zeichnen
         if (mesh.faces != null && renderFaces) { // Sicherheitscheck
-            for (int[] face : mesh.faces) { // faces = int[][]
+            for (int[] face : mesh.faces) { // geht durch alle Flächen des Meshes
                 if (face == null || face.length == 0) continue; // Leere Fläche überspringen
 
                 Polygon poly = new Polygon();
 
-                for (int idx : face) { // face = int[]
+                for (int idx : face) { // geht durch alle Eckpunkte der Fläche; idx ist der Index im Vertex-Array
                     if (idx < 0 || idx >= mesh.vertices.size()) continue; // idx nicht kleiner 0 oder größer als Anzahl der Eckpunkte
 
                     // Transformieren der einzelnen Eckpunkte der Fläche
