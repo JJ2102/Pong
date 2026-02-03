@@ -3,8 +3,8 @@ package sceneManagement.scenes;
 import enums.Difficulty;
 import enums.EnumOverlays;
 import hitboxes.BoxHitbox;
+import math.Vektor2;
 import math.Vektor3;
-import math.Vertex;
 import objekts.*;
 import objekts.SevenSegmentDisplay;
 import rendering.Camera;
@@ -257,7 +257,7 @@ public class GameScene extends Scene {
     // ===== KeyListener Methoden =====
     @Override
     public void mouseMoved(MouseEvent e) {
-        Vertex mouseScreenPos = new Vertex(e.getX(), e.getY());
+        Vektor2 mouseScreenPos = new Vektor2(e.getX(), e.getY());
         mousePos = renderer.screenToWorld(mouseScreenPos, playerPosZ, camera);
     }
 

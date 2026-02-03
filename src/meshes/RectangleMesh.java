@@ -7,15 +7,15 @@ import java.util.Arrays;
 public class RectangleMesh extends Mesh {
     public RectangleMesh(double xSize, double ySize, double zSize) {
         super(
-                Arrays.asList(
-                        new Vektor3(-xSize, -ySize, zSize), // Ecke
-                        new Vektor3(xSize, -ySize, zSize),
-                        new Vektor3(xSize, ySize, zSize),
-                        new Vektor3(-xSize, ySize, zSize),
-                        new Vektor3(-xSize, -ySize, -zSize),
-                        new Vektor3(xSize, -ySize, -zSize),
-                        new Vektor3(xSize, ySize, -zSize),
-                        new Vektor3(-xSize, ySize, -zSize)
+                Arrays.asList( // Vertecies (Ecken)
+                        new Vektor3(-xSize, -ySize, zSize), // Ecke 0
+                        new Vektor3(xSize, -ySize, zSize), // Ecke 1
+                        new Vektor3(xSize, ySize, zSize), // Ecke 2
+                        new Vektor3(-xSize, ySize, zSize), // Ecke 3
+                        new Vektor3(-xSize, -ySize, -zSize), // Ecke 4
+                        new Vektor3(xSize, -ySize, -zSize), // Ecke 5
+                        new Vektor3(xSize, ySize, -zSize), // Ecke 6
+                        new Vektor3(-xSize, ySize, -zSize) // Ecke 7
                 ),
                 new int[][] { // Kanten
                         {0,1},{1,2},{2,3},{3,0},

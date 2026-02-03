@@ -1,8 +1,8 @@
 package rendering;
 
 import hitboxes.BoxHitbox;
+import math.Vektor2;
 import math.Vektor3;
-import math.Vertex;
 import objekts.Entity;
 
 import java.awt.*;
@@ -25,14 +25,14 @@ public class Renderer {
     }
 
     // Projektion von 3D -> 2D
-    private Vertex project(Vektor3 p, double fov) {
+    private Vektor2 project(Vektor3 p, double fov) {
         if (p == null) return null;
         if (p.z <= 0) return null; // hinter Kamera
         double x = fov * p.x / p.z;
         double y = fov * p.y / p.z;
-        int sx = (int) (width / 2.0 + x * scale);
-        int sy = (int) (height / 2.0 - y * scale);
-        return new Vertex(sx, sy);
+        double sx = (width / 2.0 + x * scale);
+        double sy = (height / 2.0 - y * scale);
+        return new Vektor2(sx, sy);
     }
 
     // Transformation anwenden (Scale, Rotation, Translation)
@@ -97,7 +97,7 @@ public class Renderer {
      * Konvertiert Bildschirmkoordinaten (pixels) in Weltkoordinaten auf einer Ebene z = planeZ.
      * Vereinfacht: berücksichtigt Kamera-Position und FOV, nicht Kamera-Rotation.
      */
-    public Vektor3 screenToWorld(Vertex screenPos, double planeZ, Camera cam) {
+    public Vektor3 screenToWorld(Vektor2 screenPos, double planeZ, Camera cam) {
         if (width <= 0 || height <= 0 || cam == null) {
             return new Vektor3(screenPos.x, screenPos.y, planeZ);
         }
@@ -156,11 +156,11 @@ public class Renderer {
                     // verschiebung der Eckpunkte relativ zur Kamera
                     Vektor3 cameraPos = worldToCamera(worldPos, camera);
                     // Projektion auf 2D-Bildschirm → 2D-Koordinate
-                    Vertex v = project(cameraPos, camera.getFov());
+                    Vektor2 v = project(cameraPos, camera.getFov());
 
                     // Hinzufügen des projizierten Punkts zum Polygon
                     if (v != null) {
-                        poly.addPoint(v.x, v.y);
+                        poly.addPoint((int) v.x, (int) v.y);
                     }
                 }
                 // Nur zeichnen, wenn mindestens ein Dreieck möglich ist
@@ -189,8 +189,8 @@ public class Renderer {
                 Vektor3 cameraPos2 = worldToCamera(worldPos2, camera);
 
                 // Projektion auf 2D-Bildschirm
-                Vertex v1 = project(cameraPos1, camera.getFov());
-                Vertex v2 = project(cameraPos2 , camera.getFov());
+                Vektor2 v1 = project(cameraPos1, camera.getFov());
+                Vektor2 v2 = project(cameraPos2 , camera.getFov());
 
                 // Zeichnen der Kante
                 if (v1 != null && v2 != null) {
@@ -200,7 +200,7 @@ public class Renderer {
                         g.setColor(entity.getFaceColor());
                     }
                     g.setStroke(new BasicStroke(1.0f));
-                    g.drawLine(v1.x, v1.y, v2.x, v2.y);
+                    g.drawLine((int) v1.x, (int) v1.y, (int) v2.x, (int) v2.y);
                 }
             }
         }
@@ -227,7 +227,7 @@ public class Renderer {
         corners[7] = new Vektor3(min.x, max.y, max.z); // Hinten-oben-links
 
         // SCHRITT 2: Alle Eckpunkte in Kamerakoordinaten umwandeln und auf 2D projizieren
-        Vertex[] projected = new Vertex[8];
+        Vektor2[] projected = new Vektor2[8];
 
         for (int i = 0; i < 8; i++) {
             // Weltkoordinaten → Kamerakoordinaten (relativ zur Kamera)
@@ -264,12 +264,12 @@ public class Renderer {
     * Hilfsmethode: Zeichnet eine Kante zwischen zwei projizierten Punkten.
     * Prüft, ob beide Punkte sichtbar sind (nicht null = nicht hinter Kamera).
     * */
-    private void drawEdge(Graphics2D g, Vertex[] points, int index1, int index2) {
+    private void drawEdge(Graphics2D g, Vektor2[] points, int index1, int index2) {
         // Sicherheitscheck: Beide Punkte müssen existieren und sichtbar sein
         if (points[index1] != null && points[index2] != null) {
             g.drawLine(
-                    points[index1].x, points[index1].y,
-                    points[index2].x, points[index2].y
+                    (int) points[index1].x, (int) points[index1].y,
+                    (int) points[index2].x, (int) points[index2].y
             );
         }
     }
