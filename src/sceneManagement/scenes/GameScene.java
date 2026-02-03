@@ -150,7 +150,7 @@ public class GameScene extends Scene {
     private void addPoint(PlayerType scorer) {
         if(scorer == PlayerType.AI) {
             aiScore++;
-            window.getShatteredGlassOverlay().generateShatter(0, 0); // Todo: Position des Balls als Center verwenden
+            window.getShatteredGlassOverlay().generateShatter(0, 0, window.getWidth(), window.getHeight()); // Todo: Position des Balls als Center verwenden
             window.showOverlay(EnumOverlays.SHATTERED_GLASS, true);
         } else {
             playerScore++;

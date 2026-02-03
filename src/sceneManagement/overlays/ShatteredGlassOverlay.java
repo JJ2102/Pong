@@ -13,16 +13,17 @@ public class ShatteredGlassOverlay extends Overlay {
 
     public ShatteredGlassOverlay(GameWindow window) {
         super(window, "", 0, false);
+        setFocusable(false);
     }
 
-    public void generateShatter(int centerX, int centerY) {
+    public void generateShatter(int centerX, int centerY, int width, int height) {
         cracks.clear();
         int numRadialLines = 15 + random.nextInt(15); // Anzahl der Hauptstrahlen
 
         for (int i = 0; i < numRadialLines; i++) {
             // Winkel mit etwas Zufall berechnen
             double angle = (2 * Math.PI / numRadialLines) * i + (random.nextDouble() * 0.5);
-            double length = 800; // Lang genug, um das Panel zu verlassen
+            double length = Math.max(width/2, height/2); // Lang genug, um das Panel zu verlassen
 
             int endX = (int) (centerX + Math.cos(angle) * length);
             int endY = (int) (centerY + Math.sin(angle) * length);
