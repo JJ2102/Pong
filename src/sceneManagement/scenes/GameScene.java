@@ -87,7 +87,7 @@ public class GameScene extends Scene {
         countdown.addTickListener(e -> {
             if ("finished".equals(e.getActionCommand())) {
                 gameState = GameState.PLAYING;
-                window.showOverlay(EnumOverlays.SHATTERED_GLASS, false);
+                window.showOverlay(EnumOverlays.SHATTERED_GLASS, false); // TODO: nach Punkt kurz Einblenden, und vor Countdown ausblenden
             }
         });
 
@@ -145,7 +145,7 @@ public class GameScene extends Scene {
         if(scorer == PlayerType.AI) {
             aiScore++;
             Vektor2 ballScreenPos = renderer.worldToScreen(ball.getTransform().position, camera);
-            window.getShatteredGlassOverlay().generateShatter((int) ballScreenPos.x, (int) ballScreenPos.y, window.getWidth(), window.getHeight()); // Todo: Position des Balls als Center verwenden
+            window.getShatteredGlassOverlay().generateShatter((int) ballScreenPos.x, (int) ballScreenPos.y, window.getWidth(), window.getHeight());
             window.showOverlay(EnumOverlays.SHATTERED_GLASS, true);
         } else {
             playerScore++;
