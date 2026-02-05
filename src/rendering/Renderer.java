@@ -11,18 +11,13 @@ import java.awt.*;
 public class Renderer {
     private int width, height;
     private double scale;
-    private Matrix4x4 translationMatrix;
-    private Matrix4x4 rotationMatrix;
-    private Matrix4x4 scaleMatrix;
     private Matrix4x4 modelMatrix;
-
+    private Matrix4x4 viewMatrix;
 
     public Renderer(int width, int height) {
         this.width = width;
         this.height = height;
         this.scale = Math.min(width, height) / 2.0;
-
-        scaleMatrix = Matrix4x4.getMatrix();
     }
 
     // Ermöglicht Aktualisierung bei Panel-Resize
@@ -126,20 +121,20 @@ public class Renderer {
         Transform transform = entity.getTransform();
 
         // Matrizen für Transformationen initialisieren
-        translationMatrix = Matrix4x4.getTranslationMatrix(
+        Matrix4x4 translationMatrix = Matrix4x4.getTranslationMatrix(
                 transform.position.x,
                 transform.position.y,
                 transform.position.z
         );
 
 
-        rotationMatrix = Matrix4x4.getRotationMatrix(
+        Matrix4x4 rotationMatrix = Matrix4x4.getRotationMatrix(
                 transform.rotation.x,
                 transform.rotation.y,
                 transform.rotation.z
         );
 
-        scaleMatrix = Matrix4x4.getScalingMatrix(
+        Matrix4x4 scaleMatrix = Matrix4x4.getScalingMatrix(
                 transform.scale.x,
                 transform.scale.y,
                 transform.scale.z
@@ -147,28 +142,36 @@ public class Renderer {
 
         modelMatrix = translationMatrix.multiply(rotationMatrix).multiply(scaleMatrix);
 
+        // Matrizen für Kamera-Transformationen
+        Matrix4x4 camTranslation = Matrix4x4.getTranslationMatrix(
+                -camera.getPosition().x,
+                -camera.getPosition().y,
+                -camera.getPosition().z
+        );
+
+        Matrix4x4 camRotation = Matrix4x4.getRotationMatrix(
+                -camera.getRotation().x,
+                -camera.getRotation().y,
+                -camera.getRotation().z
+        );
+
+
+
+        Vektor2[] projectedVertices = new Vektor2[mesh.vertices.size()];
+
+        for (Vektor3 v : mesh.vertices) {
+            Vektor3 worldPos = applyTransform(v);
+            Vektor3 cameraPos = worldToCamera(worldPos, camera);
+            Vektor2 screenPos = project(cameraPos, camera.getFov());
+            projectedVertices[mesh.vertices.indexOf(v)] = screenPos;
+        }
+
         // Flächen zeichnen
         if (mesh.faces != null && renderFaces) { // Sicherheitscheck
             for (int[] face : mesh.faces) { // geht durch alle Flächen des Meshes
                 if (face == null || face.length == 0) continue; // Leere Fläche überspringen
 
-                Polygon poly = new Polygon();
-
-                for (int idx : face) { // geht durch alle Eckpunkte der Fläche; idx ist der Index im Vertex-Array
-                    if (idx < 0 || idx >= mesh.vertices.size()) continue; // idx nicht kleiner 0 oder größer als Anzahl der Eckpunkte
-
-                    // Transformieren der einzelnen Eckpunkte der Fläche
-                    Vektor3 worldPos = applyTransform(mesh.vertices.get(idx));
-                    // verschiebung der Eckpunkte relativ zur Kamera
-                    Vektor3 cameraPos = worldToCamera(worldPos, camera);
-                    // Projektion auf 2D-Bildschirm → 2D-Koordinate
-                    Vektor2 v = project(cameraPos, camera.getFov());
-
-                    // Hinzufügen des projizierten Punkts zum Polygon
-                    if (v != null) {
-                        poly.addPoint((int) v.x, (int) v.y);
-                    }
-                }
+                Polygon poly = getPolygon(face, mesh, projectedVertices); // erstellt ein Polygon aus den projizierten Eckpunkten der Fläche
                 // Nur zeichnen, wenn mindestens ein Dreieck möglich ist
                 if (poly.npoints >= 3) {
                     g.setColor(entity.getFaceColor());
@@ -186,17 +189,8 @@ public class Renderer {
                 int i1 = edge[1];
                 if (i0 < 0 || i1 < 0 || i0 >= mesh.vertices.size() || i1 >= mesh.vertices.size()) continue; // Sicherheitscheck
 
-                // Weltposition der beiden Eckpunkte der Kante
-                Vektor3 worldPos1 = applyTransform(mesh.vertices.get(i0));
-                Vektor3 worldPos2 = applyTransform(mesh.vertices.get(i1));
-
-                // Umwandlung in Kamerakoordinaten
-                Vektor3 cameraPos1 = worldToCamera(worldPos1, camera);
-                Vektor3 cameraPos2 = worldToCamera(worldPos2, camera);
-
-                // Projektion auf 2D-Bildschirm
-                Vektor2 v1 = project(cameraPos1, camera.getFov());
-                Vektor2 v2 = project(cameraPos2 , camera.getFov());
+                Vektor2 v1 = projectedVertices[i0];
+                Vektor2 v2 = projectedVertices[i1];
 
                 // Zeichnen der Kante
                 if (v1 != null && v2 != null) {
@@ -210,6 +204,22 @@ public class Renderer {
                 }
             }
         }
+    }
+
+    private Polygon getPolygon(int[] face, Mesh mesh, Vektor2[] projectedVertices) {
+        Polygon poly = new Polygon();
+
+        for (int idx : face) { // geht durch alle Eckpunkte der Fläche; idx ist der Index im Vertex-Array
+            if (idx < 0 || idx >= mesh.vertices.size()) continue; // idx nicht kleiner 0 oder größer als Anzahl der Eckpunkte
+
+            Vektor2 v = projectedVertices[idx];
+
+            // Hinzufügen des projizierten Punkts zum Polygon
+            if (v != null) {
+                poly.addPoint((int) v.x, (int) v.y);
+            }
+        }
+        return poly;
     }
 
     public void renderBoxHitbox(Graphics2D g, BoxHitbox hitbox, Camera camera, Color color) {
