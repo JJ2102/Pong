@@ -1,6 +1,7 @@
 package rendering;
 
 import hitboxes.BoxHitbox;
+import math.Matrix4x4;
 import math.Vektor2;
 import math.Vektor3;
 import objekts.Entity;
@@ -10,11 +11,23 @@ import java.awt.*;
 public class Renderer {
     private int width, height;
     private double scale;
+    private final Matrix4x4 TranslationMatrix;
+    private final Matrix4x4 RotationMatrixX;
+    private final Matrix4x4 RotationMatrixY;
+    private final Matrix4x4 RotationMatrixZ;
+    private final Matrix4x4 ScaleMatrix;
 
     public Renderer(int width, int height) {
         this.width = width;
         this.height = height;
         this.scale = Math.min(width, height) / 2.0;
+
+        // Matritzen initialisieren
+        TranslationMatrix = Matrix4x4.getMatrix();
+        RotationMatrixX = Matrix4x4.getMatrix();
+        RotationMatrixY = Matrix4x4.getMatrix();
+        RotationMatrixZ = Matrix4x4.getMatrix();
+        ScaleMatrix = Matrix4x4.getMatrix();
     }
 
     // Ermöglicht Aktualisierung bei Panel-Resize
@@ -36,30 +49,21 @@ public class Renderer {
     }
 
     // Transformation anwenden (Scale, Rotation, Translation)
-    private Vektor3 applyTransform(Vektor3 v, Transform t) {
+    private Vektor3 applyTransform(Vektor3 v) {
         // Skalierung
-        Vektor3 scaled = v.multiply(t.scale);
-
-        // Rotation um y-Achse
-        double cosY = Math.cos(t.rotation.y);
-        double sinY = Math.sin(t.rotation.y);
-        double rx = cosY * scaled.x + sinY * scaled.z;
-        double rz = -sinY * scaled.x + cosY * scaled.z;
+        Vektor3 scaled = ScaleMatrix.multiply(v);
 
         // Rotation um x-Achse
-        double cosX = Math.cos(t.rotation.x);
-        double sinX = Math.sin(t.rotation.x);
-        double ry = cosX * scaled.y - sinX * rz;
-        rz = sinX * scaled.y + cosX * rz;
+        Vektor3 rotatedX = RotationMatrixX.multiply(scaled);
+
+        // Rotation um y-Achse
+        Vektor3 rotatedY = RotationMatrixY.multiply(rotatedX);
 
         // Rotation um Z-Achse
-        double cosZ = Math.cos(t.rotation.z);
-        double sinZ = Math.sin(t.rotation.z);
-        double rxx = cosZ * rx - sinZ * ry;
-        double ryy = sinZ * rx + cosZ * ry;
+        Vektor3 rotatedZ = RotationMatrixZ.multiply(rotatedY);
 
         // Translation
-        return new Vektor3(rxx + t.position.x, ryy + t.position.y, rz + t.position.z);
+        return TranslationMatrix.multiply(rotatedZ);
     }
 
     // Converter von Welt- zu Kamerakoordinaten
@@ -139,6 +143,60 @@ public class Renderer {
         Mesh mesh = entity.getMesh();
         Transform transform = entity.getTransform();
 
+        // Matrizen für Transformationen initialisieren
+        /* Translations matrix:
+        * 1 0 0 Tx
+        * 0 1 0 Ty
+        * 0 0 1 Tz
+        * 0 0 0 1
+        * */
+        TranslationMatrix.setValue(0, 3, transform.position.x);
+        TranslationMatrix.setValue(1, 3, transform.position.y);
+        TranslationMatrix.setValue(2, 3, transform.position.z);
+
+        /* Rotation matrix X:
+        * 1 0    0     0
+        * 0 cos  -sin  0
+        * 0 sin  cos   0
+        * 0 0    0     1
+        */
+        RotationMatrixX.setValue(1, 1, Math.cos(transform.rotation.x));
+        RotationMatrixX.setValue(1, 2, -Math.sin(transform.rotation.x));
+        RotationMatrixX.setValue(2, 1, Math.sin(transform.rotation.x));
+        RotationMatrixX.setValue(2, 2, Math.cos(transform.rotation.x));
+
+        /* Rotation matrix Y:
+        * cos 0 sin 0
+        * 0   1 0   0
+        * -sin0 cos 0
+        * 0   0 0   1
+        */
+        RotationMatrixY.setValue(0, 0, Math.cos(transform.rotation.y));
+        RotationMatrixY.setValue(0, 2, Math.sin(transform.rotation.y));
+        RotationMatrixY.setValue(2, 0, -Math.sin(transform.rotation.y));
+        RotationMatrixY.setValue(2, 2, Math.cos(transform.rotation.y));
+
+        /* Rotation matrix Z:
+        * cos -sin 0 0
+        * sin cos  0 0
+        * 0   0    1 0
+        * 0   0    0 1
+        */
+        RotationMatrixZ.setValue(0, 0, Math.cos(transform.rotation.z));
+        RotationMatrixZ.setValue(0, 1, -Math.sin(transform.rotation.z));
+        RotationMatrixZ.setValue(1, 0, Math.sin(transform.rotation.z));
+        RotationMatrixZ.setValue(1, 1, Math.cos(transform.rotation.z));
+
+        /* Scale matrix:
+        * Sx 0  0  0
+        * 0  Sy 0  0
+        * 0  0  Sz 0
+        * 0  0  0  1
+        */
+        ScaleMatrix.setValue(0, 0, transform.scale.x);
+        ScaleMatrix.setValue(1, 1, transform.scale.y);
+        ScaleMatrix.setValue(2, 2, transform.scale.z);
+
         // Flächen zeichnen
         if (mesh.faces != null && renderFaces) { // Sicherheitscheck
             for (int[] face : mesh.faces) { // geht durch alle Flächen des Meshes
@@ -150,7 +208,7 @@ public class Renderer {
                     if (idx < 0 || idx >= mesh.vertices.size()) continue; // idx nicht kleiner 0 oder größer als Anzahl der Eckpunkte
 
                     // Transformieren der einzelnen Eckpunkte der Fläche
-                    Vektor3 worldPos = applyTransform(mesh.vertices.get(idx), transform);
+                    Vektor3 worldPos = applyTransform(mesh.vertices.get(idx));
                     // verschiebung der Eckpunkte relativ zur Kamera
                     Vektor3 cameraPos = worldToCamera(worldPos, camera);
                     // Projektion auf 2D-Bildschirm → 2D-Koordinate
@@ -179,8 +237,8 @@ public class Renderer {
                 if (i0 < 0 || i1 < 0 || i0 >= mesh.vertices.size() || i1 >= mesh.vertices.size()) continue; // Sicherheitscheck
 
                 // Weltposition der beiden Eckpunkte der Kante
-                Vektor3 worldPos1 = applyTransform(mesh.vertices.get(i0), transform);
-                Vektor3 worldPos2 = applyTransform(mesh.vertices.get(i1), transform);
+                Vektor3 worldPos1 = applyTransform(mesh.vertices.get(i0));
+                Vektor3 worldPos2 = applyTransform(mesh.vertices.get(i1));
 
                 // Umwandlung in Kamerakoordinaten
                 Vektor3 cameraPos1 = worldToCamera(worldPos1, camera);

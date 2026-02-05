@@ -1,5 +1,5 @@
 # Mathematische Quellen
-- projektion: https://www.mathematik.uni-marburg.de/~thormae/lectures/graphics1/graphics_6_1_ger_web.html#1
+- projektion und Matrix-Translation: https://www.mathematik.uni-marburg.de/~thormae/lectures/graphics1/graphics_6_1_ger_web.html#1
 
 # Sound- und Audioquellen
 - pong: https://pixabay.com/de/sound-effects/musical-bowling-ball-90863/
