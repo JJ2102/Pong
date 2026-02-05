@@ -39,32 +39,8 @@ public class Renderer {
     }
 
     // Converter von Welt- zu Kamerakoordinaten
-    public Vektor3 worldToCamera(Vektor3 worldPos, Camera cam) {
-        // Translation (Welt -> Kamera-Ursprung)
-        double x = worldPos.x - cam.getPosition().x;
-        double y = worldPos.y - cam.getPosition().y;
-        double z = worldPos.z - cam.getPosition().z;
-
-        // SCHRITT 2: Rotation (inverse der Kamera-Rotation)
-        // Yaw (Y-Achse) - links/rechts schauen
-        double cosY = Math.cos(-cam.getRotation().y);
-        double sinY = Math.sin(-cam.getRotation().y);
-        double rx = cosY * x + sinY * z;
-        double rz = -sinY * x + cosY * z;
-
-        // Pitch (x-Achse) - hoch/runter-schauen
-        double cosX = Math.cos(-cam.getRotation().x);
-        double sinX = Math.sin(-cam.getRotation().x);
-        double ry = cosX * y - sinX * rz;
-        rz = sinX * y + cosX * rz;
-
-        // Roll (z-Achse) - optional, meist 0
-        double cosZ = Math.cos(-cam.getRotation().z);
-        double sinZ = Math.sin(-cam.getRotation().z);
-        double rxx = cosZ * rx - sinZ * ry;
-        double ryy = sinZ * rx + cosZ * ry;
-
-        return new Vektor3(rxx, ryy, rz);
+    public Vektor3 worldToCamera(Vektor3 worldPos) {
+        return viewMatrix.multiply(worldPos);
     }
 
     /**
@@ -121,47 +97,16 @@ public class Renderer {
         Transform transform = entity.getTransform();
 
         // Matrizen für Transformationen initialisieren
-        Matrix4x4 translationMatrix = Matrix4x4.getTranslationMatrix(
-                transform.position.x,
-                transform.position.y,
-                transform.position.z
-        );
-
-
-        Matrix4x4 rotationMatrix = Matrix4x4.getRotationMatrix(
-                transform.rotation.x,
-                transform.rotation.y,
-                transform.rotation.z
-        );
-
-        Matrix4x4 scaleMatrix = Matrix4x4.getScalingMatrix(
-                transform.scale.x,
-                transform.scale.y,
-                transform.scale.z
-        );
-
-        modelMatrix = translationMatrix.multiply(rotationMatrix).multiply(scaleMatrix);
+        generateModelMatrix(transform.position, transform.rotation, transform.scale);
 
         // Matrizen für Kamera-Transformationen
-        Matrix4x4 camTranslation = Matrix4x4.getTranslationMatrix(
-                -camera.getPosition().x,
-                -camera.getPosition().y,
-                -camera.getPosition().z
-        );
+        generateViewMatrix(camera.getPosition(), camera.getRotation());
 
-        Matrix4x4 camRotation = Matrix4x4.getRotationMatrix(
-                -camera.getRotation().x,
-                -camera.getRotation().y,
-                -camera.getRotation().z
-        );
-
-
-
+        // Alle Vertex-Positionen durch die Model- und View-Matrix transformieren und dann auf 2D projizieren
         Vektor2[] projectedVertices = new Vektor2[mesh.vertices.size()];
-
         for (Vektor3 v : mesh.vertices) {
             Vektor3 worldPos = applyTransform(v);
-            Vektor3 cameraPos = worldToCamera(worldPos, camera);
+            Vektor3 cameraPos = worldToCamera(worldPos);
             Vektor2 screenPos = project(cameraPos, camera.getFov());
             projectedVertices[mesh.vertices.indexOf(v)] = screenPos;
         }
@@ -245,7 +190,7 @@ public class Renderer {
 
         for (int i = 0; i < 8; i++) {
             // Weltkoordinaten → Kamerakoordinaten (relativ zur Kamera)
-            Vektor3 cameraPos = worldToCamera(corners[i], camera);
+            Vektor3 cameraPos = worldToCamera(corners[i]);
 
             // Kamerakoordinaten → 2D-Bildschirmkoordinaten (perspektivische Projektion)
             projected[i] = project(cameraPos, camera.getFov());
@@ -274,10 +219,8 @@ public class Renderer {
         drawEdge(g, projected, 3, 7); // Oben-links
     }
 
-    /*
-    * Hilfsmethode: Zeichnet eine Kante zwischen zwei projizierten Punkten.
-    * Prüft, ob beide Punkte sichtbar sind (nicht null = nicht hinter Kamera).
-    * */
+    // ===== Utility-Methoxiden =====
+    // Zeichnet eine Kante zwischen zwei Punkten, wenn beide Punkte gültig sind
     private void drawEdge(Graphics2D g, Vektor2[] points, int index1, int index2) {
         // Sicherheitscheck: Beide Punkte müssen existieren und sichtbar sein
         if (points[index1] != null && points[index2] != null) {
@@ -286,5 +229,46 @@ public class Renderer {
                     (int) points[index2].x, (int) points[index2].y
             );
         }
+    }
+
+    private void generateModelMatrix(Vektor3 position, Vektor3 rotation, Vektor3 scale) {
+        Matrix4x4 translationMatrix = Matrix4x4.getTranslationMatrix(
+                position.x,
+                position.y,
+                position.z
+        );
+
+
+        Matrix4x4 rotationMatrix = Matrix4x4.getRotationMatrix(
+                rotation.x,
+                rotation.y,
+                rotation.z
+        );
+
+        Matrix4x4 scaleMatrix = Matrix4x4.getScalingMatrix(
+                scale.x,
+                scale.y,
+                scale.z
+        );
+
+        // Model-Matrix: Alle Objekt-Transformationen (Translation * Rotation * Scale)
+        modelMatrix = translationMatrix.multiply(rotationMatrix).multiply(scaleMatrix);
+    }
+
+    private void generateViewMatrix(Vektor3 camPos, Vektor3 camRot) {
+        // View-Matrix: Kamera-Transformationen (Rotation * Translation)
+        Matrix4x4 camTranslation = Matrix4x4.getTranslationMatrix(
+                -camPos.x,
+                -camPos.y,
+                -camPos.z
+        );
+
+        Matrix4x4 camRotation = Matrix4x4.getRotationMatrix(
+                -camRot.x,
+                -camRot.y,
+                -camRot.z
+        );
+
+        viewMatrix = camRotation.multiply(camTranslation);
     }
 }
