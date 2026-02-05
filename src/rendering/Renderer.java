@@ -99,16 +99,11 @@ public class Renderer {
         // Matrizen für Transformationen initialisieren
         generateModelMatrix(transform.position, transform.rotation, transform.scale);
 
-        // Matrizen für Kamera-Transformationen
-        generateViewMatrix(camera.getPosition(), camera.getRotation());
-
         // Alle Vertex-Positionen durch die Model- und View-Matrix transformieren und dann auf 2D projizieren
         Vektor2[] projectedVertices = new Vektor2[mesh.vertices.size()];
         for (Vektor3 v : mesh.vertices) {
-            Vektor3 worldPos = applyTransform(v);
-            Vektor3 cameraPos = worldToCamera(worldPos);
-            Vektor2 screenPos = project(cameraPos, camera.getFov());
-            projectedVertices[mesh.vertices.indexOf(v)] = screenPos;
+            Vektor3 transformed = applyTransform(v); // Transformieren in Weltkoordinaten
+            projectedVertices[mesh.vertices.indexOf(v)] = worldToScreen(transformed, camera);
         }
 
         // Flächen zeichnen
@@ -231,6 +226,7 @@ public class Renderer {
         }
     }
 
+    // Matrizen-Generierung
     private void generateModelMatrix(Vektor3 position, Vektor3 rotation, Vektor3 scale) {
         Matrix4x4 translationMatrix = Matrix4x4.getTranslationMatrix(
                 position.x,
@@ -270,5 +266,14 @@ public class Renderer {
         );
 
         viewMatrix = camRotation.multiply(camTranslation);
+    }
+
+    // Konverter Welt- zu Bildschirmkoordinaten
+    public Vektor2 worldToScreen(Vektor3 v, Camera camera) {
+        // Matrizen für Kamera-Transformationen
+        generateViewMatrix(camera.getPosition(), camera.getRotation());
+
+        Vektor3 cameraPos = worldToCamera(v);
+        return project(cameraPos, camera.getFov()); // 2D-Projektion
     }
 }
