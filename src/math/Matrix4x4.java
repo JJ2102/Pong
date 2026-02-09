@@ -14,6 +14,7 @@ public class Matrix4x4 {
 
     // ===== Matrix Generators =====
     public static Matrix4x4 getTranslationMatrix(double tx, double ty, double tz) {
+        // Quelle 1
         /* Translation matrix:
         * 1 0 0 Tx
         * 0 1 0 Ty
@@ -28,6 +29,7 @@ public class Matrix4x4 {
     }
 
     public static Matrix4x4 getRotationMatrix(double rotationX, double rotationY, double rotationZ) {
+        // Quelle 1
         /* Rotation matrix X:
          * 1 0    0     0
          * 0 cos  -sin  0
@@ -69,6 +71,7 @@ public class Matrix4x4 {
     }
 
     public static Matrix4x4 getScalingMatrix(double sx, double sy, double sz) {
+        // Quelle 1
         /* Scaling matrix:
          * Sx 0  0  0
          * 0  Sy 0  0
@@ -82,9 +85,24 @@ public class Matrix4x4 {
         return scalingMatrix;
     }
 
+    public static Matrix4x4 getProjectionMatrix(double fov) {
+        Matrix4x4 p = new Matrix4x4();
+
+        p.setValue(0, 0, fov);
+        p.setValue(1, 1, fov);
+
+        p.setValue(2, 2, 1);
+        p.setValue(3, 2, 1);
+
+        return p;
+    }
+
+
+
 
     // ===== Matrix Operations =====
     public Matrix4x4 multiply(Matrix4x4 m) {
+        // Quelle 3
         Matrix4x4 result = new Matrix4x4();
         for (int row = 0; row < 4; row++) {
             for (int col = 0; col < 4; col++) {
@@ -98,6 +116,7 @@ public class Matrix4x4 {
     }
 
     public Vektor3 multiply(Vektor3 v) {
+        // Quelle 2
         double x = v.x * matrix[0][0] + v.y * matrix[0][1] + v.z * matrix[0][2] + matrix[0][3];
         double y = v.x * matrix[1][0] + v.y * matrix[1][1] + v.z * matrix[1][2] + matrix[1][3];
         double z = v.x * matrix[2][0] + v.y * matrix[2][1] + v.z * matrix[2][2] + matrix[2][3];

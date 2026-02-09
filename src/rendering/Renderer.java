@@ -11,8 +11,11 @@ import java.awt.*;
 public class Renderer {
     private int width, height;
     private double scale;
+
+    // Matrizen
     private Matrix4x4 modelMatrix;
     private Matrix4x4 viewMatrix;
+    private Matrix4x4 projectionMatrix;
 
     public Renderer(int width, int height) {
         this.width = width;
@@ -25,22 +28,6 @@ public class Renderer {
         this.width = width;
         this.height = height;
         this.scale = Math.min(width, height) / 2.0;
-    }
-
-    // Projektion von 3D -> 2D
-    private Vektor2 project(Vektor3 p, double fov) {
-        if (p == null) return null;
-        if (p.z <= 0) return null; // hinter Kamera
-        double x = fov * p.x / p.z;
-        double y = fov * p.y / p.z;
-        double sx = (width / 2.0 + x * scale);
-        double sy = (height / 2.0 - y * scale);
-        return new Vektor2(sx, sy);
-    }
-
-    // Converter von Welt- zu Kamerakoordinaten
-    public Vektor3 worldToCamera(Vektor3 worldPos) {
-        return viewMatrix.multiply(worldPos);
     }
 
     /**
@@ -79,6 +66,19 @@ public class Renderer {
     // Transformation anwenden (Scale, Rotation, Translation)
     private Vektor3 applyTransform(Vektor3 v) {
         return modelMatrix.multiply(v);
+    }
+
+    // Converter von Welt- zu Kamerakoordinaten
+    public Vektor3 worldToCamera(Vektor3 worldPos) {
+        return viewMatrix.multiply(worldPos);
+    }
+
+    // Projektion von 3D -> 2D
+    private Vektor2 project(Vektor3 vektor) {
+        Vektor3 projected = projectionMatrix.multiply(vektor);
+        double screenX = (width / 2.0 + projected.x * scale); // x-Koordinate auf Bildschirm (mit Skalierung)
+        double screenY = (height / 2.0 - projected.y * scale); // y-Koordinate auf Bildschirm (mit Skalierung, y umgekehrt)
+        return new Vektor2(screenX, screenY);
     }
 
     // Render Entity
@@ -184,11 +184,7 @@ public class Renderer {
         Vektor2[] projected = new Vektor2[8];
 
         for (int i = 0; i < 8; i++) {
-            // Weltkoordinaten → Kamerakoordinaten (relativ zur Kamera)
-            Vektor3 cameraPos = worldToCamera(corners[i]);
-
-            // Kamerakoordinaten → 2D-Bildschirmkoordinaten (perspektivische Projektion)
-            projected[i] = project(cameraPos, camera.getFov());
+            projected[i] = worldToScreen(corners[i], camera);
         }
 
         // SCHRITT 3: Kanten der Box zeichnen
@@ -268,12 +264,18 @@ public class Renderer {
         viewMatrix = camRotation.multiply(camTranslation);
     }
 
+    private void generateProjectionMatrix(double fov) {
+        projectionMatrix = Matrix4x4.getProjectionMatrix(fov);
+    }
+
     // Konverter Welt- zu Bildschirmkoordinaten
     public Vektor2 worldToScreen(Vektor3 v, Camera camera) {
         // Matrizen für Kamera-Transformationen
         generateViewMatrix(camera.getPosition(), camera.getRotation());
 
+        generateProjectionMatrix(camera.getFov());
+
         Vektor3 cameraPos = worldToCamera(v);
-        return project(cameraPos, camera.getFov()); // 2D-Projektion
+        return project(cameraPos); // 2D-Projektion
     }
 }
