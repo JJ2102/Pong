@@ -19,6 +19,10 @@ public class Vektor3 {
         return new Vektor3(x * other.x, y * other.y, z * other.z);
     }
 
+    public Vektor3 add(Vektor3 other) {
+        return new Vektor3(x + other.x, y + other.y, z + other.z);
+    }
+
     public double length() {
         return Math.sqrt(x * x + y * y + z * z); // Pythagoras im 3D-Raum
     }

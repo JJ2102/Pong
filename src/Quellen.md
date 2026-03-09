@@ -2,6 +2,7 @@
 1. projektion und Matrix-Translation: http://theissenonline.de/Mathematik/Zentralprojektion.pdf
 2. Matrix mal Vektor: https://wwwold.mathematik.tu-dortmund.de/lsviii/new/media/veranstaltungen/wise1112/linala/LA5.pdf Definition 5.1
 3. Matrix mal Matrix: https://page.math.tu-berlin.de/~moehring/Coma/Skript-I-Java/algorithmenaufarrays.pdf 6.2 Lineare Gleichungssysteme, Seite 121
+4. Inverse Matrix: https://www.mathcentre.ac.uk/resources/Engineering%20maths%20first%20aid%20kit/latexsource%20and%20diagrams/5_5.pdf
 
 # Sound- und Audioquellen
 - pong: https://pixabay.com/de/sound-effects/musical-bowling-ball-90863/

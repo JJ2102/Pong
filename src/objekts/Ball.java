@@ -10,6 +10,7 @@ import java.awt.*;
 
 public class Ball extends Entity {
     double speedX, speedY, speedZ;
+    Vektor3 speed;
 
     private final double radius = 0.2;
 
@@ -22,29 +23,29 @@ public class Ball extends Entity {
         hitbox = new BoxHitbox(transform.position, new Vektor3(size, size, size));
 
         // Speed Setzen
-        speedX = randomSpeed();
-        speedY = randomSpeed();
-        speedZ = randomSpeed();
+        setRandomSpeed();
     }
 
     private double randomSpeed() {
         return Globals.randomSpeed(0.03, 0.05);
     }
 
+    private void setRandomSpeed() {
+        speed = new Vektor3(randomSpeed(), randomSpeed(), randomSpeed());
+    }
+
     public void reset() {
-        this.transform.position = new math.Vektor3(0,0,0);
-        speedX = randomSpeed();
-        speedY = randomSpeed();
-        speedZ = randomSpeed();
+        this.transform.position = new Vektor3(0,0,0);
+        setRandomSpeed();
     }
 
     public boolean paddleHit(BoxHitbox[] paddles) {
         for (BoxHitbox paddle : paddles) {
             if (hitbox.intersects(paddle)) {
-                speedX += Math.signum(speedX) * 0.001;
-                speedY += Math.signum(speedY) * 0.001;
-                speedZ += Math.signum(speedZ) * 0.001;
-                speedZ = -speedZ;
+                speed.x += Math.signum(speed.x) * 0.001;
+                speed.y += Math.signum(speed.y) * 0.001;
+                speed.z += Math.signum(speed.z) * 0.001;
+                speed.z = -speed.z;
 
                 return true;
             }
@@ -54,26 +55,20 @@ public class Ball extends Entity {
 
     public void move() {
         // Position basierend auf der Geschwindigkeit aktualisieren
-        this.transform.position.x += speedX;
-        this.transform.position.y += speedY;
-        this.transform.position.z += speedZ;
+        this.transform.position = this.transform.position.add(speed);
 
         // Einfache Kollisionserkennung mit den Wänden
         if (this.transform.position.x > 2 - radius || this.transform.position.x < -2 + radius) {
-            speedX = -speedX;
+            speed.x = -speed.x;
         }
         if (this.transform.position.y > 1 - radius || this.transform.position.y < -1 + radius) {
-            speedY = -speedY;
+            speed.y = -speed.y;
         }
 
         hitbox.setPosition(transform.position);
     }
 
     // Getter und Setter
-    public double getRadius() {
-        return radius;
-    }
-
     public Vektor3 getSpeed() {
         return new Vektor3(speedX, speedY, speedZ);
     }
