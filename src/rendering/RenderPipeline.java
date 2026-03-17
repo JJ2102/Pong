@@ -18,25 +18,30 @@ public class RenderPipeline {
         return transformed;
     }
 
-    public static List<Vektor3> applyCameraTransform(List<Vektor3> vektors, Camera camera) {
+    private static List<Vektor3> applyCameraTransform(List<Vektor3> transformed, Camera camera) {
         Matrix4x4 viewMatrix = Matrix4x4.getTransformationMatrix(camera.getInvertedTransform());
 
         List<Vektor3> cameraTransformed = new ArrayList<>();
-        for (Vektor3 v : vektors) {
+        for (Vektor3 v : transformed) {
             Vektor3 transformedVertex = viewMatrix.multiply(v);
             cameraTransformed.add(transformedVertex);
         }
         return cameraTransformed;
     }
 
-    public static List<Vektor3> applyFOV(List<Vektor3> vektors, double fov) {
+    private static List<Vektor3> applyFOV(List<Vektor3> cameraTransformed, double fov) {
         Matrix4x4 projectionMatrix = Matrix4x4.getProjectionMatrix(fov);
 
         List<Vektor3> fovApplied = new ArrayList<>();
-        for (Vektor3 v : vektors) {
+        for (Vektor3 v : cameraTransformed) {
             Vektor3 projectedVertex = projectionMatrix.multiply(v);
             fovApplied.add(projectedVertex);
         }
         return fovApplied;
+    }
+
+    public static List<Vektor3> applyCameraParams(List<Vektor3> transformed, Camera camera) {
+        List<Vektor3> cameraTransformed = RenderPipeline.applyCameraTransform(transformed, camera);
+        return RenderPipeline.applyFOV(cameraTransformed, camera.getFov());
     }
 }

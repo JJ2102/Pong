@@ -86,8 +86,7 @@ public class Renderer {
 
         // Matrizen für Transformationen initialisieren
         List<Vektor3> transformed = RenderPipeline.applyTransform(entity.getMesh().vertices, entity.getTransform());
-        List<Vektor3> cameraTransformed = RenderPipeline.applyCameraTransform(transformed, camera);
-        List<Vektor3> fovApplied = RenderPipeline.applyFOV(cameraTransformed, camera.getFov());
+        List<Vektor3> fovApplied = RenderPipeline.applyCameraParams(transformed, camera);
 
         // Alle Vertex-Positionen durch die Model- und View-Matrix transformieren und dann auf 2D projizieren
         Vektor2[] projectedVertices = new Vektor2[fovApplied.size()];
@@ -159,21 +158,22 @@ public class Renderer {
         Vektor3 min = hitbox.getMin();
         Vektor3 max = hitbox.getMax();
 
-        Vektor3[] corners = new Vektor3[8];
-        corners[0] = new Vektor3(min.x, min.y, min.z); // Vorne-unten-links
-        corners[1] = new Vektor3(max.x, min.y, min.z); // Vorne-unten-rechts
-        corners[2] = new Vektor3(max.x, max.y, min.z); // Vorne-oben-rechts
-        corners[3] = new Vektor3(min.x, max.y, min.z); // Vorne-oben-links
-        corners[4] = new Vektor3(min.x, min.y, max.z); // Hinten-unten-links
-        corners[5] = new Vektor3(max.x, min.y, max.z); // Hinten-unten-rechts
-        corners[6] = new Vektor3(max.x, max.y, max.z); // Hinten-oben-rechts
-        corners[7] = new Vektor3(min.x, max.y, max.z); // Hinten-oben-links
+        List<Vektor3> corners = new ArrayList<>();
+        corners.add(new Vektor3(min.x, min.y, min.z)); // Vorne-unten-links
+        corners.add(new Vektor3(max.x, min.y, min.z)); // Vorne-unten-rechts
+        corners.add(new Vektor3(max.x, max.y, min.z)); // Vorne-oben-rechts
+        corners.add(new Vektor3(min.x, max.y, min.z)); // Vorne-oben-links
+        corners.add(new Vektor3(min.x, min.y, max.z)); // Hinten-unten-links
+        corners.add(new Vektor3(max.x, min.y, max.z)); // Hinten-unten-rechts
+        corners.add(new Vektor3(max.x, max.y, max.z)); // Hinten-oben-rechts
+        corners.add(new Vektor3(min.x, max.y, max.z)); // Hinten-oben-links
 
         // SCHRITT 2: Alle Eckpunkte in Kamerakoordinaten umwandeln und auf 2D projizieren
-        Vektor2[] projected = new Vektor2[8];
+        List<Vektor3> fovApplied = RenderPipeline.applyCameraParams(corners, camera);
 
-        for (int i = 0; i < 8; i++) {
-            projected[i] = worldToScreen(corners[i], camera);
+        Vektor2[] projected = new Vektor2[8];
+        for (Vektor3 v : fovApplied) {
+            projected[fovApplied.indexOf(v)] = project(v);
         }
 
         // SCHRITT 3: Kanten der Box zeichnen
@@ -213,8 +213,11 @@ public class Renderer {
 
     // Konverter Welt- zu Bildschirmkoordinaten
     public Vektor2 worldToScreen(Vektor3 v, Camera camera) {
-        Vektor3 cameraPos = Matrix4x4.getTransformationMatrix(camera.getInvertedTransform()).multiply(v);
-        Vektor3 appliedFOV = Matrix4x4.getProjectionMatrix(camera.getFov()).multiply(cameraPos);
+        List<Vektor3> vektorList = new ArrayList<>();
+        vektorList.add(v);
+
+        Vektor3 appliedFOV = RenderPipeline.applyCameraParams(vektorList, camera).getFirst();
+
         return project(appliedFOV); // 2D-Projektion
     }
 }
