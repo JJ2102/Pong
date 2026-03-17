@@ -7,27 +7,36 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RenderPipeline {
-    public static List<Vektor3> applyTransform(Transform transform, List<Vektor3> vertices) {
-        List<Vektor3> output = new ArrayList<>();
-
+    public static List<Vektor3> applyTransform(List<Vektor3> vertices, Transform transform) {
         Matrix4x4 transformMatrix = Matrix4x4.getTransformationMatrix(transform);
 
+        List<Vektor3> transformed = new ArrayList<>();
         for (Vektor3 v : vertices) {
             Vektor3 transformedVertex = transformMatrix.multiply(v);
-            output.add(transformedVertex);
+            transformed.add(transformedVertex);
         }
-
-        return output;
+        return transformed;
     }
 
-    public static Vektor3 applyCameraTransform(Vektor3 vektor, Camera camera) {
+    public static List<Vektor3> applyCameraTransform(List<Vektor3> vektors, Camera camera) {
         Matrix4x4 viewMatrix = Matrix4x4.getTransformationMatrix(camera.getInvertedTransform());
-        return viewMatrix.multiply(vektor);
+
+        List<Vektor3> cameraTransformed = new ArrayList<>();
+        for (Vektor3 v : vektors) {
+            Vektor3 transformedVertex = viewMatrix.multiply(v);
+            cameraTransformed.add(transformedVertex);
+        }
+        return cameraTransformed;
     }
 
-    public static Vektor3 applyFOV(Vektor3 vektor, double fov) {
+    public static List<Vektor3> applyFOV(List<Vektor3> vektors, double fov) {
         Matrix4x4 projectionMatrix = Matrix4x4.getProjectionMatrix(fov);
 
-        return projectionMatrix.multiply(vektor);
+        List<Vektor3> fovApplied = new ArrayList<>();
+        for (Vektor3 v : vektors) {
+            Vektor3 projectedVertex = projectionMatrix.multiply(v);
+            fovApplied.add(projectedVertex);
+        }
+        return fovApplied;
     }
 }

@@ -7,6 +7,7 @@ import math.Vektor3;
 import objekts.Entity;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Renderer {
@@ -84,12 +85,14 @@ public class Renderer {
         Mesh mesh = entity.getMesh();
 
         // Matrizen für Transformationen initialisieren
-        List<Vektor3> output = RenderPipeline.applyTransform(entity.getTransform(), entity.getMesh().vertices);
+        List<Vektor3> transformed = RenderPipeline.applyTransform(entity.getMesh().vertices, entity.getTransform());
+        List<Vektor3> cameraTransformed = RenderPipeline.applyCameraTransform(transformed, camera);
+        List<Vektor3> fovApplied = RenderPipeline.applyFOV(cameraTransformed, camera.getFov());
 
         // Alle Vertex-Positionen durch die Model- und View-Matrix transformieren und dann auf 2D projizieren
-        Vektor2[] projectedVertices = new Vektor2[output.size()];
-        for (Vektor3 v : output) {
-            projectedVertices[output.indexOf(v)] = worldToScreen(v, camera);
+        Vektor2[] projectedVertices = new Vektor2[fovApplied.size()];
+        for (Vektor3 v : fovApplied) {
+            projectedVertices[fovApplied.indexOf(v)] = project(v);
         }
 
         // Flächen zeichnen
@@ -210,8 +213,8 @@ public class Renderer {
 
     // Konverter Welt- zu Bildschirmkoordinaten
     public Vektor2 worldToScreen(Vektor3 v, Camera camera) {
-        Vektor3 cameraPos = RenderPipeline.applyCameraTransform(v, camera);
-        Vektor3 appliedFOV = RenderPipeline.applyFOV(cameraPos, camera.getFov());
+        Vektor3 cameraPos = Matrix4x4.getTransformationMatrix(camera.getInvertedTransform()).multiply(v);
+        Vektor3 appliedFOV = Matrix4x4.getProjectionMatrix(camera.getFov()).multiply(cameraPos);
         return project(appliedFOV); // 2D-Projektion
     }
 }
