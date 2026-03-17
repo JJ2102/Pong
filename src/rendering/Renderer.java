@@ -7,6 +7,7 @@ import math.Vektor3;
 import objekts.Entity;
 
 import java.awt.*;
+import java.util.List;
 
 public class Renderer {
     private int width, height;
@@ -63,11 +64,6 @@ public class Renderer {
         return new Vektor3(worldX, worldY, planeZ);
     }
 
-    // Transformation anwenden (Scale, Rotation, Translation)
-    private Vektor3 applyTransform(Vektor3 v) {
-        return modelMatrix.multiply(v);
-    }
-
     // Converter von Welt- zu Kamerakoordinaten
     public Vektor3 worldToCamera(Vektor3 worldPos) {
         return viewMatrix.multiply(worldPos);
@@ -97,13 +93,12 @@ public class Renderer {
         Transform transform = entity.getTransform();
 
         // Matrizen für Transformationen initialisieren
-        modelMatrix = RenderPipeline.applyTransform(transform);
+        List<Vektor3> output = RenderPipeline.applyTransform(transform, mesh.vertices);
 
         // Alle Vertex-Positionen durch die Model- und View-Matrix transformieren und dann auf 2D projizieren
-        Vektor2[] projectedVertices = new Vektor2[mesh.vertices.size()];
-        for (Vektor3 v : mesh.vertices) {
-            Vektor3 transformed = applyTransform(v); // Transformieren in Weltkoordinaten
-            projectedVertices[mesh.vertices.indexOf(v)] = worldToScreen(transformed, camera);
+        Vektor2[] projectedVertices = new Vektor2[output.size()];
+        for (Vektor3 v : output) {
+            projectedVertices[output.indexOf(v)] = worldToScreen(v, camera);
         }
 
         // Flächen zeichnen

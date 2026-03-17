@@ -1,11 +1,27 @@
 package rendering;
 
 import math.Matrix4x4;
-import math.Vektor2;
 import math.Vektor3;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class RenderPipeline {
-    public static Matrix4x4 applyTransform(Transform transform) {
+    public static List<Vektor3> applyTransform(Transform transform, List<Vektor3> vertices) {
+        List<Vektor3> output = new ArrayList<>();
+
+        Matrix4x4 transformMatrix = getTransformMatrix(transform);
+
+        for (Vektor3 v : vertices) {
+            Vektor3 transformedVertex = transformMatrix.multiply(v);
+            output.add(transformedVertex);
+        }
+
+        return output;
+    }
+
+    private static Matrix4x4 getTransformMatrix(Transform transform) {
         Vektor3 position = transform.position;
         Vektor3 rotation = transform.rotation;
         Vektor3 scale = transform.scale;
