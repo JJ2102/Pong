@@ -3,30 +3,34 @@ package rendering;
 import math.Vektor3;
 
 public class Camera {
-    private Vektor3 position;
-    private Vektor3 rotation; // Pitch, Yaw, Roll
+    private final Transform transform;
     private double fov = 0.8; // Field of View
 
     public Camera() {
-        this.position = new Vektor3(0, 0, -5);
-        this.rotation = new Vektor3(0, 0, 0);
+        transform = new Transform();
+        transform.position = new Vektor3(0, 0, -5);
+        transform.rotation = new Vektor3(0, 0, 0);
+    }
+
+    public Transform getInvertedTransform() {
+        return  transform.invert(true, true, false);
+    }
+
+    public Transform getTransform() {
+        return transform;
     }
 
     // Getter und Setter
     public Vektor3 getPosition() {
-        return position;
+        return transform.position;
     }
 
     public void setPosition(Vektor3 position) {
-        this.position = position;
+        this.transform.position = position;
     }
 
     public Vektor3 getRotation() {
-        return rotation;
-    }
-
-    public void setRotation(Vektor3 rotation) {
-        this.rotation = rotation;
+        return transform.rotation;
     }
 
     public double getFov() {

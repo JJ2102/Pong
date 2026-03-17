@@ -11,6 +11,10 @@ public class Vektor3 {
         this.z = z;
     }
 
+    public Vektor3 invert() {
+        return new Vektor3(-x, -y, -z);
+    }
+
     public Vektor3 divide(double divisor) {
         return new Vektor3(x / divisor, y / divisor, z / divisor);
     }

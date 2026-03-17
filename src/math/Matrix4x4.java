@@ -1,5 +1,7 @@
 package math;
 
+import rendering.Transform;
+
 public class Matrix4x4 {
     public double[][] matrix = new double[4][4];
 
@@ -13,7 +15,20 @@ public class Matrix4x4 {
     }
 
     // ===== Matrix Generators =====
-    public static Matrix4x4 getTranslationMatrix(double tx, double ty, double tz) {
+    public static Matrix4x4 getTransformationMatrix(Transform transform) {
+        Vektor3 position = transform.position;
+        Vektor3 rotation = transform.rotation;
+        Vektor3 scale = transform.scale;
+
+        Matrix4x4 translationMatrix = getTranslationMatrix(position.x, position.y, position.z);
+        Matrix4x4 rotationMatrix = Matrix4x4.getRotationMatrix(rotation.x, rotation.y, rotation.z);
+        Matrix4x4 scaleMatrix = Matrix4x4.getScalingMatrix(scale.x, scale.y, scale.z);
+
+        // Model-Matrix: Alle Objekt-Transformationen (Translation * Rotation * Scale)
+        return translationMatrix.multiply(rotationMatrix).multiply(scaleMatrix);
+    }
+
+    private static Matrix4x4 getTranslationMatrix(double tx, double ty, double tz) {
         // Quelle 1
         /* Translation matrix:
         * 1 0 0 Tx
@@ -28,7 +43,7 @@ public class Matrix4x4 {
         return translationMatrix;
     }
 
-    public static Matrix4x4 getRotationMatrix(double rotationX, double rotationY, double rotationZ) {
+    private static Matrix4x4 getRotationMatrix(double rotationX, double rotationY, double rotationZ) {
         // Quelle 1
         /* Rotation matrix X:
          * 1 0    0     0
@@ -70,7 +85,7 @@ public class Matrix4x4 {
         return rotZ.multiply(rotY).multiply(rotX);
     }
 
-    public static Matrix4x4 getScalingMatrix(double sx, double sy, double sz) {
+    private static Matrix4x4 getScalingMatrix(double sx, double sy, double sz) {
         // Quelle 1
         /* Scaling matrix:
          * Sx 0  0  0

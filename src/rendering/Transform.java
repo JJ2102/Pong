@@ -18,4 +18,18 @@ public class Transform {
         this.rotation = rotation;
         this.scale = scale;
     }
+
+    public Transform invert(boolean pos, boolean rot, boolean scale) {
+        Transform inverted = new Transform(this.position, this.rotation, this.scale);
+
+        if (pos) inverted.position = this.position.invert();
+        if (rot) inverted.rotation = this.rotation.invert();
+        if (scale) inverted.scale = this.scale.invert();
+
+        return inverted;
+    }
+
+    public String toString() {
+        return "Transform{ " + "position=" + position + ", rotation=" + rotation + ", scale=" + scale + '}';
+    }
 }
