@@ -54,9 +54,6 @@ public class Renderer {
             return new Vektor3(camPos.x, camPos.y, planeZ);
         }
 
-        // invers der in project() verwendeten Projektion:
-        // project: x_screen = width/2 + (fov * worldX / worldZ) * scale
-        // => worldX = fovAppliedX * worldZ / fov
         double worldX = camPos.x + fovAppliedX * depth / fov;
         double worldY = camPos.y - fovAppliedY * depth / fov; // y umkehren (Bildschirm y wächst nach unten)
 
