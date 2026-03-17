@@ -39,9 +39,9 @@ public class Renderer {
             return new Vektor3(screenPos.x, screenPos.y, planeZ);
         }
 
-        // Normalisierte Bildschirmkoordinaten (gleiche Basis wie in project())
-        double normalizedX = (screenPos.x - width / 2.0) / scale;
-        double normalizedY = (screenPos.y - height / 2.0) / scale;
+        // screen in fovApplied Koordinaten
+        double fovAppliedX = (screenPos.x - width / 2.0) / scale;
+        double fovAppliedY = (screenPos.y - height / 2.0) / scale;
 
         // Kamera-Parameter
         Vektor3 camPos = cam.getPosition();
@@ -56,9 +56,9 @@ public class Renderer {
 
         // invers der in project() verwendeten Projektion:
         // project: x_screen = width/2 + (fov * worldX / worldZ) * scale
-        // => worldX = normalizedX * worldZ / fov
-        double worldX = camPos.x + normalizedX * depth / fov;
-        double worldY = camPos.y - normalizedY * depth / fov; // y umkehren (Bildschirm y wächst nach unten)
+        // => worldX = fovAppliedX * worldZ / fov
+        double worldX = camPos.x + fovAppliedX * depth / fov;
+        double worldY = camPos.y - fovAppliedY * depth / fov; // y umkehren (Bildschirm y wächst nach unten)
 
         return new Vektor3(worldX, worldY, planeZ);
     }
@@ -84,8 +84,9 @@ public class Renderer {
         // Mesh und Transformation des Objekts holen
         Mesh mesh = entity.getMesh();
 
-        // Matrizen für Transformationen initialisieren
+        // Entity Mesh in welt positionieren (vertices -> transformierten Eckpunkten)
         List<Vektor3> transformed = RenderPipeline.applyTransform(entity.getMesh().vertices, entity.getTransform());
+        // transformed -> cameraKoordinaten -> camera FOV angepassten Koordinaten
         List<Vektor3> fovApplied = RenderPipeline.applyCameraParams(transformed, camera);
 
         // Alle Vertex-Positionen durch die Model- und View-Matrix transformieren und dann auf 2D projizieren
@@ -99,13 +100,8 @@ public class Renderer {
             for (int[] face : mesh.faces) { // geht durch alle Flächen des Meshes
                 if (face == null || face.length == 0) continue; // Leere Fläche überspringen
 
-                Polygon poly = getPolygon(face, mesh, projectedVertices); // erstellt ein Polygon aus den projizierten Eckpunkten der Fläche
-                // Nur zeichnen, wenn mindestens ein Dreieck möglich ist
-                if (poly.npoints >= 3) {
-                    g.setColor(entity.getFaceColor());
-                    g.fillPolygon(poly);
-                    g.setColor(Color.BLACK);
-                }
+                Polygon poly = Drawer.getPolygon(face, projectedVertices); // erstellt ein Polygon aus den projizierten Eckpunkten der Fläche
+                Drawer.drawPolygon(g, poly, entity.getFaceColor());
             }
         }
 
@@ -122,32 +118,10 @@ public class Renderer {
 
                 // Zeichnen der Kante
                 if (v1 != null && v2 != null) {
-                    if (renderFaces) {
-                        g.setColor(entity.getEdgeColor());
-                    } else {
-                        g.setColor(entity.getFaceColor());
-                    }
-                    g.setStroke(new BasicStroke(1.0f));
-                    g.drawLine((int) v1.x, (int) v1.y, (int) v2.x, (int) v2.y);
+                    Drawer.drawLine(g, v1, v2, entity.getEdgeColor());
                 }
             }
         }
-    }
-
-    private Polygon getPolygon(int[] face, Mesh mesh, Vektor2[] projectedVertices) {
-        Polygon poly = new Polygon();
-
-        for (int idx : face) { // geht durch alle Eckpunkte der Fläche; idx ist der Index im Vertex-Array
-            if (idx < 0 || idx >= mesh.vertices.size()) continue; // idx nicht kleiner 0 oder größer als Anzahl der Eckpunkte
-
-            Vektor2 v = projectedVertices[idx];
-
-            // Hinzufügen des projizierten Punkts zum Polygon
-            if (v != null) {
-                poly.addPoint((int) v.x, (int) v.y);
-            }
-        }
-        return poly;
     }
 
     public void renderBoxHitbox(Graphics2D g, BoxHitbox hitbox, Camera camera, Color color) {
@@ -181,36 +155,25 @@ public class Renderer {
         g.setStroke(new BasicStroke(2));
 
         // Vordere Fläche (4 Kanten) - Indizes 0,1,2,3
-        drawEdge(g, projected, 0, 1); // Unten
-        drawEdge(g, projected, 1, 2); // Rechts
-        drawEdge(g, projected, 2, 3); // Oben
-        drawEdge(g, projected, 3, 0); // Links
+        Drawer.drawLine(g, projected[0], projected[1], color); // Unten
+        Drawer.drawLine(g, projected[1], projected[2], color); // Rechts
+        Drawer.drawLine(g, projected[2], projected[3], color); // Oben
+        Drawer.drawLine(g, projected[3], projected[0], color); // Links
 
         // Hintere Fläche (4 Kanten) - Indizes 4,5,6,7
-        drawEdge(g, projected, 4, 5); // Unten
-        drawEdge(g, projected, 5, 6); // Rechts
-        drawEdge(g, projected, 6, 7); // Oben
-        drawEdge(g, projected, 7, 4); // Links
+        Drawer.drawLine(g, projected[4], projected[5], color); // Unten
+        Drawer.drawLine(g, projected[5], projected[6], color); // Rechts
+        Drawer.drawLine(g, projected[6], projected[7], color); // Oben
+        Drawer.drawLine(g, projected[7], projected[4], color); // Links
 
         // Verbindende Kanten (4 Kanten) - von vorne nach hinten
-        drawEdge(g, projected, 0, 4); // Unten-links
-        drawEdge(g, projected, 1, 5); // Unten-rechts
-        drawEdge(g, projected, 2, 6); // Oben-rechts
-        drawEdge(g, projected, 3, 7); // Oben-links
+        Drawer.drawLine(g, projected[0], projected[4], color); // Unten-links
+        Drawer.drawLine(g, projected[1], projected[5], color); // Unten-rechts
+        Drawer.drawLine(g, projected[2], projected[6], color); // Oben-rechts
+        Drawer.drawLine(g, projected[3], projected[7], color); // Oben-links
     }
 
     // ===== Utility-Methoxiden =====
-    // Zeichnet eine Kante zwischen zwei Punkten, wenn beide Punkte gültig sind
-    private void drawEdge(Graphics2D g, Vektor2[] points, int index1, int index2) {
-        // Sicherheitscheck: Beide Punkte müssen existieren und sichtbar sein
-        if (points[index1] != null && points[index2] != null) {
-            g.drawLine(
-                    (int) points[index1].x, (int) points[index1].y,
-                    (int) points[index2].x, (int) points[index2].y
-            );
-        }
-    }
-
     // Konverter Welt- zu Bildschirmkoordinaten
     public Vektor2 worldToScreen(Vektor3 v, Camera camera) {
         List<Vektor3> vektorList = new ArrayList<>();
