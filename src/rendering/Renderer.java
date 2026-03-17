@@ -14,8 +14,6 @@ public class Renderer {
     private double scale;
 
     // Matrizen
-    private Matrix4x4 modelMatrix;
-    private Matrix4x4 viewMatrix;
     private Matrix4x4 projectionMatrix;
 
     public Renderer(int width, int height) {
@@ -64,16 +62,10 @@ public class Renderer {
         return new Vektor3(worldX, worldY, planeZ);
     }
 
-    // Converter von Welt- zu Kamerakoordinaten
-    public Vektor3 worldToCamera(Vektor3 worldPos) {
-        return viewMatrix.multiply(worldPos);
-    }
-
     // Projektion von 3D -> 2D
     private Vektor2 project(Vektor3 vektor) {
-        Vektor3 projected = projectionMatrix.multiply(vektor);
-        double screenX = (width / 2.0 + projected.x * scale); // x-Koordinate auf Bildschirm (mit Skalierung)
-        double screenY = (height / 2.0 - projected.y * scale); // y-Koordinate auf Bildschirm (mit Skalierung, y umgekehrt)
+        double screenX = (width / 2.0 + vektor.x * scale); // x-Koordinate auf Bildschirm (mit Skalierung)
+        double screenY = (height / 2.0 - vektor.y * scale); // y-Koordinate auf Bildschirm (mit Skalierung, y umgekehrt)
         return new Vektor2(screenX, screenY);
     }
 
@@ -216,28 +208,10 @@ public class Renderer {
         }
     }
 
-    // Matrizen-Generierung
-    private void generateViewMatrix(Camera camera) {
-        // View-Matrix: Kamera-Transformationen (Rotation * Translation)
-
-        System.out.println(camera.getTransform());
-        System.out.println(camera.getInvertedTransform());
-
-        viewMatrix = Matrix4x4.getTransformationMatrix(camera.getInvertedTransform());
-    }
-
-    private void generateProjectionMatrix(double fov) {
-        projectionMatrix = Matrix4x4.getProjectionMatrix(fov);
-    }
-
     // Konverter Welt- zu Bildschirmkoordinaten
     public Vektor2 worldToScreen(Vektor3 v, Camera camera) {
-        // Matrizen für Kamera-Transformationen
-        generateViewMatrix(camera);
-
-        generateProjectionMatrix(camera.getFov());
-
-        Vektor3 cameraPos = worldToCamera(v);
-        return project(cameraPos); // 2D-Projektion
+        Vektor3 cameraPos = RenderPipeline.applyCameraTransform(v, camera);
+        Vektor3 appliedFOV = RenderPipeline.applyFOV(cameraPos, camera.getFov());
+        return project(appliedFOV); // 2D-Projektion
     }
 }

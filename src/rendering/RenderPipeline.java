@@ -19,4 +19,15 @@ public class RenderPipeline {
 
         return output;
     }
+
+    public static Vektor3 applyCameraTransform(Vektor3 vektor, Camera camera) {
+        Matrix4x4 viewMatrix = Matrix4x4.getTransformationMatrix(camera.getInvertedTransform());
+        return viewMatrix.multiply(vektor);
+    }
+
+    public static Vektor3 applyFOV(Vektor3 vektor, double fov) {
+        Matrix4x4 projectionMatrix = Matrix4x4.getProjectionMatrix(fov);
+
+        return projectionMatrix.multiply(vektor);
+    }
 }

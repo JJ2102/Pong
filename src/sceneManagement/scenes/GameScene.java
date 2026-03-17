@@ -69,6 +69,7 @@ public class GameScene extends Scene {
         renderer = new Renderer(getWidth(), getHeight());
         camera = new Camera();
         camera.setPosition(new Vektor3(0, 0, cameraPosZ)); // 0, 0, cameraPosZ
+        //camera.getTransform().rotation = new Vektor3(Math.toRadians(20), 0, 0); // Leicht nach unten schauen
 
         // Box und Ball initialisieren
         box = new Box(boxDepth);
@@ -115,7 +116,7 @@ public class GameScene extends Scene {
         player.moveTo(mousePos);
         Vektor3 targetCameraPos = mousePos.divide(15);
         Vektor3 cameraPos = camera.getPosition().lerp(targetCameraPos, 0.5);
-        camera.setPosition(new Vektor3(cameraPos.x, cameraPos.y, cameraPosZ));
+        camera.setPosition(new Vektor3(cameraPos.x, cameraPos.y, camera.getPosition().z));
 
         // Nur Spieler kann sich bewegen
         if (gameState == GameState.COUNTING_DOWN) return;
