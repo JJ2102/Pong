@@ -97,7 +97,7 @@ public class Renderer {
         Transform transform = entity.getTransform();
 
         // Matrizen für Transformationen initialisieren
-        generateModelMatrix(transform.position, transform.rotation, transform.scale);
+        modelMatrix = RenderPipeline.applyTransform(transform);
 
         // Alle Vertex-Positionen durch die Model- und View-Matrix transformieren und dann auf 2D projizieren
         Vektor2[] projectedVertices = new Vektor2[mesh.vertices.size()];
@@ -223,30 +223,6 @@ public class Renderer {
     }
 
     // Matrizen-Generierung
-    private void generateModelMatrix(Vektor3 position, Vektor3 rotation, Vektor3 scale) {
-        Matrix4x4 translationMatrix = Matrix4x4.getTranslationMatrix(
-                position.x,
-                position.y,
-                position.z
-        );
-
-
-        Matrix4x4 rotationMatrix = Matrix4x4.getRotationMatrix(
-                rotation.x,
-                rotation.y,
-                rotation.z
-        );
-
-        Matrix4x4 scaleMatrix = Matrix4x4.getScalingMatrix(
-                scale.x,
-                scale.y,
-                scale.z
-        );
-
-        // Model-Matrix: Alle Objekt-Transformationen (Translation * Rotation * Scale)
-        modelMatrix = translationMatrix.multiply(rotationMatrix).multiply(scaleMatrix);
-    }
-
     private void generateViewMatrix(Vektor3 camPos, Vektor3 camRot) {
         // View-Matrix: Kamera-Transformationen (Rotation * Translation)
         Matrix4x4 camTranslation = Matrix4x4.getTranslationMatrix(
