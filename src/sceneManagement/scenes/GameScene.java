@@ -88,7 +88,7 @@ public class GameScene extends Scene {
         countdown.addTickListener(e -> {
             if ("finished".equals(e.getActionCommand())) {
                 gameState = GameState.PLAYING;
-                window.showOverlay(EnumOverlays.SHATTERED_GLASS, false); // TODO: nach Punkt kurz Einblenden, und vor Countdown ausblenden
+                window.showOverlay(EnumOverlays.SHATTERED_GLASS, false);
             }
         });
 
@@ -116,6 +116,7 @@ public class GameScene extends Scene {
         player.moveTo(mousePos);
         Vektor3 targetCameraPos = mousePos.divide(15);
         Vektor3 cameraPos = camera.getPosition().lerp(targetCameraPos, 0.5);
+
         camera.setPosition(new Vektor3(cameraPos.x, cameraPos.y, camera.getPosition().z));
 
         // Nur Spieler kann sich bewegen

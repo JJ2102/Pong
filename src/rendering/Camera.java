@@ -33,6 +33,10 @@ public class Camera {
         return transform.rotation;
     }
 
+    public void setRotation(Vektor3 rotation) {
+        this.transform.rotation = rotation;
+    }
+
     public double getFov() {
         return fov;
     }
