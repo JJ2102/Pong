@@ -9,9 +9,7 @@ import utility.Globals;
 import java.awt.*;
 
 public class Ball extends Entity {
-    double speedX, speedY, speedZ;
-    Vektor3 speed;
-
+    private Vektor3 speed;
     private final double radius = 0.2;
 
     public Ball() {
@@ -20,7 +18,7 @@ public class Ball extends Entity {
         this.setMesh(boxMesh);
 
         double size = radius * 1.5;
-        hitbox = new BoxHitbox(transform.position, new Vektor3(size, size, size));
+        hitbox = new BoxHitbox(transform.getPosition(), new Vektor3(size, size, size));
 
         // Speed Setzen
         setRandomSpeed();
@@ -35,7 +33,7 @@ public class Ball extends Entity {
     }
 
     public void reset() {
-        this.transform.position = new Vektor3(0,0,0);
+        this.transform.setPosition(new Vektor3(0,0,0));
         setRandomSpeed();
     }
 
@@ -55,26 +53,21 @@ public class Ball extends Entity {
 
     public void move() {
         // Position basierend auf der Geschwindigkeit aktualisieren
-        this.transform.position = this.transform.position.add(speed);
+        this.transform.setPosition(this.transform.getPosition().add(speed));
 
         // Einfache Kollisionserkennung mit den Wänden
-        if (this.transform.position.x > 2 - radius || this.transform.position.x < -2 + radius) {
+        if (this.transform.getPosition().x > 2 - radius || this.transform.getPosition().x < -2 + radius) {
             speed.x = -speed.x;
         }
-        if (this.transform.position.y > 1 - radius || this.transform.position.y < -1 + radius) {
+        if (this.transform.getPosition().y > 1 - radius || this.transform.getPosition().y < -1 + radius) {
             speed.y = -speed.y;
         }
 
-        hitbox.setPosition(transform.position);
-    }
-
-    // Getter und Setter
-    public Vektor3 getSpeed() {
-        return new Vektor3(speedX, speedY, speedZ);
+        hitbox.setPosition(transform.getPosition());
     }
 
     // Debugging
     public String toString() {
-        return "[Ball] Pos: " + transform.position + " Speed: " + getSpeed();
+        return "[Ball] Pos: " + transform.getPosition() + " Speed: " + speed;
     }
 }

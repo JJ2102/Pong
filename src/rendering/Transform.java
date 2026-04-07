@@ -3,9 +3,9 @@ package rendering;
 import math.Vektor3;
 
 public class Transform {
-    public Vektor3 position;
-    public Vektor3 rotation;
-    public Vektor3 scale;
+    private Vektor3 position;
+    private Vektor3 rotation;
+    private Vektor3 scale;
 
     public Transform() {
         this.position = new Vektor3(0, 0, 0);
@@ -27,6 +27,31 @@ public class Transform {
         if (scale) inverted.scale = this.scale.invert();
 
         return inverted;
+    }
+
+    // ===== utility =====
+    public Vektor3 getPosition() {
+        return position;
+    }
+
+    public void setPosition(Vektor3 position) {
+        this.position = position;
+    }
+
+    public Vektor3 getRotation() {
+        return rotation;
+    }
+
+    public void setRotation(Vektor3 rotation) {
+        this.rotation = rotation;
+    }
+
+    public Vektor3 getScale() {
+        return scale;
+    }
+
+    public void setScale(Vektor3 scale) {
+        this.scale = scale;
     }
 
     public String toString() {

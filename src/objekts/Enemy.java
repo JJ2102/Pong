@@ -25,21 +25,21 @@ public class Enemy extends Paddle {
     }
 
     private double clamp(double value, double min, double max) {
-        return Math.max(min, Math.min(max, value));
+        return Math.clamp(value, min, max);
     }
 
     public void move(Vektor3 ballPos, double difficulty) {
-        this.transform.position = this.transform.position.lerp(ballPos, difficulty);
-        this.transform.position.z = posZ;
+        this.transform.setPosition(this.transform.getPosition().lerp(ballPos, difficulty));
+        this.transform.getPosition().z = posZ;
 
         // Begrenze die Position innerhalb der Box
-        transform.position.x = clamp(transform.position.x, MIN_X, MAX_X);
-        transform.position.y = clamp(transform.position.y, MIN_Y, MAX_Y);
+        transform.getPosition().x = clamp(transform.getPosition().x, MIN_X, MAX_X);
+        transform.getPosition().y = clamp(transform.getPosition().y, MIN_Y, MAX_Y);
 
-        hitbox.setPosition(transform.position);
+        hitbox.setPosition(transform.getPosition());
     }
 
     public void reset() {
-        transform.position = new Vektor3(0, 0, transform.position.z);
+        transform.setPosition(new Vektor3(0, 0, transform.getPosition().z));
     }
 }

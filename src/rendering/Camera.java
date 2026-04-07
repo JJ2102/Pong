@@ -8,33 +8,21 @@ public class Camera {
 
     public Camera() {
         transform = new Transform();
-        transform.position = new Vektor3(0, 0, -5);
-        transform.rotation = new Vektor3(0, 0, 0);
+        transform.setPosition(new Vektor3(0, 0, -5));
+        transform.setRotation(new Vektor3(0, 0, 0));
     }
 
     public Transform getInvertedTransform() {
         return  transform.invert(true, true, false);
     }
 
-    public Transform getTransform() {
-        return transform;
-    }
-
     // Getter und Setter
     public Vektor3 getPosition() {
-        return transform.position;
+        return transform.getPosition();
     }
 
     public void setPosition(Vektor3 position) {
-        this.transform.position = position;
-    }
-
-    public Vektor3 getRotation() {
-        return transform.rotation;
-    }
-
-    public void setRotation(Vektor3 rotation) {
-        this.transform.rotation = rotation;
+        this.transform.setPosition(position);
     }
 
     public double getFov() {

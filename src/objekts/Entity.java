@@ -1,7 +1,6 @@
 package objekts;
 
 import hitboxes.BoxHitbox;
-import math.Vektor2;
 import math.Vektor3;
 import rendering.Mesh;
 import rendering.Transform;
@@ -46,6 +45,6 @@ public class Entity {
     }
 
     public Vektor3 getPosition() {
-        return transform.position;
+        return transform.getPosition();
     }
 }

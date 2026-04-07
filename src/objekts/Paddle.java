@@ -15,15 +15,7 @@ public class Paddle extends Entity {
         super(colorFace, colorEdge);
         Mesh panalMesh = new RectangleMesh(xSize, ySize, 0);
         this.setMesh(panalMesh);
-        transform.position = position;
-        hitbox = new BoxHitbox(transform.position , new Vektor3(xSize*2, ySize*2, 0));
-    }
-
-    public double getYSize() {
-        return ySize;
-    }
-
-    public double getXSize() {
-        return xSize;
+        transform.setPosition(position);
+        hitbox = new BoxHitbox(transform.getPosition() , new Vektor3(xSize*2, ySize*2, 0));
     }
 }

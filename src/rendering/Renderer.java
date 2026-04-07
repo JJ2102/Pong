@@ -1,7 +1,6 @@
 package rendering;
 
 import hitboxes.BoxHitbox;
-import math.Matrix4x4;
 import math.Vektor2;
 import math.Vektor3;
 import objekts.Entity;
@@ -13,9 +12,6 @@ import java.util.List;
 public class Renderer {
     private int width, height;
     private double scale;
-
-    // Matrizen
-    private Matrix4x4 projectionMatrix;
 
     public Renderer(int width, int height) {
         this.width = width;
@@ -73,7 +69,7 @@ public class Renderer {
     }
 
     public void renderEntity(Graphics2D g, Entity entity, Camera camera, boolean renderFaces) {
-        if (entity == null || entity.getMesh() == null || entity.getMesh().vertices == null) return;
+        if (entity == null || entity.getMesh() == null || entity.getMesh().getVertices() == null) return;
 
         // Anti-Aliasing für sauberere Linien
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -82,7 +78,7 @@ public class Renderer {
         Mesh mesh = entity.getMesh();
 
         // Entity Mesh in welt positionieren (vertices -> transformierten Eckpunkten)
-        List<Vektor3> transformed = RenderPipeline.applyTransform(entity.getMesh().vertices, entity.getTransform());
+        List<Vektor3> transformed = RenderPipeline.applyTransform(entity.getMesh().getVertices(), entity.getTransform());
         // transformed -> cameraKoordinaten -> camera FOV angepassten Koordinaten
         List<Vektor3> fovApplied = RenderPipeline.applyCameraParams(transformed, camera);
 
@@ -93,8 +89,8 @@ public class Renderer {
         }
 
         // Flächen zeichnen
-        if (mesh.faces != null && renderFaces) { // Sicherheitscheck
-            for (int[] face : mesh.faces) { // geht durch alle Flächen des Meshes
+        if (mesh.getFaces() != null && renderFaces) { // Sicherheitscheck
+            for (int[] face : mesh.getFaces()) { // geht durch alle Flächen des Meshes
                 if (face == null || face.length == 0) continue; // Leere Fläche überspringen
 
                 Polygon poly = Drawer.getPolygon(face, projectedVertices); // erstellt ein Polygon aus den projizierten Eckpunkten der Fläche
@@ -103,12 +99,12 @@ public class Renderer {
         }
 
         // Kanten zeichnen
-        if (mesh.edges != null) {
-            for (int[] edge : mesh.edges) {
+        if (mesh.getEdges() != null) {
+            for (int[] edge : mesh.getEdges()) {
                 if (edge == null || edge.length < 2) continue;
                 int i0 = edge[0];
                 int i1 = edge[1];
-                if (i0 < 0 || i1 < 0 || i0 >= mesh.vertices.size() || i1 >= mesh.vertices.size()) continue; // Sicherheitscheck
+                if (i0 < 0 || i1 < 0 || i0 >= mesh.getVertices().size() || i1 >= mesh.getVertices().size()) continue; // Sicherheitscheck
 
                 Vektor2 v1 = projectedVertices[i0];
                 Vektor2 v2 = projectedVertices[i1];

@@ -12,3 +12,8 @@
 
 # Musikquellen
 - main: https://pixabay.com/de/music/schl%c3%a4gt-back-to-the-same-10140/
+
+# Programmierquellen
+- Aufrunden: https://www.w3schools.com/java/ref_math_ceil.asp
+- Play audio file: https://stackoverflow.com/questions/24481887/playing-wav-song-in-java
+- Volume Change: https://stackoverflow.com/questions/66214054/set-volume-of-a-java-clip-method-not-working

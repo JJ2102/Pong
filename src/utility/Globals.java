@@ -23,7 +23,7 @@ public class Globals {
     }
 
     public static Font getMainFont(int size) {
-        return new Font("Arial", Font.BOLD, (int) size); // Arial
+        return new Font("Arial", Font.BOLD, size); // Arial
     }
 
     // Random Values

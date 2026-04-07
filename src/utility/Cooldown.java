@@ -16,9 +16,4 @@ public class Cooldown {
     public void trigger() {
         nextAllowed = System.currentTimeMillis() + duration;
     }
-
-    public long getRemainingTime() {
-        long remaining = nextAllowed - System.currentTimeMillis();
-        return Math.max(remaining, 0);
-    }
 }

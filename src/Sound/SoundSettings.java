@@ -23,6 +23,6 @@ public class SoundSettings {
     // Hilfsmethode zum Begrenzen der Lautstärke auf den Bereich [0.0, 1.0]
     private float clamp(float v) {
         if (Float.isNaN(v)) return 0f;
-        return Math.max(0f, Math.min(1f, v));
+        return Math.clamp(v, 0f, 1f);
     }
 }

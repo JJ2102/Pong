@@ -41,8 +41,8 @@ public class Ball2D extends Objekt2D {
     }
 
     public void paintMe(Graphics2D g2d) {
-        int posX = (int) (pos.getX() - width / 2);
-        int  posY = (int) (pos.getY() - height / 2);
+        int posX = (int) (pos.getX() - (double) width / 2);
+        int  posY = (int) (pos.getY() - (double) height / 2);
 
         Ellipse2D.Double ball = new Ellipse2D.Double(posX, posY, width*2, height*2);
 

@@ -3,7 +3,7 @@ package math;
 import rendering.Transform;
 
 public class Matrix4x4 {
-    public double[][] matrix = new double[4][4];
+    private final double[][] matrix = new double[4][4];
 
     public static Matrix4x4 getMatrix() {
         Matrix4x4 translationMatrix = new Matrix4x4();
@@ -16,9 +16,9 @@ public class Matrix4x4 {
 
     // ===== Matrix Generators =====
     public static Matrix4x4 getTransformationMatrix(Transform transform) {
-        Vektor3 position = transform.position;
-        Vektor3 rotation = transform.rotation;
-        Vektor3 scale = transform.scale;
+        Vektor3 position = transform.getPosition();
+        Vektor3 rotation = transform.getRotation();
+        Vektor3 scale = transform.getScale();
 
         Matrix4x4 translationMatrix = getTranslationMatrix(position.x, position.y, position.z);
         Matrix4x4 rotationMatrix = Matrix4x4.getRotationMatrix(rotation.x, rotation.y, rotation.z);

@@ -5,9 +5,9 @@ import java.io.File;
 import java.util.HashMap;
 
 public class SoundManager {
-    HashMap<String, Clip> soundEffekts = new HashMap<>();
-    HashMap<String, Clip> backgroundMusik = new HashMap<>();
-    private Clip currentBackgroundMusik;
+    HashMap<String, Clip> soundEffekts = new HashMap<>(); // Name -> Soundeffekt-Clip
+    HashMap<String, Clip> backgroundMusik = new HashMap<>(); // Name -> HintergrundMusik-Clip
+    private Clip currentBackgroundMusik; // aktuelle HintergrundMusik
 
     private final SoundSettings settings;
 
@@ -17,39 +17,45 @@ public class SoundManager {
 
     private Clip createClip(String path) {
         try {
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(path)); // AudioInputStream mit rohdaten erstellen
-            DataLine.Info info = new DataLine.Info(Clip.class, audioInputStream.getFormat()); // Clip Info erstellen
-            Clip clip = (Clip) AudioSystem.getLine(info); // Leeren Clip erstellen
-            clip.open(audioInputStream); // Clip mit Sounddaten füllen
-            return clip;
+            File file = new File(path);
+            if (file.exists()) {
+                AudioInputStream sound = AudioSystem.getAudioInputStream(file); // Audiodatei laden
+                Clip clip = AudioSystem.getClip(); // Clip erstellen
+                clip.open(sound); // Clip mit Audiodaten füllen
+                return clip;
+            } else {
+                System.out.println("Fehler: Audiodatei nicht gefunden: " + path);
+                throw new RuntimeException("Sound: File Not Found: " + path);
+            }
         } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+            System.out.println("Fehler: " + path + ": \n" + e);
         }
+        return null;
     }
 
-    private void setVolume(Clip clip, boolean isMusic) {
+    // ===== Volume =====
+    private void setVolume(Clip clip, float volume) {
         if (clip == null) return;
         try {
-            FloatControl gain = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-            float vol = isMusic ? settings.getMusicVolume() : settings.getEffectsVolume();
-            if (vol <= 0f) { // Stumm
-                gain.setValue(gain.getMinimum());
-            } else { // volume in dB umrechnen
-                float dB = (float) (20.0 * Math.log10(vol)); // dB-Wert berechnen
-                dB = Math.max(gain.getMinimum(), Math.min(gain.getMaximum(), dB)); // dB-Wert begrenzen
-                gain.setValue(dB); // Lautstärke setzen
-            }
+            FloatControl gain = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN); // Lautstärkeregler holen
+            float dB = volumeToDB(volume, gain.getMinimum(), gain.getMaximum()); // Lautstärke in dB umrechnen
+            gain.setValue(dB); // Lautstärke setzen
         } catch (IllegalArgumentException ignored) {
-            // MASTER_GAIN nicht verfügbar -> nichts tun
+            // MASTER_GAIN nicht verfügbar ⇾ nichts tun
         }
     }
 
+    private float volumeToDB(float volume, float min, float max) {
+        float dB = (float) (20.0 * Math.log10(volume)); // dB-Wert berechnen
+        return Math.clamp(dB, min, max); // dB-Wert begrenzen
+    }
+
+    // ===== Soundeffekte =====
     // Soundeffekt laden
     public void loadSoundEffekt(String name, String path) {
-        Clip clip = createClip(path);
+        Clip clip = createClip(path); // clip erstellen
         if (clip != null) {
-            setVolume(clip, false);
+            setVolume(clip, settings.getEffectsVolume());
             soundEffekts.put(name, clip); // Clip in die HashMap speichern
         }
     }
@@ -61,17 +67,18 @@ public class SoundManager {
             if (clip.isRunning()) {
                 clip.stop(); // Stoppe den Sound, wenn er bereits läuft
             }
-            setVolume(clip, false);
+            setVolume(clip, settings.getEffectsVolume());
             clip.setFramePosition(0);
             clip.start();
         }
     }
 
+    // ===== Hintergrundmusik =====
     // Hintergrundmusik laden
     public void loadBackgroundMusik(String name, String path) {
         Clip clip = createClip(path);
         if (clip != null) {
-            setVolume(clip, true);
+            setVolume(clip, settings.getMusicVolume());
             backgroundMusik.put(name, clip);
         }
     }
@@ -84,7 +91,7 @@ public class SoundManager {
         // Stoppe und schließe aktuelle Musik sauber
         stopBackgroundMusik();
 
-        setVolume(clip, true);
+        setVolume(clip, settings.getMusicVolume());
         clip.setFramePosition(0); // Setze die Position auf den Anfang
         clip.loop(Clip.LOOP_CONTINUOUSLY); // Schleife die Musik endlos
         clip.start(); // Starte die Musik
@@ -100,14 +107,15 @@ public class SoundManager {
         }
     }
 
+    // ===== utility =====
     public void applyVolumes() {
         for (Clip clip : soundEffekts.values()) {
-            setVolume(clip, false);
+            setVolume(clip, settings.getEffectsVolume());
         }
         for (Clip clip : backgroundMusik.values()) {
-            setVolume(clip, true);
+            setVolume(clip, settings.getMusicVolume());
         }
-        if (currentBackgroundMusik != null) setVolume(currentBackgroundMusik, true);
+        if (currentBackgroundMusik != null) setVolume(currentBackgroundMusik, settings.getMusicVolume());
     }
 
     public void setEffectsVolume(float v) {

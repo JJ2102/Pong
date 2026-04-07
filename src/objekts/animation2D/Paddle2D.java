@@ -10,8 +10,8 @@ public class Paddle2D extends Objekt2D {
     }
 
     public void paintMe(Graphics2D g2d) {
-        int posX = (int) (pos.getX() - width / 2);
-        int  posY = (int) (pos.getY() - height / 2);
+        int posX = (int) (pos.getX() - (double) width / 2);
+        int  posY = (int) (pos.getY() - (double) height / 2);
 
         Rectangle r = new Rectangle(posX, posY, width, height);
         g2d.setColor(Color.WHITE);

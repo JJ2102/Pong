@@ -21,18 +21,9 @@ public class GameWindow extends JFrame {
     private final SceneManager sceneManager;
     private final SoundManager soundManager;
 
-    // Overlays
-    private PauseOverlay pauseOverlay;
-    private DifficultyOverlay difficultyOverlay;
-    private InfoOverlay infoOverlay;
-    private WinOverlay winOverlay;
-    private WinOverlay loseOverlay;
     private ShatteredGlassOverlay shatteredGlassOverlay;
 
-    // Scenen
-    private MenuScene menuScene;
     private GameScene gameScene;
-    private SettingsScene settingsScene;
 
     public GameWindow(Dimension size) {
         super("Pong 3D"); // Fenstertitel
@@ -55,28 +46,33 @@ public class GameWindow extends JFrame {
 
     private void initManagers() {
         // ===== sceneManager =====
-        // Scenes Erstellen und registrieren
-        menuScene = new MenuScene(this);
-        gameScene = new GameScene(this);
-        settingsScene = new SettingsScene(this);
-
+        // Scenen Erstellen und registrieren
+        MenuScene menuScene = new MenuScene(this);
         sceneManager.registerScene(EnumScenes.MENU, menuScene);
+
+        gameScene = new GameScene(this);
         sceneManager.registerScene(EnumScenes.GAME, gameScene);
+
+        SettingsScene settingsScene = new SettingsScene(this);
         sceneManager.registerScene(EnumScenes.SETTINGS, settingsScene);
 
-        // Overlay erstellen (wird über SceneManager angezeigt/verdeckt)
-        pauseOverlay = new PauseOverlay(this);
-        difficultyOverlay = new DifficultyOverlay(this);
-        infoOverlay = new InfoOverlay(this);
-        winOverlay = new WinOverlay(this, EnumOverlays.WIN);
-        loseOverlay = new WinOverlay(this, EnumOverlays.LOSE);
-        shatteredGlassOverlay = new ShatteredGlassOverlay(this);
-
+        // Overlay erstellen und registrieren
+        PauseOverlay pauseOverlay = new PauseOverlay(this);
         sceneManager.registerOverlay(EnumOverlays.PAUSE, pauseOverlay);
+
+        DifficultyOverlay difficultyOverlay = new DifficultyOverlay(this);
         sceneManager.registerOverlay(EnumOverlays.DIFFICULTY, difficultyOverlay);
+
+        InfoOverlay infoOverlay = new InfoOverlay(this);
         sceneManager.registerOverlay(EnumOverlays.INFO, infoOverlay);
+
+        WinOverlay winOverlay = new WinOverlay(this, EnumOverlays.WIN);
         sceneManager.registerOverlay(EnumOverlays.WIN, winOverlay);
+
+        WinOverlay loseOverlay = new WinOverlay(this, EnumOverlays.LOSE);
         sceneManager.registerOverlay(EnumOverlays.LOSE, loseOverlay);
+
+        shatteredGlassOverlay = new ShatteredGlassOverlay(this);
         sceneManager.registerOverlay(EnumOverlays.SHATTERED_GLASS, shatteredGlassOverlay);
 
         currentScene = EnumScenes.MENU; // Standard-Szene festlegen
@@ -90,7 +86,7 @@ public class GameWindow extends JFrame {
 
         // Hintergrundmusik laden und abspielen
         soundManager.loadBackgroundMusik("bg1", "res/musik/BgSong1.wav");
-        soundManager.playBackgroundMusik("bg1");
+        soundManager.playBackgroundMusik("bg1"); // Hintergrundmusik starten
     }
 
     private void setDefaultWindowOptions() {
@@ -134,10 +130,6 @@ public class GameWindow extends JFrame {
     public void setCurrentScene(EnumScenes scene) {
         this.currentScene = scene;
         sceneManager.setScene(scene);
-    }
-
-    public EnumScenes getCurrentScene() {
-        return currentScene;
     }
 
     public Dimension getSIZE() {

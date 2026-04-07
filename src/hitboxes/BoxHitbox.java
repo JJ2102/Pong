@@ -3,8 +3,8 @@ package hitboxes;
 import math.Vektor3;
 
 public class BoxHitbox {
-    Vektor3 position; // Center position
-    Vektor3 size;   // Width, Height, Depth
+    private Vektor3 position; // Center position
+    private final Vektor3 size;   // Width, Height, Depth
 
     public BoxHitbox(Vektor3 center, Vektor3 size) {
         position = center;

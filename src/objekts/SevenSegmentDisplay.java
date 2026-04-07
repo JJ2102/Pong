@@ -5,8 +5,6 @@ import meshes.SevenSegmentMeshes;
 import java.awt.*;
 
 public class SevenSegmentDisplay extends Entity {
-    private int left = 0;
-    private int right = 0;
 
     public SevenSegmentDisplay() {
         super(Color.GREEN, Color.GREEN);
@@ -14,11 +12,8 @@ public class SevenSegmentDisplay extends Entity {
     }
 
     public void setScore(int left, int right) {
-        this.left = Math.max(0, Math.min(9, left));
-        this.right = Math.max(0, Math.min(9, right));
-        this.setMesh(SevenSegmentMeshes.getDisplayMesh(this.left, this.right));
+        int left1 = Math.clamp(left, 0, 9);
+        int right1 = Math.clamp(right, 0, 9);
+        this.setMesh(SevenSegmentMeshes.getDisplayMesh(left1, right1));
     }
-
-    public int getLeft() { return left; }
-    public int getRight() { return right; }
 }

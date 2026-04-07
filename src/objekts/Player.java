@@ -10,7 +10,7 @@ public class Player extends Paddle {
     }
 
     public void moveTo(Vektor3 position) {
-        transform.position = position;
-        hitbox.setPosition(transform.position);
+        transform.setPosition(position);
+        hitbox.setPosition(transform.getPosition());
     }
 }

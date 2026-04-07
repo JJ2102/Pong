@@ -140,22 +140,22 @@ public class SevenSegmentMeshes {
 
         int baseIndex = targetVertices.size();
 
-        if (sourceMesh.vertices != null) {
-            for (Vektor3 vertex : sourceMesh.vertices) {
+        if (sourceMesh.getVertices() != null) {
+            for (Vektor3 vertex : sourceMesh.getVertices()) {
                 targetVertices.add(new Vektor3(vertex.x + translateX, vertex.y + translateY, vertex.z));
             }
         }
 
-        if (sourceMesh.edges != null) {
-            for (int[] edge : sourceMesh.edges) {
+        if (sourceMesh.getEdges() != null) {
+            for (int[] edge : sourceMesh.getEdges()) {
                 if (edge.length >= 2) {
                     targetEdges.add(new int[] {baseIndex + edge[0], baseIndex + edge[1]});
                 }
             }
         }
 
-        if (sourceMesh.faces != null) {
-            for (int[] face : sourceMesh.faces) {
+        if (sourceMesh.getFaces() != null) {
+            for (int[] face : sourceMesh.getFaces()) {
                 int[] newFace = new int[face.length];
                 for (int i = 0; i < face.length; i++) {
                     newFace[i] = baseIndex + face[i];

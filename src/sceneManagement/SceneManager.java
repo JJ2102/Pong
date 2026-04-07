@@ -29,7 +29,7 @@ public class SceneManager {
         return layeredPane;
     }
 
-    // Scene Methoden
+    // ===== Scenes =====
     public void registerScene(EnumScenes id, Scene panel) {
         panel.setBounds(0, 0, size.width, size.height);
         panel.setVisible(false);
@@ -103,7 +103,7 @@ public class SceneManager {
         return activeOverlayID != null && activeOverlayID.equals(id);
     }
 
-    // Helpers
+    // ===== utility =====
     public <K, V extends JComponent> void updateVisibility(Map<K, V> components, K targetKey) {
         for (Map.Entry<K, V> entry : components.entrySet()) {
             entry.getValue().setVisible(entry.getKey().equals(targetKey));

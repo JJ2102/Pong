@@ -1,6 +1,5 @@
 package objekts.animation2D;
 
-import enums.Direction;
 import math.Vektor2;
 
 import java.awt.*;
@@ -23,28 +22,7 @@ public class Objekt2D {
         this.pos = pos;
     }
 
-
-    public void setPos(Vektor2 pos) {
-        this.pos = pos;
-    }
-
     public Vektor2 getPos() {
         return this.pos;
-    }
-
-    public void setVel(Vektor2 vel) {
-        this.vel = vel;
-    }
-
-    public Vektor2 getVel() {
-        return this.vel;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
-    public int getWidth() {
-        return width;
     }
 }
