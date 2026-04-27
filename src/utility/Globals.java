@@ -4,11 +4,20 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class Globals {
+//    public static Cursor getInvisibleCursor() {
+//        Toolkit toolkit = Toolkit.getDefaultToolkit();
+//        BufferedImage cursorImage = new BufferedImage(1, 1, BufferedImage.TRANSLUCENT);
+//        return toolkit.createCustomCursor(cursorImage, new Point(0, 0), "invisibleCursor");
+//    }
+
     public static Cursor getInvisibleCursor() {
-        Toolkit toolkit = Toolkit.getDefaultToolkit();
-        BufferedImage cursorImage = new BufferedImage(1, 1, BufferedImage.TRANSLUCENT);
-        return toolkit.createCustomCursor(cursorImage, new Point(0, 0), "invisibleCursor");
+        // Transparent 16 x 16 pixel cursor image.
+        BufferedImage cursorImg = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
+
+        // Create a new invisible cursor.
+        return Toolkit.getDefaultToolkit().createCustomCursor(cursorImg, new Point(0, 0), "invisibleCursor");
     }
+
 
     // Farbe
     public static Color getBackgroundColor() {
