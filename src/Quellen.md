@@ -19,3 +19,7 @@
 - Volume Change: https://stackoverflow.com/questions/66214054/set-volume-of-a-java-clip-method-not-working, 06.04.2026
 - Slider Klasse: https://docs.oracle.com/javase/8/docs/api/javax/swing/JSlider.html, 27.04.2026
 - Invisibile Cursor https://stackoverflow.com/questions/1984071/how-to-hide-cursor-in-a-swing-application, 27.04.2026
+
+# Sonstiges
+- Pong als Arcade Game: https://de.wikipedia.org/wiki/Pong
+- Atari: https://de.wikipedia.org/wiki/Atari,_Inc._(1972)
