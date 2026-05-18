@@ -40,10 +40,13 @@ public class Ball extends Entity {
     public boolean paddleHit(BoxHitbox[] paddles) {
         for (BoxHitbox paddle : paddles) {
             if (hitbox.intersects(paddle)) {
+                // jeden hit plus 0.001 speed
                 speed.x += Math.signum(speed.x) * 0.001;
                 speed.y += Math.signum(speed.y) * 0.001;
                 speed.z += Math.signum(speed.z) * 0.001;
-                speed.z = -speed.z;
+                speed.z = -speed.z; // Richtung ändern
+
+                System.out.println(speed);
 
                 return true;
             }

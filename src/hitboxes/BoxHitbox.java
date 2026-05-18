@@ -39,9 +39,9 @@ public class BoxHitbox {
         Vektor3 bMin = other.getMin();
         Vektor3 bMax = other.getMax();
 
-        return (aMin.x <= bMax.x && aMax.x >= bMin.x) && // X axis overlap
-               (aMin.y <= bMax.y && aMax.y >= bMin.y) && // Y axis overlap
-               (aMin.z <= bMax.z && aMax.z >= bMin.z);   // Z axis overlap
+        return (aMin.x <= bMax.x && aMax.x >= bMin.x) && // X-Achsen überlappen
+               (aMin.y <= bMax.y && aMax.y >= bMin.y) && // Y-Achsen überlappen
+               (aMin.z <= bMax.z && aMax.z >= bMin.z);   // Z-Achsen überlappen
     }
 
     public String toString() {

@@ -120,13 +120,14 @@ public class GameScene extends Scene {
         if (gameState == GameState.COUNTING_DOWN) return;
 
         BoxHitbox[] paddleHitboxes = new BoxHitbox[]{player.getHitbox(), aiPlayer.getHitbox()};
-        // Ball bewegen
+        // Paddle kolision prüfen
         if (hitCooldown.isReady()) {
             if (ball.paddleHit(paddleHitboxes)) {
                 window.getSoundManager().playSoundEffekt("pong");
                 hitCooldown.trigger();
             }
         }
+        // Ball bewegen
         ball.move();
 
         // Tore prüfen
@@ -137,6 +138,7 @@ public class GameScene extends Scene {
             addPoint(PlayerType.PLAYER);
         }
 
+        // KI bewegen
         aiPlayer.move(ball.getTransform().getPosition(), gameDifficulty.getValue());
     }
 
