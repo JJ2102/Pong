@@ -21,5 +21,5 @@
 - Invisibile Cursor https://stackoverflow.com/questions/1984071/how-to-hide-cursor-in-a-swing-application, 27.04.2026
 
 # Sonstiges
-- Pong als Arcade Game: https://de.wikipedia.org/wiki/Pong
-- Atari: https://de.wikipedia.org/wiki/Atari,_Inc._(1972)
+- Pong als Arcade Game: https://de.wikipedia.org/wiki/Pong, 26.05.2026
+- Atari: https://de.wikipedia.org/wiki/Atari,_Inc._(1972), 26.05.2026
