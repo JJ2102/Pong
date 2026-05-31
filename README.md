@@ -1,19 +1,14 @@
 # 3D Pong
 
----
-
 ## Beschreibung
 Ein Einzelspieler 3D-Pong in Java Swing, inspiriert von klassischen Pong-Spielen,
 aber mit einer modernen selbstentwickelten perspektivischen 3D-Grafik. Das Ziel ist es, den Ball am gegnerischen Paddle vorbeizubringen.
-
----
+![game](aufnahmen/gameplay.gif)
 
 ## Technische Highlights
 - **Kollisionserkennung**: Findet jeden Tick zwischen definierten Objekten durch ein Hitboxsystem statt.
 - **Eigene 3D-Engine**: Die 3-dimensionalen Eckpunkte der Objekte werden per Transformationsmatrizen und perspektivischer Projektion auf eine 2-dimensionale Ebene projiziert.
 - **Update-Logik**: Ein Swing-Timer sorgt für regelmäßige Updates der Spielszene, einschließlich Bewegung, Kollisionserkennung und Soundwiedergabe.
-
----
 
 ## Projektstruktur
 | Klasse           | Beschreibung                                                               |
@@ -29,8 +24,6 @@ aber mit einer modernen selbstentwickelten perspektivischen 3D-Grafik. Das Ziel 
 | `GameScene`      | Koordiniert und speichert die Spieldaten                                   |
 | `SceneManager`   | Koordiniert zwischen den verschiedenen Szenen (Menü, Spiel, Einstellungen) |
 | `SoundManager`   | Steuert die Soundwiedergabe                                                |
-
----
 
 ## Voraussetzungen & Installation
 
@@ -51,8 +44,6 @@ aber mit einer modernen selbstentwickelten perspektivischen 3D-Grafik. Das Ziel 
 3. `src`-Ordner als Quellcode-Verzeichnis markieren
 4. `res`-Ordner als Ressourcen-Verzeichnis markieren
 5. `Game.java` als Einstiegspunkt festlegen und ausführen
-
----
 
 ## Autor
 GitHub: [@JJ2102](https://github.com/JJ2102)
