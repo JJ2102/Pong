@@ -8,8 +8,8 @@ import java.awt.*;
 import java.awt.geom.Ellipse2D;
 
 public class Ball2D extends Objekt2D {
-    public Ball2D(Dimension windowSize) {
-        super(windowSize, 30, 30);
+    public Ball2D(Dimension windowSize, int size) {
+        super(windowSize, size, size);
         vel = new Vektor2(Globals.randomSpeed(3, 5), Globals.randomSpeed(3, 5));
     }
 
@@ -26,10 +26,10 @@ public class Ball2D extends Objekt2D {
     }
 
     public Direction isOut(Dimension windowSize) {
-        boolean outLeft   = pos.x <= width + 20;
-        boolean outRight  = pos.x >= windowSize.width  - width - 30;
+        boolean outLeft   = pos.x <= width;
+        boolean outRight  = pos.x >= windowSize.width  - width*2;
         boolean outTop    = pos.y <= height;
-        boolean outBottom = pos.y >= windowSize.height - height;
+        boolean outBottom = pos.y >= windowSize.height - height*2;
 
         if (outLeft || outRight) {
             return Direction.X;

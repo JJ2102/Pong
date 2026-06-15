@@ -20,7 +20,7 @@ public class MenuScene extends ButtonScene {
     public MenuScene(GameWindow window) {
         super(window, "Pong 3D");
 
-        ball = new Ball2D(window.getSIZE());
+        ball = new Ball2D(window.getSIZE(), 20);
         p1 = new Paddle2D(new Vektor2(10, (double) window.getSIZE().height / 2));
         p2 = new Paddle2D(new Vektor2(window.getSIZE().width - 10, (double) window.getSIZE().height / 2));
 
