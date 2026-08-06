@@ -1,29 +1,29 @@
-package sceneManagement.overlays;
+package scenemanagement.overlays;
 
-import enums.EnumOverlays;
-import sceneManagement.GameWindow;
+import enums.OverlayType;
+import scenemanagement.GameWindow;
 import utility.Button;
 
 public class WinOverlay extends Overlay {
-    public WinOverlay(GameWindow window, EnumOverlays overlayType) {
-        super(window, overlayType == EnumOverlays.LOSE ? "You Lose!" : "You Win!", 150, true);
+    public WinOverlay(GameWindow window, OverlayType overlayType) {
+        super(window, overlayType == OverlayType.LOSE ? "You Lose!" : "You Win!", 150, true);
 
         // Buttons
-        Button playAgainBtn = new Button("Play Again");
-        Button menuBtn = new Button("Back to Menu");
+        Button playAgainButton = new Button("Play Again");
+        Button menuButton = new Button("Back to Menu");
 
         // Aktionen
-        playAgainBtn.addActionListener(_ -> {
+        playAgainButton.addActionListener(_ -> {
             window.toggleOverlay(overlayType);
             window.getGameScene().restart();
         });
-        menuBtn.addActionListener(_ -> {
+        menuButton.addActionListener(_ -> {
             window.toggleOverlay(overlayType);
             window.returnToMenu();
         });
 
-        addComponent(playAgainBtn);
-        addComponent(menuBtn);
+        addComponent(playAgainButton);
+        addComponent(menuButton);
 
         positionComponents();
     }

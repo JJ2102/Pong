@@ -1,6 +1,7 @@
 package enums;
 
-public enum EnumOverlays {
+// Alle möglichen Overlays
+public enum OverlayType {
     PAUSE,
     DIFFICULTY,
     INFO,

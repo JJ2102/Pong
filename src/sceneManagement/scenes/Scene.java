@@ -1,6 +1,6 @@
-package sceneManagement.scenes;
+package scenemanagement.scenes;
 
-import sceneManagement.GameWindow;
+import scenemanagement.GameWindow;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,16 +11,15 @@ import java.awt.event.MouseMotionListener;
 
 public abstract class Scene extends JPanel implements KeyListener, MouseMotionListener {
     protected final GameWindow window;
-    protected Timer timer;
-    protected Dimension size;
+    private Timer timer;
 
     public Scene(GameWindow window) {
         this.window = window;
-        this.size = window.getSIZE();
         setFocusable(true);
         addKeyListener(this);
         addMouseMotionListener(this);
 
+        // Game-Loop: alle 20ms (~50 FPS) Zustand aktualisieren und neu zeichnen
         timer = new Timer(20, _ -> {
             update();
             repaint();
@@ -51,6 +50,10 @@ public abstract class Scene extends JPanel implements KeyListener, MouseMotionLi
 
     public void onResume() {
         startScene();
+    }
+
+    protected Timer getTimer() {
+        return timer;
     }
 
     // Default Input-Handling

@@ -1,5 +1,6 @@
 package enums;
 
+// Schwierigkeit des Spiels
 public enum Difficulty {
     EASY(0.1),
     MEDIUM(0.2),

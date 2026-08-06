@@ -1,23 +1,23 @@
-package objekts;
+package objects;
 
-import math.Vektor3;
+import math.Vector3;
 import meshes.RectangleMesh;
 import rendering.Mesh;
 
 import java.awt.*;
 
 public class Box extends Entity {
-    private final Vektor3 size;
+    private final Vector3 size;
 
     public Box(double depth) {
         super(Color.BLACK, Color.WHITE);
-        this.size = new Vektor3(2.45, 1.4, depth);
+        this.size = new Vector3(2.45, 1.4, depth);
         Mesh boxMesh = new RectangleMesh(size.x, size.y, size.z);
         this.setMesh(boxMesh);
     }
 
     // Getter und Setter
-    public Vektor3 getSize() {
+    public Vector3 getSize() {
         return size;
     }
 }

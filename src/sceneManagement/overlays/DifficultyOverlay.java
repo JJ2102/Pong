@@ -1,8 +1,8 @@
-package sceneManagement.overlays;
+package scenemanagement.overlays;
 
 import enums.Difficulty;
-import enums.EnumOverlays;
-import sceneManagement.GameWindow;
+import enums.OverlayType;
+import scenemanagement.GameWindow;
 import utility.Button;
 
 public class DifficultyOverlay extends Overlay {
@@ -10,27 +10,27 @@ public class DifficultyOverlay extends Overlay {
         super(window, "Select Difficulty", 200, true);
 
         // Buttons
-        Button easyBtn = new Button("Easy");
-        Button mediumBtn = new Button("Medium");
-        Button hardBtn = new Button("Hard");
-        Button cancelBtn = new Button("Cancel");
+        Button easyButton = new Button("Easy");
+        Button mediumButton = new Button("Medium");
+        Button hardButton = new Button("Hard");
+        Button cancelButton = new Button("Cancel");
 
         // Aktionen
-        easyBtn.addActionListener(_ -> startGame(Difficulty.EASY));
-        mediumBtn.addActionListener(_ -> startGame(Difficulty.MEDIUM));
-        hardBtn.addActionListener(_ -> startGame(Difficulty.HARD));
-        cancelBtn.addActionListener(_ -> window.toggleOverlay(EnumOverlays.DIFFICULTY));
+        easyButton.addActionListener(_ -> startGame(Difficulty.EASY));
+        mediumButton.addActionListener(_ -> startGame(Difficulty.MEDIUM));
+        hardButton.addActionListener(_ -> startGame(Difficulty.HARD));
+        cancelButton.addActionListener(_ -> window.toggleOverlay(OverlayType.DIFFICULTY));
 
-        addComponent(easyBtn);
-        addComponent(mediumBtn);
-        addComponent(hardBtn);
-        addComponent(cancelBtn);
+        addComponent(easyButton);
+        addComponent(mediumButton);
+        addComponent(hardButton);
+        addComponent(cancelButton);
 
         positionComponents();
     }
 
     private void startGame(Difficulty difficulty) {
-        window.toggleOverlay(EnumOverlays.DIFFICULTY);
+        window.toggleOverlay(OverlayType.DIFFICULTY);
         window.getGameScene().setDifficulty(difficulty);
         window.startGame();
     }

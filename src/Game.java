@@ -1,11 +1,11 @@
-import sceneManagement.GameWindow;
+import scenemanagement.GameWindow;
 
 import java.awt.*;
 
 public class Game {
-    static Dimension ScreenSize = Toolkit.getDefaultToolkit().getScreenSize(); // Bildschirmgröße ermitteln
+    private static final Dimension SCREEN_SIZE = Toolkit.getDefaultToolkit().getScreenSize(); // Bildschirmgröße ermitteln
 
     public static void main(String[] args) {
-        new GameWindow(ScreenSize); // GameWindow mit Bildschirmgröße erstellen
+        new GameWindow(SCREEN_SIZE); // GameWindow mit Bildschirmgröße erstellen
     }
 }

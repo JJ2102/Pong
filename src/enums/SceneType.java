@@ -1,6 +1,7 @@
 package enums;
 
-public enum EnumScenes {
+// alle möglichen Szenen
+public enum SceneType {
     MENU,
     GAME,
     SETTINGS

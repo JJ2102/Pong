@@ -1,6 +1,6 @@
-package sceneManagement.scenes;
+package scenemanagement.scenes;
 
-import sceneManagement.GameWindow;
+import scenemanagement.GameWindow;
 import utility.Button;
 import utility.InfoLabel;
 import utility.Slider;
@@ -18,16 +18,16 @@ public class SettingsScene extends ButtonScene {
         InfoLabel volumeEffectsLabel = new InfoLabel("Volume Effects:");
         Slider volumeEffectsSlider = new Slider(0, 100, effectsVolume);
         volumeEffectsSlider.addChangeListener(_ -> {
-            float vol = volumeEffectsSlider.getValue() / 100f;
-            window.getSoundManager().setEffectsVolume(vol);
-            window.getSoundManager().playSoundEffekt("pong");
+            float volume = volumeEffectsSlider.getValue() / 100f;
+            window.getSoundManager().setEffectsVolume(volume);
+            window.getSoundManager().playSoundEffect("pong");
         });
 
         InfoLabel volumeMusicLabel = new InfoLabel("Volume Music:");
         Slider volumeMusicSlider = new Slider(0, 100, musicVolume);
         volumeMusicSlider.addChangeListener(_ -> {
-            float vol = volumeMusicSlider.getValue() / 100f;
-            window.getSoundManager().setMusicVolume(vol);
+            float volume = volumeMusicSlider.getValue() / 100f;
+            window.getSoundManager().setMusicVolume(volume);
         });
 
         Button exitButton = new Button("Back to Menu");

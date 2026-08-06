@@ -1,21 +1,21 @@
-package sceneManagement;
+package scenemanagement;
 
-import Sound.SoundManager;
-import enums.EnumOverlays;
-import enums.EnumScenes;
-import sceneManagement.overlays.*;
-import sceneManagement.scenes.GameScene;
-import sceneManagement.scenes.MenuScene;
-import sceneManagement.scenes.SettingsScene;
+import sound.SoundManager;
+import enums.OverlayType;
+import enums.SceneType;
+import scenemanagement.overlays.*;
+import scenemanagement.scenes.GameScene;
+import scenemanagement.scenes.MenuScene;
+import scenemanagement.scenes.SettingsScene;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class GameWindow extends JFrame {
-    private EnumScenes currentScene;
-    private final Dimension SIZE;
+    private SceneType currentScene; // speichert die aktuelle Szene
+    private final Dimension windowSize;
 
-    private boolean DEBUG = false;
+    private boolean debug = false; // wird für debugausgaben genutzt
 
     // Manager
     private final SceneManager sceneManager;
@@ -25,92 +25,100 @@ public class GameWindow extends JFrame {
 
     private GameScene gameScene;
 
-    public GameWindow(Dimension size) {
+    public GameWindow(Dimension windowSize) {
         super("Pong 3D"); // Fenstertitel
-        SIZE = size; // Fenstergröße speichern
+        this.windowSize = windowSize; // Fenstergröße speichern
 
         // Manager initialisieren
-        sceneManager = new SceneManager(SIZE);
+        sceneManager = new SceneManager(this.windowSize);
         this.setContentPane(sceneManager.getLayeredPane());
 
         soundManager = new SoundManager();
 
-        initManagers(); // Szenen initialisieren
+        initManagers(); // Szenen und Sound laden
 
+        // Fenster Einstellungen Setzen
         setDefaultWindowOptions();
         sceneManager.setScene(currentScene); // Startszene anzeigen
         pack();
-        setLocationRelativeTo(null);
+        this.setLocationRelativeTo(null);
         setVisible(true);
     }
 
+    // Erstellt und Läd die Szenen und die Sounds
     private void initManagers() {
         // ===== sceneManager =====
         // Scenen Erstellen und registrieren
         MenuScene menuScene = new MenuScene(this);
-        sceneManager.registerScene(EnumScenes.MENU, menuScene);
+        sceneManager.registerScene(SceneType.MENU, menuScene);
 
         gameScene = new GameScene(this);
-        sceneManager.registerScene(EnumScenes.GAME, gameScene);
+        sceneManager.registerScene(SceneType.GAME, gameScene);
 
         SettingsScene settingsScene = new SettingsScene(this);
-        sceneManager.registerScene(EnumScenes.SETTINGS, settingsScene);
+        sceneManager.registerScene(SceneType.SETTINGS, settingsScene);
 
         // Overlay erstellen und registrieren
         PauseOverlay pauseOverlay = new PauseOverlay(this);
-        sceneManager.registerOverlay(EnumOverlays.PAUSE, pauseOverlay);
+        sceneManager.registerOverlay(OverlayType.PAUSE, pauseOverlay);
 
         DifficultyOverlay difficultyOverlay = new DifficultyOverlay(this);
-        sceneManager.registerOverlay(EnumOverlays.DIFFICULTY, difficultyOverlay);
+        sceneManager.registerOverlay(OverlayType.DIFFICULTY, difficultyOverlay);
 
         InfoOverlay infoOverlay = new InfoOverlay(this);
-        sceneManager.registerOverlay(EnumOverlays.INFO, infoOverlay);
+        sceneManager.registerOverlay(OverlayType.INFO, infoOverlay);
 
-        WinOverlay winOverlay = new WinOverlay(this, EnumOverlays.WIN);
-        sceneManager.registerOverlay(EnumOverlays.WIN, winOverlay);
+        WinOverlay winOverlay = new WinOverlay(this, OverlayType.WIN);
+        sceneManager.registerOverlay(OverlayType.WIN, winOverlay);
 
-        WinOverlay loseOverlay = new WinOverlay(this, EnumOverlays.LOSE);
-        sceneManager.registerOverlay(EnumOverlays.LOSE, loseOverlay);
+        WinOverlay loseOverlay = new WinOverlay(this, OverlayType.LOSE);
+        sceneManager.registerOverlay(OverlayType.LOSE, loseOverlay);
 
         shatteredGlassOverlay = new ShatteredGlassOverlay(this);
-        sceneManager.registerOverlay(EnumOverlays.SHATTERED_GLASS, shatteredGlassOverlay);
+        sceneManager.registerOverlay(OverlayType.SHATTERED_GLASS, shatteredGlassOverlay);
 
-        currentScene = EnumScenes.MENU; // Standard-Szene festlegen
+        currentScene = SceneType.MENU; // Standard-Szene festlegen
 
         // ===== soundManager =====
         // Soundeffekte laden
-        soundManager.loadSoundEffekt("pong", "res/sounds/pong.wav");
-        soundManager.loadSoundEffekt("score", "res/sounds/score.wav");
-        soundManager.loadSoundEffekt("win", "res/sounds/win.wav");
-        soundManager.loadSoundEffekt("lose", "res/sounds/lose.wav");
+        soundManager.loadSoundEffect("pong", "res/sounds/pong.wav");
+        soundManager.loadSoundEffect("score", "res/sounds/score.wav");
+        soundManager.loadSoundEffect("win", "res/sounds/win.wav");
+        soundManager.loadSoundEffect("lose", "res/sounds/lose.wav");
 
         // Hintergrundmusik laden und abspielen
-        soundManager.loadBackgroundMusik("bg1", "res/musik/BgSong1.wav");
-        soundManager.playBackgroundMusik("bg1"); // Hintergrundmusik starten
+        soundManager.loadBackgroundMusic("bg1", "res/musik/BgSong1.wav");
+        soundManager.playBackgroundMusic("bg1"); // Hintergrundmusik starten
     }
 
+    // Setzt die Standardoptionen für das Fenster
     private void setDefaultWindowOptions() {
         this.setUndecorated(true);
         this.setResizable(false);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
-    // start / stop Game
+    // Startet das Spiel
     public void startGame() {
-        setCurrentScene(EnumScenes.GAME);
+        setCurrentScene(SceneType.GAME);
     }
 
     public void returnToMenu() {
-        sceneManager.hideOverlay(EnumOverlays.PAUSE);
-        sceneManager.hideOverlay(EnumOverlays.WIN);
-        sceneManager.hideOverlay(EnumOverlays.LOSE);
+        // versteckt alle overlays
+        sceneManager.hideOverlay(OverlayType.PAUSE);
+        sceneManager.hideOverlay(OverlayType.WIN);
+        sceneManager.hideOverlay(OverlayType.LOSE);
 
+        // Resetet das spiel für das nächste mal
         gameScene.reset();
-        setCurrentScene(EnumScenes.MENU);
+
+        // zeigt Menu als Szene
+        setCurrentScene(SceneType.MENU);
     }
 
     // Overlay Methoden
-    public void toggleOverlay(EnumOverlays overlayID) {
+    // Falls das Overlay nicht sichtbar ist, zeige es an, sonst verstecke es
+    public void toggleOverlay(OverlayType overlayID) {
         if (!sceneManager.isOverlayVisible(overlayID)) {
             sceneManager.showOverlay(overlayID);
         } else {
@@ -118,22 +126,23 @@ public class GameWindow extends JFrame {
         }
     }
 
-    public void showOverlay(EnumOverlays overlayID, boolean show) {
-        if (show && !sceneManager.isOverlayVisible(overlayID)) {
-            sceneManager.showOverlay(overlayID);
-        } else if (sceneManager.isOverlayVisible(overlayID)) {
-            sceneManager.hideOverlay(overlayID);
+    // Falls show true ist, zeige das Overlay an, sonst verstecke es
+    public void showOverlay(OverlayType overlayID, boolean show) {
+        if (show) {
+            sceneManager.showOverlay(overlayID); // zeige overlay an
+        } else {
+            sceneManager.hideOverlay(overlayID); // verstecke overlay
         }
     }
 
-    // Getters und Setters
-    public void setCurrentScene(EnumScenes scene) {
+    // Getter und Setter
+    public void setCurrentScene(SceneType scene) {
         this.currentScene = scene;
         sceneManager.setScene(scene);
     }
 
-    public Dimension getSIZE() {
-        return SIZE;
+    public Dimension getWindowSize() {
+        return windowSize;
     }
 
     public GameScene getGameScene() {
@@ -149,10 +158,10 @@ public class GameWindow extends JFrame {
     }
 
     public boolean isDebug() {
-        return DEBUG;
+        return debug;
     }
 
     public void toggleDebug() {
-        this.DEBUG = !this.DEBUG;
+        this.debug = !this.debug;
     }
 }

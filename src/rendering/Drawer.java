@@ -1,15 +1,15 @@
 package rendering;
 
-import math.Vektor2;
+import math.Vector2;
 
 import java.awt.*;
 
 public class Drawer {
-    public static Polygon getPolygon(int[] face, Vektor2[] projectedVertices) {
+    public static Polygon getPolygon(int[] face, Vector2[] projectedVertices) {
         Polygon poly = new Polygon();
 
         for (int idx : face) { // geht durch alle Eckpunkte der Fläche; idx ist der Index im Vertex-Array
-            Vektor2 v = projectedVertices[idx];
+            Vector2 v = projectedVertices[idx];
 
             // Hinzufügen des projizierten Punkts zum Polygon
             if (v != null) {
@@ -26,7 +26,7 @@ public class Drawer {
         }
     }
 
-    public static void drawLine(Graphics2D g, Vektor2 v1, Vektor2 v2, Color color) {
+    public static void drawLine(Graphics2D g, Vector2 v1, Vector2 v2, Color color) {
         g.setColor(color);
         g.setStroke(new BasicStroke(1.0f));
         g.drawLine((int) v1.x, (int) v1.y, (int) v2.x, (int) v2.y);

@@ -3,23 +3,34 @@ package math;
 import rendering.Transform;
 
 public class Matrix4x4 {
-    private final double[][] matrix = new double[4][4];
+    private final double[][] matrix = new double[4][4]; // 2D-Array speichert die 4x4 Matrix-Werte
 
-    public static Matrix4x4 getMatrix() {
-        Matrix4x4 translationMatrix = new Matrix4x4();
-        translationMatrix.matrix[0][0] = 1;
-        translationMatrix.matrix[1][1] = 1;
-        translationMatrix.matrix[2][2] = 1;
-        translationMatrix.matrix[3][3] = 1;
-        return translationMatrix;
+    // Gibt die Einheitsmatrix zurück
+    public static Matrix4x4 getUnitMatrix() {
+        /*
+         * 1 0 0 0
+         * 0 1 0 0
+         * 0 0 1 0
+         * 0 0 0 1
+         */
+        Matrix4x4 unitMatrix = new Matrix4x4(); // neue Matrix erstellen
+        // Hauptdiagonale auf 1 setzen
+        unitMatrix.matrix[0][0] = 1;
+        unitMatrix.matrix[1][1] = 1;
+        unitMatrix.matrix[2][2] = 1;
+        unitMatrix.matrix[3][3] = 1;
+        return unitMatrix;
     }
 
-    // ===== Matrix Generators =====
+    // ===== Matrix-Generatoren =====
+    // Erstellt eine kombinierte Transformationsmatrix (Translation * Rotation * Scale)
     public static Matrix4x4 getTransformationMatrix(Transform transform) {
-        Vektor3 position = transform.getPosition();
-        Vektor3 rotation = transform.getRotation();
-        Vektor3 scale = transform.getScale();
+        // Position, Rotation und Skalierung aus dem Transform-Objekt holen
+        Vector3 position = transform.getPosition();
+        Vector3 rotation = transform.getRotation();
+        Vector3 scale = transform.getScale();
 
+        // Einzelne Transformationsmatrizen erstellen
         Matrix4x4 translationMatrix = getTranslationMatrix(position.x, position.y, position.z);
         Matrix4x4 rotationMatrix = Matrix4x4.getRotationMatrix(rotation.x, rotation.y, rotation.z);
         Matrix4x4 scaleMatrix = Matrix4x4.getScalingMatrix(scale.x, scale.y, scale.z);
@@ -28,6 +39,7 @@ public class Matrix4x4 {
         return translationMatrix.multiply(rotationMatrix).multiply(scaleMatrix);
     }
 
+    // Erstellt eine Translationsmatrix für die Verschiebung
     private static Matrix4x4 getTranslationMatrix(double tx, double ty, double tz) {
         // Quelle 1
         /* Translation matrix:
@@ -36,13 +48,15 @@ public class Matrix4x4 {
         * 0 0 1 Tz
         * 0 0 0 1
         */
-        Matrix4x4 translationMatrix = getMatrix();
+        Matrix4x4 translationMatrix = getUnitMatrix(); // startet mit der Einheitsmatrix
+        // Verschiebungs-Werte in die vierte Spalte eintragen
         translationMatrix.setValue(0, 3, tx);
         translationMatrix.setValue(1, 3, ty);
         translationMatrix.setValue(2, 3, tz);
         return translationMatrix;
     }
 
+    // Erstellt eine Rotationsmatrix aus den Rotationswinkeln (X, Y, Z)
     private static Matrix4x4 getRotationMatrix(double rotationX, double rotationY, double rotationZ) {
         // Quelle 1
         /* Rotation matrix X:
@@ -51,7 +65,7 @@ public class Matrix4x4 {
          * 0 sin  cos   0
          * 0 0    0     1
          */
-        Matrix4x4 rotX = getMatrix();
+        Matrix4x4 rotX = getUnitMatrix();
         rotX.setValue(1, 1, Math.cos(rotationX));
         rotX.setValue(1, 2, -Math.sin(rotationX));
         rotX.setValue(2, 1, Math.sin(rotationX));
@@ -63,7 +77,7 @@ public class Matrix4x4 {
          * -sin0 cos 0
          * 0   0 0   1
          */
-        Matrix4x4 rotY = getMatrix();
+        Matrix4x4 rotY = getUnitMatrix();
         rotY.setValue(0, 0, Math.cos(rotationY));
         rotY.setValue(0, 2, Math.sin(rotationY));
         rotY.setValue(2, 0, -Math.sin(rotationY));
@@ -75,7 +89,7 @@ public class Matrix4x4 {
          * 0   0    1 0
          * 0   0    0 1
          */
-        Matrix4x4 rotZ = getMatrix();
+        Matrix4x4 rotZ = getUnitMatrix();
         rotZ.setValue(0, 0, Math.cos(rotationZ));
         rotZ.setValue(0, 1, -Math.sin(rotationZ));
         rotZ.setValue(1, 0, Math.sin(rotationZ));
@@ -85,6 +99,7 @@ public class Matrix4x4 {
         return rotZ.multiply(rotY).multiply(rotX);
     }
 
+    // Erstellt eine Skalierungsmatrix
     private static Matrix4x4 getScalingMatrix(double sx, double sy, double sz) {
         // Quelle 1
         /* Scaling matrix:
@@ -93,32 +108,35 @@ public class Matrix4x4 {
          * 0  0  Sz 0
          * 0  0  0  1
          */
-        Matrix4x4 scalingMatrix = getMatrix();
+        Matrix4x4 scalingMatrix = getUnitMatrix(); // startet mit der Einheitsmatrix
+        // Skalierungsfaktoren auf der Hauptdiagonale setzen
         scalingMatrix.setValue(0, 0, sx);
         scalingMatrix.setValue(1, 1, sy);
         scalingMatrix.setValue(2, 2, sz);
         return scalingMatrix;
     }
 
+    // Erstellt eine Projektionsmatrix für die 3D-Projektion
     public static Matrix4x4 getProjectionMatrix(double fov) {
         Matrix4x4 p = new Matrix4x4();
 
+        // FOV-Werte setzen
         p.setValue(0, 0, fov);
         p.setValue(1, 1, fov);
 
+        // Z- und W-Werte für Perspektive setzen
         p.setValue(2, 2, 1);
         p.setValue(3, 2, 1);
 
         return p;
     }
 
-
-
-
-    // ===== Matrix Operations =====
+    // ===== Matrix-Operationen =====
+    // Multipliziert zwei 4x4 Matrizen
     public Matrix4x4 multiply(Matrix4x4 m) {
         // Quelle 3
-        Matrix4x4 result = new Matrix4x4();
+        Matrix4x4 result = new Matrix4x4(); // Ergebnismatrix erstellen
+        // Zeilen und Spalten durchgehen und Matrixprodukt berechnen
         for (int row = 0; row < 4; row++) {
             for (int col = 0; col < 4; col++) {
                 result.matrix[row][col] = 0;
@@ -130,24 +148,29 @@ public class Matrix4x4 {
         return result;
     }
 
-    public Vektor3 multiply(Vektor3 v) {
+    // Multipliziert die Matrix mit einem 3D-Vektor
+    public Vector3 multiply(Vector3 v) {
         // Quelle 2
+        // Neue Komponenten inklusive homogener Koordinaten berechnen
         double x = v.x * matrix[0][0] + v.y * matrix[0][1] + v.z * matrix[0][2] + matrix[0][3];
         double y = v.x * matrix[1][0] + v.y * matrix[1][1] + v.z * matrix[1][2] + matrix[1][3];
         double z = v.x * matrix[2][0] + v.y * matrix[2][1] + v.z * matrix[2][2] + matrix[2][3];
         double w = v.x * matrix[3][0] + v.y * matrix[3][1] + v.z * matrix[3][2] + matrix[3][3];
 
-        if (w != 0 && w != 1) { // Normalisierung, falls nötig
-            return new Vektor3(x / w, y / w, z / w);
+        // Normalisierung, falls nötig (Perspektiventeilung)
+        if (w != 0 && w != 1) {
+            return new Vector3(x / w, y / w, z / w);
         }
-        return new Vektor3(x, y, z);
+        return new Vector3(x, y, z);
     }
 
-    // ==== Utility Methods =====
+    // ===== Hilfsmethoden =====
+    // Setzt einen Wert an einer bestimmten Position in der Matrix
     public void setValue(int row, int col, double value) {
         matrix[row][col] = value;
     }
 
+    // Gibt die Matrix als formatierte Zeichenkette für die Konsole zurück
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -161,3 +184,4 @@ public class Matrix4x4 {
         return sb.toString();
     }
 }
+

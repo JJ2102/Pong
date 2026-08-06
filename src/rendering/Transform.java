@@ -1,56 +1,56 @@
 package rendering;
 
-import math.Vektor3;
+import math.Vector3;
 
 public class Transform {
-    private Vektor3 position;
-    private Vektor3 rotation;
-    private Vektor3 scale;
+    private Vector3 position;
+    private Vector3 rotation;
+    private Vector3 scale;
 
     public Transform() {
-        this.position = new Vektor3(0, 0, 0);
-        this.rotation = new Vektor3(0, 0, 0);
-        this.scale = new Vektor3(1, 1, 1);
+        this.position = new Vector3(0, 0, 0);
+        this.rotation = new Vector3(0, 0, 0);
+        this.scale = new Vector3(1, 1, 1);
     }
 
-    public Transform(Vektor3 position, Vektor3 rotation, Vektor3 scale) {
+    public Transform(Vector3 position, Vector3 rotation, Vector3 scale) {
         this.position = position;
         this.rotation = rotation;
         this.scale = scale;
     }
 
-    public Transform invert(boolean pos, boolean rot, boolean scale) {
+    public Transform invert(boolean position, boolean rotation, boolean scale) {
         Transform inverted = new Transform(this.position, this.rotation, this.scale);
 
-        if (pos) inverted.position = this.position.invert();
-        if (rot) inverted.rotation = this.rotation.invert();
+        if (position) inverted.position = this.position.invert();
+        if (rotation) inverted.rotation = this.rotation.invert();
         if (scale) inverted.scale = this.scale.invert();
 
         return inverted;
     }
 
-    // ===== utility =====
-    public Vektor3 getPosition() {
+    // ===== Hilfsmethoden =====
+    public Vector3 getPosition() {
         return position;
     }
 
-    public void setPosition(Vektor3 position) {
+    public void setPosition(Vector3 position) {
         this.position = position;
     }
 
-    public Vektor3 getRotation() {
+    public Vector3 getRotation() {
         return rotation;
     }
 
-    public void setRotation(Vektor3 rotation) {
+    public void setRotation(Vector3 rotation) {
         this.rotation = rotation;
     }
 
-    public Vektor3 getScale() {
+    public Vector3 getScale() {
         return scale;
     }
 
-    public void setScale(Vektor3 scale) {
+    public void setScale(Vector3 scale) {
         this.scale = scale;
     }
 

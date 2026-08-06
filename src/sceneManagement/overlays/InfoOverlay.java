@@ -1,7 +1,7 @@
-package sceneManagement.overlays;
+package scenemanagement.overlays;
 
-import enums.EnumOverlays;
-import sceneManagement.GameWindow;
+import enums.OverlayType;
+import scenemanagement.GameWindow;
 import utility.Button;
 import utility.Globals;
 
@@ -11,7 +11,7 @@ public class InfoOverlay extends Overlay {
     public InfoOverlay(GameWindow window) {
         super(window, "Information", 225, false);
 
-        JLabel controlsLabel = new JLabel( // TODO: add more info (what is the Game about, etc.)
+        JLabel controlsLabel = new JLabel( // TODO: mehr Infos ergänzen (worum es im Spiel geht, etc.)
                 "<html>" +
                         "<div style='text-align: center;'>" +
                             "Use Mouse to move the paddle.<br>" +
@@ -22,9 +22,9 @@ public class InfoOverlay extends Overlay {
         controlsLabel.setForeground(Globals.getFontColor());
         addComponent(controlsLabel);
 
-        Button cancelBtn = new Button("Close");
-        cancelBtn.addActionListener(_ -> window.toggleOverlay(EnumOverlays.INFO));
-        addComponent(cancelBtn);
+        Button cancelButton = new Button("Close");
+        cancelButton.addActionListener(_ -> window.toggleOverlay(OverlayType.INFO));
+        addComponent(cancelButton);
 
         positionComponents();
     }

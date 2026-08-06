@@ -4,20 +4,13 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class Globals {
-//    public static Cursor getInvisibleCursor() {
-//        Toolkit toolkit = Toolkit.getDefaultToolkit();
-//        BufferedImage cursorImage = new BufferedImage(1, 1, BufferedImage.TRANSLUCENT);
-//        return toolkit.createCustomCursor(cursorImage, new Point(0, 0), "invisibleCursor");
-//    }
-
     public static Cursor getInvisibleCursor() {
-        // Transparent 16 x 16 pixel cursor image.
+        // Transparentes 16x16-Pixel-Bild als Cursor verwenden
         BufferedImage cursorImg = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
 
-        // Create a new invisible cursor.
+        // Neuen unsichtbaren Cursor erstellen
         return Toolkit.getDefaultToolkit().createCustomCursor(cursorImg, new Point(0, 0), "invisibleCursor");
     }
-
 
     // Farbe
     public static Color getBackgroundColor() {
@@ -32,10 +25,10 @@ public class Globals {
     }
 
     public static Font getMainFont(int size) {
-        return new Font("Arial", Font.BOLD, size); // Arial
+        return new Font("Arial", Font.BOLD, size);
     }
 
-    // Random Values
+    // Zufallswerte
     public static double randomSpeed(double min, double max) {
         // zufällige Richtung: -1 oder +1
         double sign = Math.random() < 0.5 ? -1 : 1;

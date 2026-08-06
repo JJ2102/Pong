@@ -1,6 +1,6 @@
-package sceneManagement.overlays;
+package scenemanagement.overlays;
 
-import sceneManagement.GameWindow;
+import scenemanagement.GameWindow;
 
 import java.awt.*;
 import java.awt.geom.Line2D;

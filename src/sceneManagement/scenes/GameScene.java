@@ -1,15 +1,14 @@
-package sceneManagement.scenes;
+package scenemanagement.scenes;
 
 import enums.Difficulty;
-import enums.EnumOverlays;
+import enums.OverlayType;
 import hitboxes.BoxHitbox;
-import math.Vektor2;
-import math.Vektor3;
-import objekts.*;
-import objekts.SevenSegmentDisplay;
+import math.Vector2;
+import math.Vector3;
+import objects.*;
 import rendering.Camera;
 import rendering.Renderer;
-import sceneManagement.GameWindow;
+import scenemanagement.GameWindow;
 import utility.Cooldown;
 import utility.Countdown;
 import utility.Globals;
@@ -19,7 +18,7 @@ import java.awt.event.MouseEvent;
 
 public class GameScene extends Scene {
     // Difficulty
-    Difficulty gameDifficulty = Difficulty.MEDIUM;
+    private Difficulty gameDifficulty = Difficulty.MEDIUM;
 
     // FPS
     private long lastFrameTime = System.currentTimeMillis();
@@ -52,13 +51,13 @@ public class GameScene extends Scene {
 
     // Scoring
     private final Countdown countdown;
-    private enum  GameState { PLAYING, COUNTING_DOWN }
+    private enum GameState { PLAYING, COUNTING_DOWN }
     private GameState gameState = GameState.COUNTING_DOWN;
 
     // Positionen
     private final double boxDepth = 1.5;
-    private final double playerPosZ = -boxDepth + 0.2;
-    private Vektor3 mousePos = new Vektor3(0,0,playerPosZ); // Aktuelle Mausposition
+    private final double playerPositionZ = -boxDepth + 0.2;
+    private Vector3 mousePosition = new Vector3(0, 0, playerPositionZ); // Aktuelle Mausposition
 
     public GameScene(GameWindow window) {
         super(window);
@@ -67,8 +66,8 @@ public class GameScene extends Scene {
         // Renderer initialisieren
         renderer = new Renderer(getWidth(), getHeight());
         camera = new Camera();
-        double cameraPosZ = -boxDepth - 1;
-        camera.setPosition(new Vektor3(0, 0, cameraPosZ)); // 0, 0, cameraPosZ
+        double cameraPositionZ = -boxDepth - 1;
+        camera.setPosition(new Vector3(0, 0, cameraPositionZ)); // Kamera hinter der Box platzieren
 
         // Box und Ball initialisieren
         box = new Box(boxDepth);
@@ -76,16 +75,16 @@ public class GameScene extends Scene {
 
         // Score Display initialisieren
         scoreDisplay = new SevenSegmentDisplay();
-        scoreDisplay.getTransform().setScale(new Vektor3(0.5, 0.5, 0.5));
-        scoreDisplay.getTransform().setPosition(new Vektor3(box.getSize().x - 0.1, 0, -0.5));
-        scoreDisplay.getTransform().setRotation(new Vektor3(0, Math.toRadians(90), 0));
+        scoreDisplay.getTransform().setScale(new Vector3(0.5, 0.5, 0.5));
+        scoreDisplay.getTransform().setPosition(new Vector3(box.getSize().x - 0.1, 0, -0.5));
+        scoreDisplay.getTransform().setRotation(new Vector3(0, Math.toRadians(90), 0));
 
         // 3 Sekunden Countdown erstellen
         countdown = new Countdown(3000); // 3 Sekunden
         countdown.onTick(_ -> repaint());
         countdown.onFinish(() -> {
             gameState = GameState.PLAYING;
-            window.showOverlay(EnumOverlays.SHATTERED_GLASS, false);
+            window.showOverlay(OverlayType.SHATTERED_GLASS, false);
         });
 
         // Hit Cooldown initialisieren
@@ -93,28 +92,28 @@ public class GameScene extends Scene {
 
 
         // Hitboxes für Tore
-        Vektor3 boxSize = box.getSize();
-        Vektor3 hitboxSize = new Vektor3(boxSize.x * 2, boxSize.y * 2, 0);
-        goalPlayerHitbox = new BoxHitbox(new Vektor3(0, 0, -boxDepth), hitboxSize);
-        goalAIHitbox = new BoxHitbox(new Vektor3(0, 0, boxDepth), hitboxSize);
+        Vector3 boxSize = box.getSize();
+        Vector3 hitboxSize = new Vector3(boxSize.x * 2, boxSize.y * 2, 0);
+        goalPlayerHitbox = new BoxHitbox(new Vector3(0, 0, -boxDepth), hitboxSize);
+        goalAIHitbox = new BoxHitbox(new Vector3(0, 0, boxDepth), hitboxSize);
 
         // Spieler-Panel an 0, 0 Initialisieren
-        player = new Player(new Vektor3(0,0,playerPosZ));
+        player = new Player(new Vector3(0, 0, playerPositionZ));
 
         // KI-Panel an spiegelverkehrte Position initialisieren
-        Vektor3 playerPos = player.getTransform().getPosition();
-        Vektor3 aiPos = new Vektor3(playerPos.x, playerPos.y, -playerPosZ);
-        aiPlayer = new Enemy(aiPos, box.getSize());
+        Vector3 playerPosition = player.getTransform().getPosition();
+        Vector3 aiPosition = new Vector3(playerPosition.x, playerPosition.y, -playerPositionZ);
+        aiPlayer = new Enemy(aiPosition, box.getSize());
     }
 
     public void update() {
         if (window.isDebug()) calculateFPS();
 
-        player.moveTo(mousePos);
+        player.moveTo(mousePosition);
         // leichte Kamera bewegung basierend auf Mausposition, um mehr Dynamik zu erzeugen
-        Vektor3 targetCameraPos = mousePos.divide(15);
-        Vektor3 cameraPos = camera.getPosition().lerp(targetCameraPos, 0.5);
-        camera.setPosition(new Vektor3(cameraPos.x, cameraPos.y, camera.getPosition().z));
+        Vector3 targetCameraPosition = mousePosition.divide(15);
+        Vector3 cameraPosition = camera.getPosition().lerp(targetCameraPosition, 0.5);
+        camera.setPosition(new Vector3(cameraPosition.x, cameraPosition.y, camera.getPosition().z));
 
         // Nur Spieler kann sich während des Countdowns bewegen, Ball und KI pausieren
         if (gameState == GameState.COUNTING_DOWN) return;
@@ -123,7 +122,7 @@ public class GameScene extends Scene {
         // Paddle kolision prüfen
         if (hitCooldown.isReady()) {
             if (ball.paddleHit(paddleHitboxes)) {
-                window.getSoundManager().playSoundEffekt("pong");
+                window.getSoundManager().playSoundEffect("pong");
                 hitCooldown.trigger();
             }
         }
@@ -145,26 +144,24 @@ public class GameScene extends Scene {
     private void addPoint(PlayerType scorer) {
         if(scorer == PlayerType.AI) {
             aiScore++;
-            Vektor2 ballScreenPos = renderer.worldToScreen(ball.getTransform().getPosition(), camera);
-            window.getShatteredGlassOverlay().generateShatter((int) ballScreenPos.x, (int) ballScreenPos.y, window.getWidth(), window.getHeight());
-            window.showOverlay(EnumOverlays.SHATTERED_GLASS, true);
+            Vector2 ballScreenPosition = renderer.worldToScreen(ball.getTransform().getPosition(), camera);
+            window.getShatteredGlassOverlay().generateShatter((int) ballScreenPosition.x, (int) ballScreenPosition.y, window.getWidth(), window.getHeight());
+            window.showOverlay(OverlayType.SHATTERED_GLASS, true);
         } else {
             playerScore++;
         }
-        window.getSoundManager().playSoundEffekt("score");
+        window.getSoundManager().playSoundEffect("score");
         scoreDisplay.setScore(aiScore, playerScore);
         ball.reset();
 
         // Überprüfen, ob jemand gewonnen hat
         if (aiScore == winningScore || playerScore == winningScore) {
             if (aiScore == winningScore) {
-                System.out.println("AI wins!");
-                window.toggleOverlay(EnumOverlays.LOSE);
-                window.getSoundManager().playSoundEffekt("lose");
+                window.toggleOverlay(OverlayType.LOSE);
+                window.getSoundManager().playSoundEffect("lose");
             } else {
-                System.out.println("Player wins!");
-                window.toggleOverlay(EnumOverlays.WIN);
-                window.getSoundManager().playSoundEffekt("win");
+                window.toggleOverlay(OverlayType.WIN);
+                window.getSoundManager().playSoundEffect("win");
             }
             return;
         }
@@ -186,13 +183,13 @@ public class GameScene extends Scene {
     // Laufzeit
     @Override
     public void onPause() {
-        if (timer.isRunning()) timer.stop();
+        if (getTimer().isRunning()) getTimer().stop();
         if (countdown.isRunning()) countdown.stop();
     }
 
     @Override
     public void onResume() {
-        if (!timer.isRunning()) timer.start();
+        if (!getTimer().isRunning()) getTimer().start();
         if (gameState == GameState.COUNTING_DOWN && !countdown.isRunning()) {
             countdown.start();
         }
@@ -253,14 +250,14 @@ public class GameScene extends Scene {
     // ===== KeyListener Methoden =====
     @Override
     public void mouseMoved(MouseEvent e) {
-        Vektor2 mouseScreenPos = new Vektor2(e.getX(), e.getY());
-        mousePos = renderer.screenToWorld(mouseScreenPos, playerPosZ, camera);
+        Vector2 mouseScreenPosition = new Vector2(e.getX(), e.getY());
+        mousePosition = renderer.screenToWorld(mouseScreenPosition, playerPositionZ, camera);
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-            window.toggleOverlay(EnumOverlays.PAUSE);
+            window.toggleOverlay(OverlayType.PAUSE);
         }
         if (e.getKeyCode() == KeyEvent.VK_F3) {
             window.toggleDebug();

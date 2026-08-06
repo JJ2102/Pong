@@ -1,11 +1,11 @@
 package rendering;
 
-import math.Vektor3;
+import math.Vector3;
 import java.util.List;
 
 public class Mesh {
     // 3D-Punkte
-    private final List<Vektor3> vertices; // Eckpunkte
+    private final List<Vector3> vertices; // Eckpunkte
 
     // Kanten (für Drahtgitterdarstellung)
     private final int[][] edges;
@@ -13,7 +13,7 @@ public class Mesh {
     // Flächen (für gefüllte Polygone, z. B. Dreiecke)
     private final int[][] faces;
 
-    public Mesh(List<Vektor3> vertices, int[][] edges, int[][] faces) {
+    public Mesh(List<Vector3> vertices, int[][] edges, int[][] faces) {
         this.vertices = vertices;
         this.edges = edges;
         this.faces = faces;
@@ -27,7 +27,7 @@ public class Mesh {
         return edges;
     }
 
-    public List<Vektor3> getVertices() {
+    public List<Vector3> getVertices() {
         return vertices;
     }
 }

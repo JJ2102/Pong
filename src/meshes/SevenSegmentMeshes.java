@@ -1,7 +1,7 @@
 package meshes;
 
 import rendering.Mesh;
-import math.Vektor3;
+import math.Vector3;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +28,7 @@ public class SevenSegmentMeshes {
     private static final int COLON_SEGMENTS = 8;
     private static final float CHARACTER_SPACING = 0.75f;
 
-    // Segment\-Definitionen: x, y, breite, höhe, isHorizontal
+    // Segment-Definitionen: x, y, breite, höhe, isHorizontal
     private static final float[][] SEGMENT_CONFIGS = {
             {0f, TOP_SEGMENT_Y, HORIZONTAL_SEGMENT_WIDTH, SEGMENT_THICKNESS, 1}, // A
             {RIGHT_SEGMENT_X, UPPER_VERTICAL_Y, SEGMENT_THICKNESS, VERTICAL_SEGMENT_HEIGHT, 0}, // B
@@ -55,7 +55,7 @@ public class SevenSegmentMeshes {
     public static Mesh getDigitMesh(int digit) {
         if (digit < 0 || digit > 9) digit = 0;
 
-        List<Vektor3> vertices = new ArrayList<>();
+        List<Vector3> vertices = new ArrayList<>();
         List<int[]> edges = new ArrayList<>();
         List<int[]> faces = new ArrayList<>();
 
@@ -72,7 +72,7 @@ public class SevenSegmentMeshes {
     }
 
     public static Mesh getColonMesh() {
-        List<Vektor3> vertices = new ArrayList<>();
+        List<Vector3> vertices = new ArrayList<>();
         List<int[]> edges = new ArrayList<>();
         List<int[]> faces = new ArrayList<>();
 
@@ -83,7 +83,7 @@ public class SevenSegmentMeshes {
     }
 
     public static Mesh getDisplayMesh(int leftDigit, int rightDigit) {
-        List<Vektor3> vertices = new ArrayList<>();
+        List<Vector3> vertices = new ArrayList<>();
         List<int[]> edges = new ArrayList<>();
         List<int[]> faces = new ArrayList<>();
 
@@ -94,7 +94,9 @@ public class SevenSegmentMeshes {
         return new Mesh(vertices, edges.toArray(new int[0][]), faces.toArray(new int[0][]));
     }
 
-    private static void addRoundedSegment(List<Vektor3> vertices, List<int[]> edges, List<int[]> faces,
+    // Erzeugt ein Segment als Sechseck mit abgeschrägten Ecken (chamfer), damit die Segmente
+    // wie bei einer echten Siebensegmentanzeige spitz zueinander zulaufen statt rechteckig zu wirken
+    private static void addRoundedSegment(List<Vector3> vertices, List<int[]> edges, List<int[]> faces,
                                           float centerX, float centerY, float width, float height, boolean isHorizontal) {
         int baseIndex = vertices.size();
         float halfWidth = width / 2f;
@@ -102,38 +104,38 @@ public class SevenSegmentMeshes {
         float chamfer = SEGMENT_THICKNESS * 0.4f;
 
         if (isHorizontal) {
-            vertices.add(new Vektor3(centerX - halfWidth + chamfer, centerY + halfHeight, 0));
-            vertices.add(new Vektor3(centerX + halfWidth - chamfer, centerY + halfHeight, 0));
-            vertices.add(new Vektor3(centerX + halfWidth, centerY, 0));
-            vertices.add(new Vektor3(centerX + halfWidth - chamfer, centerY - halfHeight, 0));
-            vertices.add(new Vektor3(centerX - halfWidth + chamfer, centerY - halfHeight, 0));
-            vertices.add(new Vektor3(centerX - halfWidth, centerY, 0));
+            vertices.add(new Vector3(centerX - halfWidth + chamfer, centerY + halfHeight, 0));
+            vertices.add(new Vector3(centerX + halfWidth - chamfer, centerY + halfHeight, 0));
+            vertices.add(new Vector3(centerX + halfWidth, centerY, 0));
+            vertices.add(new Vector3(centerX + halfWidth - chamfer, centerY - halfHeight, 0));
+            vertices.add(new Vector3(centerX - halfWidth + chamfer, centerY - halfHeight, 0));
+            vertices.add(new Vector3(centerX - halfWidth, centerY, 0));
         } else {
-            vertices.add(new Vektor3(centerX, centerY + halfHeight, 0));
-            vertices.add(new Vektor3(centerX + halfWidth, centerY + halfHeight - chamfer, 0));
-            vertices.add(new Vektor3(centerX + halfWidth, centerY - halfHeight + chamfer, 0));
-            vertices.add(new Vektor3(centerX, centerY - halfHeight, 0));
-            vertices.add(new Vektor3(centerX - halfWidth, centerY - halfHeight + chamfer, 0));
-            vertices.add(new Vektor3(centerX - halfWidth, centerY + halfHeight - chamfer, 0));
+            vertices.add(new Vector3(centerX, centerY + halfHeight, 0));
+            vertices.add(new Vector3(centerX + halfWidth, centerY + halfHeight - chamfer, 0));
+            vertices.add(new Vector3(centerX + halfWidth, centerY - halfHeight + chamfer, 0));
+            vertices.add(new Vector3(centerX, centerY - halfHeight, 0));
+            vertices.add(new Vector3(centerX - halfWidth, centerY - halfHeight + chamfer, 0));
+            vertices.add(new Vector3(centerX - halfWidth, centerY + halfHeight - chamfer, 0));
         }
 
         addHexagon(edges, faces, baseIndex);
     }
 
-    private static void addColonDot(List<Vektor3> vertices, List<int[]> edges, List<int[]> faces, float yOffset) {
+    private static void addColonDot(List<Vector3> vertices, List<int[]> edges, List<int[]> faces, float yOffset) {
         int baseIndex = vertices.size();
 
         for (int i = 0; i < COLON_SEGMENTS; i++) {
             double angle = 2 * Math.PI * i / COLON_SEGMENTS;
             float x = (float)(Math.cos(angle) * COLON_DOT_SIZE / 2f);
             float y = yOffset + (float)(Math.sin(angle) * COLON_DOT_SIZE / 2f);
-            vertices.add(new Vektor3(x, y, 0));
+            vertices.add(new Vector3(x, y, 0));
         }
 
         addPolygon(edges, faces, baseIndex, COLON_SEGMENTS);
     }
 
-    private static void addMeshTranslated(List<Vektor3> targetVertices, List<int[]> targetEdges,
+    private static void addMeshTranslated(List<Vector3> targetVertices, List<int[]> targetEdges,
                                           List<int[]> targetFaces, Mesh sourceMesh,
                                           float translateX, float translateY) {
         if (sourceMesh == null) return;
@@ -141,8 +143,8 @@ public class SevenSegmentMeshes {
         int baseIndex = targetVertices.size();
 
         if (sourceMesh.getVertices() != null) {
-            for (Vektor3 vertex : sourceMesh.getVertices()) {
-                targetVertices.add(new Vektor3(vertex.x + translateX, vertex.y + translateY, vertex.z));
+            for (Vector3 vertex : sourceMesh.getVertices()) {
+                targetVertices.add(new Vector3(vertex.x + translateX, vertex.y + translateY, vertex.z));
             }
         }
 

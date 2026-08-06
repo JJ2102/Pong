@@ -1,11 +1,11 @@
-package sceneManagement.scenes;
+package scenemanagement.scenes;
 
-import enums.EnumOverlays;
-import enums.EnumScenes;
-import math.Vektor2;
-import objekts.animation2D.Ball2D;
-import objekts.animation2D.Paddle2D;
-import sceneManagement.GameWindow;
+import enums.OverlayType;
+import enums.SceneType;
+import math.Vector2;
+import objects.animation2d.Ball2D;
+import objects.animation2d.Paddle2D;
+import scenemanagement.GameWindow;
 import utility.Button;
 
 import java.awt.*;
@@ -20,9 +20,9 @@ public class MenuScene extends ButtonScene {
     public MenuScene(GameWindow window) {
         super(window, "Pong 3D");
 
-        ball = new Ball2D(window.getSIZE());
-        p1 = new Paddle2D(new Vektor2(10, (double) window.getSIZE().height / 2));
-        p2 = new Paddle2D(new Vektor2(window.getSIZE().width - 10, (double) window.getSIZE().height / 2));
+        ball = new Ball2D(window.getWindowSize());
+        p1 = new Paddle2D(new Vector2(10, (double) window.getWindowSize().height / 2));
+        p2 = new Paddle2D(new Vector2(window.getWindowSize().width - 10, (double) window.getWindowSize().height / 2));
 
         // Buttons
         Button startButton = new Button("Start Game");
@@ -31,9 +31,9 @@ public class MenuScene extends ButtonScene {
         Button exitButton = new Button("Exit");
 
         // Aktionen
-        startButton.addActionListener(_ -> window.toggleOverlay(EnumOverlays.DIFFICULTY));
-        infoButton.addActionListener(_ -> window.toggleOverlay(EnumOverlays.INFO));
-        settingsButton.addActionListener(_ -> window.setCurrentScene(EnumScenes.SETTINGS));
+        startButton.addActionListener(_ -> window.toggleOverlay(OverlayType.DIFFICULTY));
+        infoButton.addActionListener(_ -> window.toggleOverlay(OverlayType.INFO));
+        settingsButton.addActionListener(_ -> window.setCurrentScene(SceneType.SETTINGS));
         exitButton.addActionListener(_ -> System.exit(0));
 
         addComponent(startButton);
@@ -47,9 +47,9 @@ public class MenuScene extends ButtonScene {
     @Override
     protected void update() {
         ball.move();
-        p1.move(ball.getPos().y);
-        p2.move(ball.getPos().y);
-        switch (ball.isOut(window.getSIZE())) {
+        p1.move(ball.getPosition().y);
+        p2.move(ball.getPosition().y);
+        switch (ball.isOut(window.getWindowSize())) {
             case X -> ball.switchXDirection();
             case Y -> ball.switchYDirection();
             default -> {}
@@ -69,7 +69,7 @@ public class MenuScene extends ButtonScene {
     @Override
     public void keyPressed(KeyEvent e) {
         switch (e.getKeyCode()) {
-            case KeyEvent.VK_ENTER -> window.setCurrentScene(EnumScenes.GAME);
+            case KeyEvent.VK_ENTER -> window.setCurrentScene(SceneType.GAME);
             case KeyEvent.VK_ESCAPE -> System.exit(0);
         }
     }

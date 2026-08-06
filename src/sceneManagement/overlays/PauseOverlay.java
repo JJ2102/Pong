@@ -1,7 +1,7 @@
-package sceneManagement.overlays;
+package scenemanagement.overlays;
 
-import enums.EnumOverlays;
-import sceneManagement.GameWindow;
+import enums.OverlayType;
+import scenemanagement.GameWindow;
 import utility.Button;
 
 public class PauseOverlay extends Overlay {
@@ -9,21 +9,21 @@ public class PauseOverlay extends Overlay {
         super(window, "Paused", 150, true);
 
         // Buttons
-        Button resumeBtn = new Button("Resume");
-        Button menuBtn = new Button("Back to Menu");
-        Button quitBtn = new Button("Quit Game");
+        Button resumeButton = new Button("Resume");
+        Button menuButton = new Button("Back to Menu");
+        Button quitButton = new Button("Quit Game");
 
         // Aktionen
-        resumeBtn.addActionListener(_ -> window.toggleOverlay(EnumOverlays.PAUSE));
-        menuBtn.addActionListener(_ -> {
-            window.toggleOverlay(EnumOverlays.PAUSE);
+        resumeButton.addActionListener(_ -> window.toggleOverlay(OverlayType.PAUSE));
+        menuButton.addActionListener(_ -> {
+            window.toggleOverlay(OverlayType.PAUSE);
             window.returnToMenu();
         });
-        quitBtn.addActionListener(_ -> System.exit(0));
+        quitButton.addActionListener(_ -> System.exit(0));
 
-        addComponent(resumeBtn);
-        addComponent(menuBtn);
-        addComponent(quitBtn);
+        addComponent(resumeButton);
+        addComponent(menuButton);
+        addComponent(quitButton);
 
         positionComponents();
     }

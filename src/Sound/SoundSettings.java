@@ -1,4 +1,4 @@
-package Sound;
+package sound;
 
 public class SoundSettings {
     private float effectsVolume = 1.0f; // Lautstärke für Soundeffekte (0.0 bis 1.0)

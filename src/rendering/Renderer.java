@@ -1,16 +1,17 @@
 package rendering;
 
 import hitboxes.BoxHitbox;
-import math.Vektor2;
-import math.Vektor3;
-import objekts.Entity;
+import math.Vector2;
+import math.Vector3;
+import objects.Entity;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Renderer {
-    private int width, height;
+    private int width;
+    private int height;
     private double scale;
 
     public Renderer(int width, int height) {
@@ -30,37 +31,37 @@ public class Renderer {
      * Konvertiert Bildschirmkoordinaten (pixels) in Weltkoordinaten auf einer Ebene z = planeZ.
      * Vereinfacht: berücksichtigt Kamera-Position und FOV, nicht Kamera-Rotation.
      */
-    public Vektor3 screenToWorld(Vektor2 screenPos, double planeZ, Camera cam) {
-        if (width <= 0 || height <= 0 || cam == null) {
-            return new Vektor3(screenPos.x, screenPos.y, planeZ);
+    public Vector3 screenToWorld(Vector2 screenPosition, double planeZ, Camera camera) {
+        if (width <= 0 || height <= 0 || camera == null) {
+            return new Vector3(screenPosition.x, screenPosition.y, planeZ);
         }
 
         // screen in fovApplied Koordinaten
-        double fovAppliedX = (screenPos.x - width / 2.0) / scale;
-        double fovAppliedY = (screenPos.y - height / 2.0) / scale;
+        double fovAppliedX = (screenPosition.x - width / 2.0) / scale;
+        double fovAppliedY = (screenPosition.y - height / 2.0) / scale;
 
         // Kamera-Parameter
-        Vektor3 camPos = cam.getPosition();
-        double fov = cam.getFov();
+        Vector3 cameraPosition = camera.getPosition();
+        double fov = camera.getFov();
 
         // Tiefe (Z der Ebene relativ zur Kamera)
-        double depth = planeZ - camPos.z; // Differenz der Z-Koordinaten von Kamera und Ziel-Ebene
+        double depth = planeZ - cameraPosition.z; // Differenz der Z-Koordinaten von Kamera und Ziel-Ebene
         if (depth <= 0) {
             // Ebene ist hinter der Kamera, fallback auf Kameraposition
-            return new Vektor3(camPos.x, camPos.y, planeZ);
+            return new Vector3(cameraPosition.x, cameraPosition.y, planeZ);
         }
 
-        double worldX = camPos.x + fovAppliedX * depth / fov;
-        double worldY = camPos.y - fovAppliedY * depth / fov; // y umkehren (Bildschirm y wächst nach unten)
+        double worldX = cameraPosition.x + fovAppliedX * depth / fov;
+        double worldY = cameraPosition.y - fovAppliedY * depth / fov; // y umkehren (Bildschirm y wächst nach unten)
 
-        return new Vektor3(worldX, worldY, planeZ);
+        return new Vector3(worldX, worldY, planeZ);
     }
 
     // Projektion von 3D -> 2D
-    private Vektor2 project(Vektor3 vektor) {
-        double screenX = (width / 2.0 + vektor.x * scale); // x-Koordinate auf Bildschirm (mit Skalierung)
-        double screenY = (height / 2.0 - vektor.y * scale); // y-Koordinate auf Bildschirm (mit Skalierung, y umgekehrt)
-        return new Vektor2(screenX, screenY);
+    private Vector2 project(Vector3 vector) {
+        double screenX = (width / 2.0 + vector.x * scale); // x-Koordinate auf Bildschirm (mit Skalierung)
+        double screenY = (height / 2.0 - vector.y * scale); // y-Koordinate auf Bildschirm (mit Skalierung, y umgekehrt)
+        return new Vector2(screenX, screenY);
     }
 
     // Render Entity
@@ -78,13 +79,13 @@ public class Renderer {
         Mesh mesh = entity.getMesh();
 
         // Entity Mesh in welt positionieren (vertices -> transformierten Eckpunkten)
-        List<Vektor3> transformed = RenderPipeline.applyTransform(entity.getMesh().getVertices(), entity.getTransform());
+        List<Vector3> transformed = RenderPipeline.applyTransform(entity.getMesh().getVertices(), entity.getTransform());
         // transformed -> cameraKoordinaten -> camera FOV angepassten Koordinaten
-        List<Vektor3> fovApplied = RenderPipeline.applyCameraParams(transformed, camera);
+        List<Vector3> fovApplied = RenderPipeline.applyCameraParams(transformed, camera);
 
         // Alle Vertex-Positionen durch die Model- und View-Matrix transformieren und dann auf 2D projizieren
-        Vektor2[] projectedVertices = new Vektor2[fovApplied.size()];
-        for (Vektor3 v : fovApplied) {
+        Vector2[] projectedVertices = new Vector2[fovApplied.size()];
+        for (Vector3 v : fovApplied) {
             projectedVertices[fovApplied.indexOf(v)] = project(v);
         }
 
@@ -106,8 +107,8 @@ public class Renderer {
                 int i1 = edge[1];
                 if (i0 < 0 || i1 < 0 || i0 >= mesh.getVertices().size() || i1 >= mesh.getVertices().size()) continue; // Sicherheitscheck
 
-                Vektor2 v1 = projectedVertices[i0];
-                Vektor2 v2 = projectedVertices[i1];
+                Vector2 v1 = projectedVertices[i0];
+                Vector2 v2 = projectedVertices[i1];
 
                 // Zeichnen der Kante
                 if (v1 != null && v2 != null) {
@@ -122,24 +123,24 @@ public class Renderer {
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         // SCHRITT 1: Die 8 Eckpunkte der Box berechnen
-        Vektor3 min = hitbox.getMin();
-        Vektor3 max = hitbox.getMax();
+        Vector3 min = hitbox.getMin();
+        Vector3 max = hitbox.getMax();
 
-        List<Vektor3> corners = new ArrayList<>();
-        corners.add(new Vektor3(min.x, min.y, min.z)); // Vorne-unten-links
-        corners.add(new Vektor3(max.x, min.y, min.z)); // Vorne-unten-rechts
-        corners.add(new Vektor3(max.x, max.y, min.z)); // Vorne-oben-rechts
-        corners.add(new Vektor3(min.x, max.y, min.z)); // Vorne-oben-links
-        corners.add(new Vektor3(min.x, min.y, max.z)); // Hinten-unten-links
-        corners.add(new Vektor3(max.x, min.y, max.z)); // Hinten-unten-rechts
-        corners.add(new Vektor3(max.x, max.y, max.z)); // Hinten-oben-rechts
-        corners.add(new Vektor3(min.x, max.y, max.z)); // Hinten-oben-links
+        List<Vector3> corners = new ArrayList<>();
+        corners.add(new Vector3(min.x, min.y, min.z)); // Vorne-unten-links
+        corners.add(new Vector3(max.x, min.y, min.z)); // Vorne-unten-rechts
+        corners.add(new Vector3(max.x, max.y, min.z)); // Vorne-oben-rechts
+        corners.add(new Vector3(min.x, max.y, min.z)); // Vorne-oben-links
+        corners.add(new Vector3(min.x, min.y, max.z)); // Hinten-unten-links
+        corners.add(new Vector3(max.x, min.y, max.z)); // Hinten-unten-rechts
+        corners.add(new Vector3(max.x, max.y, max.z)); // Hinten-oben-rechts
+        corners.add(new Vector3(min.x, max.y, max.z)); // Hinten-oben-links
 
         // SCHRITT 2: Alle Eckpunkte in Kamerakoordinaten umwandeln und auf 2D projizieren
-        List<Vektor3> fovApplied = RenderPipeline.applyCameraParams(corners, camera);
+        List<Vector3> fovApplied = RenderPipeline.applyCameraParams(corners, camera);
 
-        Vektor2[] projected = new Vektor2[8];
-        for (Vektor3 v : fovApplied) {
+        Vector2[] projected = new Vector2[8];
+        for (Vector3 v : fovApplied) {
             projected[fovApplied.indexOf(v)] = project(v);
         }
 
@@ -166,14 +167,14 @@ public class Renderer {
         Drawer.drawLine(g, projected[3], projected[7], color); // Oben-links
     }
 
-    // ===== Utility-Methoxiden =====
+    // ===== Utility-Methoden =====
     // Konverter Welt- zu Bildschirmkoordinaten
-    public Vektor2 worldToScreen(Vektor3 v, Camera camera) {
-        List<Vektor3> vektorList = new ArrayList<>();
-        vektorList.add(v);
+    public Vector2 worldToScreen(Vector3 v, Camera camera) {
+        List<Vector3> vectorList = new ArrayList<>();
+        vectorList.add(v);
 
-        Vektor3 appliedFOV = RenderPipeline.applyCameraParams(vektorList, camera).getFirst();
+        Vector3 appliedFov = RenderPipeline.applyCameraParams(vectorList, camera).getFirst();
 
-        return project(appliedFOV); // 2D-Projektion
+        return project(appliedFov); // 2D-Projektion
     }
 }

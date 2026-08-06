@@ -1,6 +1,6 @@
-package sceneManagement.overlays;
+package scenemanagement.overlays;
 
-import sceneManagement.GameWindow;
+import scenemanagement.GameWindow;
 import utility.Globals;
 
 import javax.swing.*;
@@ -11,7 +11,7 @@ public abstract class Overlay extends JPanel {
     protected final GameWindow window;
     private final ArrayList<Component> components = new ArrayList<>();
     private final int transparency;
-    protected JLabel titleLabel;
+    private JLabel titleLabel;
     private final Color bgColor = Globals.getBackgroundColor();
     private final boolean pauseUnderlying;
 

@@ -1,18 +1,18 @@
-package objekts;
+package objects;
 
 import hitboxes.BoxHitbox;
-import math.Vektor3;
+import math.Vector3;
 import rendering.Mesh;
 import rendering.Transform;
 
 import java.awt.*;
 
 public class Entity {
-    protected Mesh mesh;
-    protected Transform transform;
-    protected Color colorFace;
-    protected  Color colorEdge;
-    protected BoxHitbox hitbox;
+    private Mesh mesh;
+    private Transform transform;
+    private Color colorFace;
+    private Color colorEdge;
+    private BoxHitbox hitbox;
 
     public Entity(Color colorFace, Color colorEdge) {
         this.mesh = null;
@@ -38,13 +38,19 @@ public class Entity {
         return colorFace;
     }
 
-    public  Color getEdgeColor() {return colorEdge;}
+    public Color getEdgeColor() {
+        return colorEdge;
+    }
 
     public BoxHitbox getHitbox() {
         return hitbox;
     }
 
-    public Vektor3 getPosition() {
+    public void setHitbox(BoxHitbox hitbox) {
+        this.hitbox = hitbox;
+    }
+
+    public Vector3 getPosition() {
         return transform.getPosition();
     }
 }

@@ -1,6 +1,6 @@
-package sceneManagement.scenes;
+package scenemanagement.scenes;
 
-import sceneManagement.GameWindow;
+import scenemanagement.GameWindow;
 import utility.Globals;
 
 import javax.swing.*;
@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class ButtonScene extends Scene {
     private final ArrayList<Component> components = new ArrayList<>();
-    protected JLabel titleLabel;
+    private JLabel titleLabel;
 
     public ButtonScene(GameWindow window, String title) {
         super(window);
