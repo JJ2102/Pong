@@ -10,9 +10,9 @@ import java.awt.*;
 // Basisklasse für alle darstellbaren Objekte in der 3D-Szene
 public class Entity {
     private Mesh mesh;
-    private Transform transform;
-    private Color colorFace;
-    private Color colorEdge;
+    private final Transform transform;
+    private final Color colorFace;
+    private final Color colorEdge;
     private BoxHitbox hitbox;
 
     // Initialisiert eine Entität ohne Mesh an der Startposition mit den angegebenen Farben

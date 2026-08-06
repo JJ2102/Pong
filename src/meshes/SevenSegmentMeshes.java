@@ -114,7 +114,7 @@ public class SevenSegmentMeshes {
 
     // ===== Hilfsmethoden zur Geometrie-Erstellung =====
     // Erzeugt ein Segment als Sechseck mit abgeschrägten Ecken (chamfer), damit die Segmente
-    // wie bei einer echten Siebensegmentanzeige spitz zueinander zulaufen statt rechteckig zu wirken
+    // wie bei einer echten Siebensegmentanzeige spitz zueinander zulaufen, statt rechteckig zu wirken
     private static void addRoundedSegment(List<Vector3> vertices, List<int[]> edges, List<int[]> faces,
                                           float centerX, float centerY, float width, float height, boolean isHorizontal) {
         int baseIndex = vertices.size(); // Startindex für die neuen Punkte

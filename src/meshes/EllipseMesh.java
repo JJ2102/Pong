@@ -19,7 +19,7 @@ public class EllipseMesh extends Mesh {
     // ===== Mesh-Generatoren =====
     // Erzeugt die Eckpunkte (Vertices) einer Kugel
     private static List<Vector3> generateVertices(double r, int segments, int rings) {
-        List<Vector3> verts = new ArrayList<>();
+        List<Vector3> vertices = new ArrayList<>();
         // Zeilen (Ringe) durchgehen
         for (int i = 0; i <= rings; i++) {
             double v = (double) i / rings;
@@ -33,10 +33,10 @@ public class EllipseMesh extends Mesh {
                 double x = r * Math.sin(phi) * Math.cos(theta);
                 double y = r * Math.cos(phi);
                 double z = r * Math.sin(phi) * Math.sin(theta);
-                verts.add(new Vector3(x, y, z));
+                vertices.add(new Vector3(x, y, z));
             }
         }
-        return verts;
+        return vertices;
     }
 
     // Erzeugt die Kanten zwischen benachbarten Punkten

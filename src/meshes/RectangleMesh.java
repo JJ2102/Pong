@@ -10,14 +10,14 @@ public class RectangleMesh extends Mesh {
         super(
                 // ===== Eckpunkte (Vertices) =====
                 Arrays.asList( 
-                        new Vector3(-xSize, -ySize, zSize),  // Ecke 0: Vorne Unten Links
-                        new Vector3(xSize, -ySize, zSize),   // Ecke 1: Vorne Unten Rechts
-                        new Vector3(xSize, ySize, zSize),    // Ecke 2: Vorne Oben Rechts
-                        new Vector3(-xSize, ySize, zSize),   // Ecke 3: Vorne Oben Links
-                        new Vector3(-xSize, -ySize, -zSize), // Ecke 4: Hinten Unten Links
-                        new Vector3(xSize, -ySize, -zSize),  // Ecke 5: Hinten Unten Rechts
-                        new Vector3(xSize, ySize, -zSize),   // Ecke 6: Hinten Oben Rechts
-                        new Vector3(-xSize, ySize, -zSize)   // Ecke 7: Hinten Oben Links
+                        new Vector3(-xSize, -ySize, zSize),  // Ecke 0: Vorne unten Links
+                        new Vector3(xSize, -ySize, zSize),   // Ecke 1: Vorne unten Rechts
+                        new Vector3(xSize, ySize, zSize),    // Ecke 2: Vorne oben Rechts
+                        new Vector3(-xSize, ySize, zSize),   // Ecke 3: Vorne oben Links
+                        new Vector3(-xSize, -ySize, -zSize), // Ecke 4: Hinten unten Links
+                        new Vector3(xSize, -ySize, -zSize),  // Ecke 5: Hinten unten Rechts
+                        new Vector3(xSize, ySize, -zSize),   // Ecke 6: Hinten oben Rechts
+                        new Vector3(-xSize, ySize, -zSize)   // Ecke 7: Hinten oben Links
                 ),
                 // ===== Kanten (Edges) =====
                 new int[][] { 

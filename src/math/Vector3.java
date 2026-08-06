@@ -23,19 +23,9 @@ public class Vector3 {
         return new Vector3(x / divisor, y / divisor, z / divisor);
     }
 
-    // Multipliziert diesen Vektor komponentenweise mit einem anderen 3D-Vektor
-    public Vector3 multiply(Vector3 other) {
-        return new Vector3(x * other.x, y * other.y, z * other.z);
-    }
-
     // Addiert einen anderen 3D-Vektor zu diesem Vektor und gibt das Ergebnis zurück
     public Vector3 add(Vector3 other) {
         return new Vector3(x + other.x, y + other.y, z + other.z);
-    }
-
-    // Berechnet die Länge (Magnitude) des Vektors
-    public double length() {
-        return Math.sqrt(x * x + y * y + z * z); // Pythagoras im 3D-Raum
     }
 
     // Erzeugt den Standard-Up-Vektor (0, 1, 0)
@@ -43,8 +33,8 @@ public class Vector3 {
         return new Vector3(0, 1, 0);
     }
 
-    // Führt eine lineare Interpolation (Lerp) zwischen diesem Vektor und einem Zielvektor durch
-    public Vector3 lerp(Vector3 other, double percent) {
+    // Führt eine lineare Interpolation (Leap) zwischen diesem Vektor und einem Zielvektor durch
+    public Vector3 leap(Vector3 other, double percent) {
         double newX = this.x + (other.x - this.x) * percent;
         double newY = this.y + (other.y - this.y) * percent;
         double newZ = this.z + (other.z - this.z) * percent;

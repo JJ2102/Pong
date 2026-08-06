@@ -3,7 +3,6 @@ package rendering;
 import math.Vector3;
 
 // Kapselt Position, Rotation und Skalierung eines Objekts im 3D-Raum
-// Kapselt Position, Rotation und Skalierung eines Objekts im 3D-Raum
 public class Transform {
     private Vector3 position;
     private Vector3 rotation;

@@ -61,7 +61,7 @@ public class Renderer {
     private Vector2 project(Vector3 vector) {
         // Multipliziert den normalisierten Raum (-1 bis 1) mit der Skalierung und zentriert das Ergebnis auf dem Bildschirm
         double screenX = (width / 2.0 + vector.x * scale); 
-        double screenY = (height / 2.0 - vector.y * scale); // Auch hier wird die Y-Achse für 2D-Darstellung invertiert
+        double screenY = (height / 2.0 - vector.y * scale); // Auch hier wird die y-Achse für 2D-Darstellung invertiert
         return new Vector2(screenX, screenY);
     }
 

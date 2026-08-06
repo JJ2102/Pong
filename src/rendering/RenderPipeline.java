@@ -51,7 +51,7 @@ public class RenderPipeline {
 
     // Führt View- und Projektions-Transformation (Schritt 2 und 3) nacheinander aus
     public static List<Vector3> applyCameraParams(List<Vector3> transformed, Camera camera) {
-        // Pipeline abarbeiten: Zuerst Kamera-Ausrichtung, dann Sichtfeld-Skalierung
+        // Pipeline abarbeiten: zuerst Kamera-Ausrichtung, dann Sichtfeld-Skalierung
         List<Vector3> cameraTransformed = RenderPipeline.applyCameraTransform(transformed, camera);
         return RenderPipeline.applyFov(cameraTransformed, camera.getFov());
     }

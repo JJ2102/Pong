@@ -39,7 +39,7 @@ public class ShatteredGlassOverlay extends Overlay {
             // 2. Querbrüche (Web-Effekt), die den Strahl mit seinem Nachbarn verbinden
             int numCrossCracks = 3 + random.nextInt(5); // Anzahl der Querlinien pro Strahl
             for (int j = 1; j <= numCrossCracks; j++) {
-                double dist = j * (50 + random.nextInt(50)); // Distanz vom Zentrum, wächst mit jedem Ring
+                double dist = j * (50 + random.nextInt(50)); // Distanz vom Zentrum wächst mit jedem Ring
 
                 // Verbindung zur nächsten radialen Linie
                 double nextAngle = (2 * Math.PI / numRadialLines) * (i + 1) + (random.nextDouble() * 0.5);
@@ -59,7 +59,7 @@ public class ShatteredGlassOverlay extends Overlay {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        Graphics2D g2 = (Graphics2D) g; // Graphics2D bietet Antialiasing und dickere Linien
+        Graphics2D g2 = (Graphics2D) g; // Grafics2D bietet Antialiasing und dickere Linien
 
         // Antialiasing für glatte Linien
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);

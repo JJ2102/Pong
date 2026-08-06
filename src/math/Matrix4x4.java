@@ -39,7 +39,7 @@ public class Matrix4x4 {
         return translationMatrix.multiply(rotationMatrix).multiply(scaleMatrix);
     }
 
-    // Erstellt eine Translationsmatrix für die Verschiebung
+    // Erstellt eine Translations matrix für die Verschiebung
     private static Matrix4x4 getTranslationMatrix(double tx, double ty, double tz) {
         // Quelle 1
         /* Translation matrix:
@@ -49,7 +49,7 @@ public class Matrix4x4 {
         * 0 0 0 1
         */
         Matrix4x4 translationMatrix = getUnitMatrix(); // startet mit der Einheitsmatrix
-        // Verschiebungs-Werte in die vierte Spalte eintragen
+        // Verschiebung-Werte in die vierte Spalte eintragen
         translationMatrix.setValue(0, 3, tx);
         translationMatrix.setValue(1, 3, ty);
         translationMatrix.setValue(2, 3, tz);
@@ -151,13 +151,13 @@ public class Matrix4x4 {
     // Multipliziert die Matrix mit einem 3D-Vektor
     public Vector3 multiply(Vector3 v) {
         // Quelle 2
-        // Neue Komponenten inklusive homogener Koordinaten berechnen
+        // neue Komponenten inklusive homogener Koordinaten berechnen
         double x = v.x * matrix[0][0] + v.y * matrix[0][1] + v.z * matrix[0][2] + matrix[0][3];
         double y = v.x * matrix[1][0] + v.y * matrix[1][1] + v.z * matrix[1][2] + matrix[1][3];
         double z = v.x * matrix[2][0] + v.y * matrix[2][1] + v.z * matrix[2][2] + matrix[2][3];
         double w = v.x * matrix[3][0] + v.y * matrix[3][1] + v.z * matrix[3][2] + matrix[3][3];
 
-        // Normalisierung, falls nötig (Perspektiventeilung)
+        // Normalisierung, falls nötig
         if (w != 0 && w != 1) {
             return new Vector3(x / w, y / w, z / w);
         }
