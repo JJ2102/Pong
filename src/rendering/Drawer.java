@@ -4,31 +4,37 @@ import math.Vector2;
 
 import java.awt.*;
 
+// Hilfsklasse zum Zeichnen von 2D-Polygonen und Linien
+// Hilfsklasse zum Zeichnen von 2D-Polygonen und Linien
 public class Drawer {
+    
+    // Wandelt eine projizierte 3D-Fläche anhand der Eckpunkte in ein 2D-Polygon um
     public static Polygon getPolygon(int[] face, Vector2[] projectedVertices) {
-        Polygon poly = new Polygon();
+        Polygon poly = new Polygon(); // Initialisiere ein leeres 2D-Polygon
 
-        for (int idx : face) { // geht durch alle Eckpunkte der Fläche; idx ist der Index im Vertex-Array
-            Vector2 v = projectedVertices[idx];
+        for (int idx : face) { // Iteriere über alle Eckpunkt-Indizes dieser spezifischen Fläche
+            Vector2 v = projectedVertices[idx]; // Hole die fertig berechneten 2D-Bildschirmkoordinaten
 
-            // Hinzufügen des projizierten Punkts zum Polygon
+            // Hinzufügen des projizierten Punkts zum Polygon (Sicherheitscheck gegen Null-Referenzen)
             if (v != null) {
-                poly.addPoint((int) v.x, (int) v.y);
+                poly.addPoint((int) v.x, (int) v.y); // Pixel-Koordinaten benötigen Ganzzahlen (int)
             }
         }
         return poly;
     }
 
+    // Zeichnet ein gefülltes 2D-Polygon in der vorgegebenen Farbe
     public static void drawPolygon(Graphics2D g, Polygon poly, Color color) {
-        if (poly.npoints >= 3) { // Nur zeichnen, wenn mindestens 3 Punkte vorhanden sind
+        if (poly.npoints >= 3) { // Eine Fläche braucht mindestens 3 Punkte (Dreieck), um gezeichnet zu werden
             g.setColor(color);
-            g.fillPolygon(poly);
+            g.fillPolygon(poly); // Füllt das Polygon deckend auf dem Canvas
         }
     }
 
+    // Zeichnet eine einfache Linie zwischen zwei 2D-Punkten
     public static void drawLine(Graphics2D g, Vector2 v1, Vector2 v2, Color color) {
         g.setColor(color);
-        g.setStroke(new BasicStroke(1.0f));
-        g.drawLine((int) v1.x, (int) v1.y, (int) v2.x, (int) v2.y);
+        g.setStroke(new BasicStroke(1.0f)); // Linienstärke auf 1 Pixel setzen
+        g.drawLine((int) v1.x, (int) v1.y, (int) v2.x, (int) v2.y); // Start- und Endpunkt verbinden
     }
 }

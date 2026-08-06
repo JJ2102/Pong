@@ -4,6 +4,7 @@ import math.Vector2;
 
 import java.awt.*;
 
+// Basisklasse für 2D-Objekte in der Hintergrund-Animation des Menüs
 public class Object2D {
     protected final int width;
     protected final int height;
@@ -24,10 +25,12 @@ public class Object2D {
         this.position = position;
     }
 
+    // Gibt die aktuelle Position des Objekts zurück
     public Vector2 getPosition() {
         return this.position;
     }
 
+    // Setzt das Objekt auf eine neue Position
     public void setPosition(Vector2 position) {
         this.position = position;
     }

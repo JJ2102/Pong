@@ -7,10 +7,13 @@ import utility.Globals;
 
 import javax.swing.*;
 
+// Overlay mit der Steuerungs- und Spielerklärung, aufrufbar aus dem Hauptmenü
 public class InfoOverlay extends Overlay {
+    // Baut den Erklärtext und den Schließen-Button auf
     public InfoOverlay(GameWindow window) {
-        super(window, "Information", 225, false);
+        super(window, "Information", 225, false); // fast deckender Hintergrund, Szene darunter läuft weiter
 
+        // Der Text wird als HTML gesetzt, damit Zeilenumbrüche und Fettschrift möglich sind
         JLabel controlsLabel = new JLabel("""
     <html>
         <div style='text-align: center;'>
@@ -30,9 +33,9 @@ public class InfoOverlay extends Overlay {
         addComponent(controlsLabel);
 
         Button cancelButton = new Button("Close");
-        cancelButton.addActionListener(_ -> window.toggleOverlay(OverlayType.INFO));
+        cancelButton.addActionListener(_ -> window.toggleOverlay(OverlayType.INFO)); // blendet das Overlay wieder aus
         addComponent(cancelButton);
 
-        positionComponents();
+        positionComponents(); // ordnet Titel, Text und Button untereinander an
     }
 }

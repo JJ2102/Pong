@@ -8,10 +8,12 @@ import utility.Globals;
 
 import java.awt.*;
 
+// Repräsentiert den 3D-Spielball im Raum
 public class Ball extends Entity {
     private Vector3 velocity;
     private final double radius = 0.2;
 
+    // Initialisiert den Ball mit seinem Mesh, seiner Hitbox und einer zufälligen Startgeschwindigkeit
     public Ball() {
         super(Color.YELLOW, Color.ORANGE);
         Mesh boxMesh = new EllipseMesh(radius, 10, 10);
@@ -24,19 +26,23 @@ public class Ball extends Entity {
         setRandomSpeed();
     }
 
+    // Generiert einen zufälligen Geschwindigkeitswert
     private double randomSpeed() {
         return Globals.randomSpeed(0.03, 0.05);
     }
 
+    // Setzt die Geschwindigkeit des Balls in alle Richtungen auf Zufallswerte
     private void setRandomSpeed() {
         velocity = new Vector3(randomSpeed(), randomSpeed(), randomSpeed());
     }
 
+    // Setzt den Ball auf den Ursprung zurück und vergibt eine neue Geschwindigkeit
     public void reset() {
         this.getTransform().setPosition(new Vector3(0, 0, 0));
         setRandomSpeed();
     }
 
+    // Prüft auf Kollision mit den übergebenen Paddles und ändert bei einem Treffer die Z-Richtung
     public boolean paddleHit(BoxHitbox[] paddles) {
         for (BoxHitbox paddle : paddles) {
             if (getHitbox().intersects(paddle)) {
@@ -46,14 +52,13 @@ public class Ball extends Entity {
                 velocity.z += Math.signum(velocity.z) * 0.001;
                 velocity.z = -velocity.z; // Richtung ändern
 
-                System.out.println(velocity);
-
                 return true;
             }
         }
         return false;
     }
 
+    // Bewegt den Ball und lässt ihn an den seitlichen Wänden abprallen
     public void move() {
         // Position basierend auf der Geschwindigkeit aktualisieren
         this.getTransform().setPosition(this.getTransform().getPosition().add(velocity));
@@ -69,7 +74,7 @@ public class Ball extends Entity {
         getHitbox().setPosition(getTransform().getPosition());
     }
 
-    // Debugging
+    // Liefert eine Debug-Ausgabe des Balls
     public String toString() {
         return "[Ball] Pos: " + getTransform().getPosition() + " Speed: " + velocity;
     }

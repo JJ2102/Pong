@@ -5,27 +5,38 @@ import math.Vector3;
 import java.util.Arrays;
 
 public class RectangleMesh extends Mesh {
+    // Konstruktor zur Initialisierung eines Quaders (Rechteck-Mesh im 3D-Raum)
     public RectangleMesh(double xSize, double ySize, double zSize) {
         super(
-                Arrays.asList( // Eckpunkte
-                        new Vector3(-xSize, -ySize, zSize), // Ecke 0
-                        new Vector3(xSize, -ySize, zSize), // Ecke 1
-                        new Vector3(xSize, ySize, zSize), // Ecke 2
-                        new Vector3(-xSize, ySize, zSize), // Ecke 3
-                        new Vector3(-xSize, -ySize, -zSize), // Ecke 4
-                        new Vector3(xSize, -ySize, -zSize), // Ecke 5
-                        new Vector3(xSize, ySize, -zSize), // Ecke 6
-                        new Vector3(-xSize, ySize, -zSize) // Ecke 7
+                // ===== Eckpunkte (Vertices) =====
+                Arrays.asList( 
+                        new Vector3(-xSize, -ySize, zSize),  // Ecke 0: Vorne Unten Links
+                        new Vector3(xSize, -ySize, zSize),   // Ecke 1: Vorne Unten Rechts
+                        new Vector3(xSize, ySize, zSize),    // Ecke 2: Vorne Oben Rechts
+                        new Vector3(-xSize, ySize, zSize),   // Ecke 3: Vorne Oben Links
+                        new Vector3(-xSize, -ySize, -zSize), // Ecke 4: Hinten Unten Links
+                        new Vector3(xSize, -ySize, -zSize),  // Ecke 5: Hinten Unten Rechts
+                        new Vector3(xSize, ySize, -zSize),   // Ecke 6: Hinten Oben Rechts
+                        new Vector3(-xSize, ySize, -zSize)   // Ecke 7: Hinten Oben Links
                 ),
-                new int[][] { // Kanten
+                // ===== Kanten (Edges) =====
+                new int[][] { 
+                        // Vordere Kanten
                         {0,1},{1,2},{2,3},{3,0},
+                        // Hintere Kanten
                         {4,5},{5,6},{6,7},{7,4},
+                        // Verbindende Kanten zwischen vorne und hinten
                         {0,4},{1,5},{2,6},{3,7}
                 },
-                new int[][] { // Flächen (als Vierecke)
-                        {0,1,2,3}, {4,5,6,7},
-                        {0,1,5,4}, {2,3,7,6},
-                        {0,3,7,4}, {1,2,6,5}
+                // ===== Flächen (Faces) =====
+                new int[][] { 
+                        // Flächen werden hier als Vierecke definiert
+                        {0,1,2,3}, // Vorne
+                        {4,5,6,7}, // Hinten
+                        {0,1,5,4}, // Unten
+                        {2,3,7,6}, // Oben
+                        {0,3,7,4}, // Links
+                        {1,2,6,5}  // Rechts
                 }
         );
     }
