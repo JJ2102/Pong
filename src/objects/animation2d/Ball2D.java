@@ -8,8 +8,8 @@ import java.awt.*;
 import java.awt.geom.Ellipse2D;
 
 public class Ball2D extends Object2D {
-    public Ball2D(Dimension windowSize) {
-        super(windowSize, 30, 30);
+    public Ball2D(Dimension windowSize, int size) {
+        super(windowSize, size, size);
         velocity = new Vector2(Globals.randomSpeed(3, 5), Globals.randomSpeed(3, 5));
     }
 
@@ -25,13 +25,12 @@ public class Ball2D extends Object2D {
         setPosition(getPosition().add(velocity));
     }
 
-    // Prüft, ob der Ball die Paddles (links/rechts) oder den oberen/unteren Rand erreicht hat;
-    // die Offsets (+20/-30) sorgen dafür, dass er bereits kurz vor den Paddles abprallt
+    // Prüft, ob der Ball die Paddles (links/rechts) oder den oberen/unteren Rand erreicht hat
     public Direction isOut(Dimension windowSize) {
-        boolean outLeft   = getPosition().x <= width + 20;
-        boolean outRight  = getPosition().x >= windowSize.width - width - 30;
+        boolean outLeft   = getPosition().x <= width;
+        boolean outRight  = getPosition().x >= windowSize.width - width*2;
         boolean outTop    = getPosition().y <= height;
-        boolean outBottom = getPosition().y >= windowSize.height - height;
+        boolean outBottom = getPosition().y >= windowSize.height - height*2;
 
         if (outLeft || outRight) {
             return Direction.X;
