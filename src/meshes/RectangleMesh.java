@@ -1,15 +1,17 @@
 package meshes;
 
-import rendering.Mesh;
 import math.Vector3;
+import rendering.Mesh;
+
 import java.util.Arrays;
 
+// Quaderförmiges Mesh mit 8 Eckpunkten, 12 Kanten und 6 Flächen
 public class RectangleMesh extends Mesh {
     // Konstruktor zur Initialisierung eines Quaders (Rechteck-Mesh im 3D-Raum)
     public RectangleMesh(double xSize, double ySize, double zSize) {
         super(
                 // ===== Eckpunkte (Vertices) =====
-                Arrays.asList( 
+                Arrays.asList(
                         new Vector3(-xSize, -ySize, zSize),  // Ecke 0: Vorne unten Links
                         new Vector3(xSize, -ySize, zSize),   // Ecke 1: Vorne unten Rechts
                         new Vector3(xSize, ySize, zSize),    // Ecke 2: Vorne oben Rechts
@@ -20,7 +22,7 @@ public class RectangleMesh extends Mesh {
                         new Vector3(-xSize, ySize, -zSize)   // Ecke 7: Hinten oben Links
                 ),
                 // ===== Kanten (Edges) =====
-                new int[][] { 
+                new int[][] {
                         // Vordere Kanten
                         {0,1},{1,2},{2,3},{3,0},
                         // Hintere Kanten
@@ -29,7 +31,7 @@ public class RectangleMesh extends Mesh {
                         {0,4},{1,5},{2,6},{3,7}
                 },
                 // ===== Flächen (Faces) =====
-                new int[][] { 
+                new int[][] {
                         // Flächen werden hier als Vierecke definiert
                         {0,1,2,3}, // Vorne
                         {4,5,6,7}, // Hinten

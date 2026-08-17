@@ -8,24 +8,27 @@ import objects.animation2d.Paddle2D;
 import scenemanagement.GameWindow;
 import utility.Button;
 
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 
 // Das Hauptmenü des Spiels mit Start-, Info- und Einstellungs-Buttons
 public class MenuScene extends ButtonScene {
-    private final Ball2D ball; // Ball der 2D-Hintergrund-Animation
+    private final transient Ball2D ball; // Ball der 2D-Hintergrund-Animation
 
-    private final Paddle2D p1; // Linkes Paddle der Animation
-    private final Paddle2D p2; // Rechtes Paddle der Animation
+    private final transient Paddle2D leftPaddle; // Linkes Paddle der Animation
+    private final transient Paddle2D rightPaddle; // Rechtes Paddle der Animation
 
     // Initialisiert das Menü, die Hintergrund-Animation (2D-Pong) und die Buttons
     public MenuScene(GameWindow window) {
         super(window, "Pong 3D");
 
         // Objekte der Hintergrund-Animation erzeugen, die Paddles kleben am linken bzw. rechten Fensterrand
-        ball = new Ball2D(window.getWindowSize(), 20);
-        p1 = new Paddle2D(new Vector2(10, (double) window.getWindowSize().height / 2));
-        p2 = new Paddle2D(new Vector2(window.getWindowSize().width - 10, (double) window.getWindowSize().height / 2));
+        Dimension windowSize = window.getWindowSize();
+        ball = new Ball2D(windowSize, 20);
+        leftPaddle = new Paddle2D(new Vector2(10, (double) windowSize.height / 2));
+        rightPaddle = new Paddle2D(new Vector2(windowSize.width - 10, (double) windowSize.height / 2));
 
         // Buttons
         Button startButton = new Button("Start Game");
@@ -34,7 +37,8 @@ public class MenuScene extends ButtonScene {
         Button exitButton = new Button("Exit");
 
         // Aktionen für Buttons verknüpfen
-        startButton.addActionListener(_ -> window.toggleOverlay(OverlayType.DIFFICULTY)); // Erst Schwierigkeit wählen, dann startet das Spiel
+        // Erst Schwierigkeit wählen, dann startet das Spiel
+        startButton.addActionListener(_ -> window.toggleOverlay(OverlayType.DIFFICULTY));
         infoButton.addActionListener(_ -> window.toggleOverlay(OverlayType.INFO));
         settingsButton.addActionListener(_ -> window.setCurrentScene(SceneType.SETTINGS));
         exitButton.addActionListener(_ -> System.exit(0));
@@ -52,13 +56,14 @@ public class MenuScene extends ButtonScene {
     @Override
     protected void update() {
         ball.move();
-        p1.move(ball.getPosition().y); // Paddles folgen der Y-Position des Balls
-        p2.move(ball.getPosition().y);
-        
+        leftPaddle.move(ball.getPosition().getY()); // Paddles folgen der Y-Position des Balls
+        rightPaddle.move(ball.getPosition().getY());
+
         switch (ball.isOut(window.getWindowSize())) {
             case X -> ball.switchXDirection(); // Prallt an den Paddles (oder Wänden) ab
             case Y -> ball.switchYDirection(); // Prallt an Decke/Boden ab
-            default -> {}
+            default -> {
+            }
         }
     }
 
@@ -69,8 +74,8 @@ public class MenuScene extends ButtonScene {
         Graphics2D g2d = (Graphics2D) g;
 
         // Paddles zuerst, der Ball wird darüber gezeichnet
-        p1.paintMe(g2d);
-        p2.paintMe(g2d);
+        leftPaddle.paintMe(g2d);
+        rightPaddle.paintMe(g2d);
         ball.paintMe(g2d);
     }
 
@@ -80,6 +85,8 @@ public class MenuScene extends ButtonScene {
         switch (e.getKeyCode()) {
             case KeyEvent.VK_ENTER -> window.setCurrentScene(SceneType.GAME); // Schnelles Starten mit Enter
             case KeyEvent.VK_ESCAPE -> System.exit(0); // Beenden mit Escape
+            default -> {
+            }
         }
     }
 }

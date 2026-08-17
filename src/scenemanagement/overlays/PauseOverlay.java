@@ -4,7 +4,7 @@ import enums.OverlayType;
 import scenemanagement.GameWindow;
 import utility.Button;
 
-// Pausemenü, das während des Spiels mit ESC eingeblendet wird
+// Pausenmenü, das während des Spiels mit ESC eingeblendet wird
 public class PauseOverlay extends Overlay {
     // Erstellt die Buttons zum Fortsetzen, für den Rücksprung ins Menü und zum Beenden
     public PauseOverlay(GameWindow window) {
@@ -16,9 +16,10 @@ public class PauseOverlay extends Overlay {
         Button quitButton = new Button("Quit Game");
 
         // Aktionen
-        resumeButton.addActionListener(_ -> window.toggleOverlay(OverlayType.PAUSE)); // Overlay ausblenden, Spiel läuft weiter
+        // Overlay ausblenden, Spiel läuft weiter
+        resumeButton.addActionListener(_ -> window.toggleOverlay(OverlayType.PAUSE));
         menuButton.addActionListener(_ -> {
-            // Erst das Pausemenü schließen, dann das Spiel zurücksetzen und ins Hauptmenü wechseln
+            // Erst das Pausenmenü schließen, dann das Spiel zurücksetzen und ins Hauptmenü wechseln
             window.toggleOverlay(OverlayType.PAUSE);
             window.returnToMenu();
         });

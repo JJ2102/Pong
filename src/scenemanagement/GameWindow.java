@@ -1,26 +1,31 @@
 package scenemanagement;
 
-import sound.SoundManager;
 import enums.OverlayType;
 import enums.SceneType;
-import scenemanagement.overlays.*;
+import scenemanagement.overlays.DifficultyOverlay;
+import scenemanagement.overlays.InfoOverlay;
+import scenemanagement.overlays.PauseOverlay;
+import scenemanagement.overlays.ShatteredGlassOverlay;
+import scenemanagement.overlays.WinOverlay;
 import scenemanagement.scenes.GameScene;
 import scenemanagement.scenes.MenuScene;
 import scenemanagement.scenes.SettingsScene;
+import sound.SoundManager;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JFrame;
+import java.awt.Dimension;
 
 // Hauptfenster des Spiels, verwaltet alle Szenen und Overlays sowie die Soundausgabe
 public class GameWindow extends JFrame {
-    private SceneType currentScene; // speichert die aktuelle Szene
     private final Dimension windowSize;
 
-    private boolean debug = false; // wird für debugausgaben genutzt
-
     // Manager
-    private final SceneManager sceneManager;
-    private final SoundManager soundManager;
+    private final transient SceneManager sceneManager;
+    private final transient SoundManager soundManager;
+
+    private SceneType currentScene; // speichert die aktuelle Szene
+
+    private boolean debug = false; // wird für debugausgaben genutzt
 
     private ShatteredGlassOverlay shatteredGlassOverlay;
 
@@ -33,7 +38,8 @@ public class GameWindow extends JFrame {
 
         // Manager initialisieren
         sceneManager = new SceneManager(this.windowSize);
-        this.setContentPane(sceneManager.getLayeredPane()); // JLayeredPane als Container setzen, um Ebenen zu ermöglichen
+        // JLayeredPane als Container setzen, um Ebenen zu ermöglichen
+        setContentPane(sceneManager.getLayeredPane());
 
         soundManager = new SoundManager();
 
@@ -43,7 +49,7 @@ public class GameWindow extends JFrame {
         setDefaultWindowOptions();
         sceneManager.setScene(currentScene); // Startszene anzeigen
         pack(); // Passt die Fenstergröße an den Inhalt an
-        this.setLocationRelativeTo(null); // Zentriert das Fenster auf dem Bildschirm
+        setLocationRelativeTo(null); // Zentriert das Fenster auf dem Bildschirm
         setVisible(true);
     }
 
@@ -90,14 +96,14 @@ public class GameWindow extends JFrame {
 
         // Hintergrundmusik laden und sofort abspielen (Loopt standardmäßig)
         soundManager.loadBackgroundMusic("bg1", "res/musik/BgSong1.wav");
-        soundManager.playBackgroundMusic("bg1"); 
+        soundManager.playBackgroundMusic("bg1");
     }
 
     // Konfiguriert das Fenster (z.B. keine Ränder, nicht vergrößerbar, Schließverhalten)
     private void setDefaultWindowOptions() {
-        this.setUndecorated(true); // Versteckt die Windows-Titelleiste
-        this.setResizable(false);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Beendet das Programm beim Schließen
+        setUndecorated(true); // Versteckt die Windows-Titelleiste
+        setResizable(false);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Beendet das Programm beim Schließen
     }
 
     // Startet das Spiel durch Wechsel zur Spielszene
@@ -120,22 +126,22 @@ public class GameWindow extends JFrame {
     }
 
     // ===== Overlay Methoden =====
-    
+
     // Schaltet die Sichtbarkeit eines Overlays um (an/aus)
-    public void toggleOverlay(OverlayType overlayID) {
-        if (!sceneManager.isOverlayVisible(overlayID)) {
-            sceneManager.showOverlay(overlayID);
+    public void toggleOverlay(OverlayType overlayId) {
+        if (!sceneManager.isOverlayVisible(overlayId)) {
+            sceneManager.showOverlay(overlayId);
         } else {
-            sceneManager.hideOverlay(overlayID);
+            sceneManager.hideOverlay(overlayId);
         }
     }
 
     // Zeigt oder versteckt ein bestimmtes Overlay explizit
-    public void showOverlay(OverlayType overlayID, boolean show) {
+    public void showOverlay(OverlayType overlayId, boolean show) {
         if (show) {
-            sceneManager.showOverlay(overlayID); 
+            sceneManager.showOverlay(overlayId);
         } else {
-            sceneManager.hideOverlay(overlayID); 
+            sceneManager.hideOverlay(overlayId);
         }
     }
 

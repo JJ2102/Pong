@@ -1,14 +1,40 @@
 package math;
 
+// Vektor im dreidimensionalen Raum
 public class Vector3 {
-    public double x; // X-Koordinate
-    public double y; // Y-Koordinate
-    public double z; // Z-Koordinate
+    private double x; // X-Koordinate
+    private double y; // Y-Koordinate
+    private double z; // Z-Koordinate
 
     // Konstruktor zur Initialisierung des 3D-Vektors
     public Vector3(double x, double y, double z) {
         this.x = x;
         this.y = y;
+        this.z = z;
+    }
+
+    // ===== Getter und Setter =====
+    public double getX() {
+        return x;
+    }
+
+    public void setX(double x) {
+        this.x = x;
+    }
+
+    public double getY() {
+        return y;
+    }
+
+    public void setY(double y) {
+        this.y = y;
+    }
+
+    public double getZ() {
+        return z;
+    }
+
+    public void setZ(double z) {
         this.z = z;
     }
 
@@ -48,4 +74,3 @@ public class Vector3 {
         return "( " + x + ", " + y + ", " + z + " )";
     }
 }
-

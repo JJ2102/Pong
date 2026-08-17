@@ -4,7 +4,9 @@ import enums.Direction;
 import math.Vector2;
 import utility.Globals;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics2D;
 import java.awt.geom.Ellipse2D;
 
 // Repräsentiert den animierten 2D-Ball im Hintergrund-Menü
@@ -17,12 +19,12 @@ public class Ball2D extends Object2D {
 
     // Kehrt die horizontale Bewegungsrichtung um
     public void switchXDirection() {
-        velocity.x = velocity.x * -1;
+        velocity.setX(velocity.getX() * -1);
     }
 
     // Kehrt die vertikale Bewegungsrichtung um
     public void switchYDirection() {
-        velocity.y = velocity.y * -1;
+        velocity.setY(velocity.getY() * -1);
     }
 
     // Bewegt den Ball basierend auf seiner aktuellen Geschwindigkeit einen Schritt weiter
@@ -32,10 +34,10 @@ public class Ball2D extends Object2D {
 
     // Prüft, ob der Ball die Paddles (links/rechts) oder den oberen/unteren Rand erreicht hat
     public Direction isOut(Dimension windowSize) {
-        boolean outLeft   = getPosition().x <= width;
-        boolean outRight  = getPosition().x >= windowSize.width - width*2;
-        boolean outTop    = getPosition().y <= height;
-        boolean outBottom = getPosition().y >= windowSize.height - height*2;
+        boolean outLeft = getPosition().getX() <= width;
+        boolean outRight = getPosition().getX() >= windowSize.width - width * 2;
+        boolean outTop = getPosition().getY() <= height;
+        boolean outBottom = getPosition().getY() >= windowSize.height - height * 2;
 
         if (outLeft || outRight) {
             return Direction.X;
@@ -51,7 +53,7 @@ public class Ball2D extends Object2D {
         int posX = (int) (getPosition().getX() - (double) width / 2);
         int posY = (int) (getPosition().getY() - (double) height / 2);
 
-        Ellipse2D.Double ball = new Ellipse2D.Double(posX, posY, width*2, height*2);
+        Ellipse2D.Double ball = new Ellipse2D.Double(posX, posY, width * 2, height * 2);
 
         g2d.setColor(Color.WHITE);
         g2d.draw(ball);

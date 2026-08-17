@@ -1,12 +1,13 @@
 package meshes;
 
-import rendering.Mesh;
 import math.Vector3;
+import rendering.Mesh;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SevenSegmentMeshes {
+// Erzeugt die Meshes einer Siebensegmentanzeige (zwei Ziffern mit Doppelpunkt)
+public final class SevenSegmentMeshes {
     // ===== NUR DIESE WERTE ANPASSEN =====
     private static final float DIGIT_WIDTH = 0.6f;
     private static final float DIGIT_HEIGHT = 1.0f;
@@ -17,16 +18,16 @@ public class SevenSegmentMeshes {
     // ===== Interne Konstanten zur Positionierung =====
     private static final float HORIZONTAL_SEGMENT_WIDTH = DIGIT_WIDTH * 0.85f;
     private static final float VERTICAL_SEGMENT_HEIGHT = (DIGIT_HEIGHT - SEGMENT_THICKNESS * 3 - SEGMENT_GAP * 2) / 2f;
-    
+
     // Y-Positionen der horizontalen Segmente
     private static final float TOP_SEGMENT_Y = DIGIT_HEIGHT / 2f - SEGMENT_THICKNESS / 2f;
     private static final float MIDDLE_SEGMENT_Y = 0.0f;
     private static final float BOTTOM_SEGMENT_Y = -DIGIT_HEIGHT / 2f + SEGMENT_THICKNESS / 2f;
-    
+
     // Y-Positionen der vertikalen Segmente
     private static final float UPPER_VERTICAL_Y = (TOP_SEGMENT_Y + MIDDLE_SEGMENT_Y) / 2f;
     private static final float LOWER_VERTICAL_Y = (MIDDLE_SEGMENT_Y + BOTTOM_SEGMENT_Y) / 2f;
-    
+
     // X-Position der rechten Segmente
     private static final float RIGHT_SEGMENT_X = DIGIT_WIDTH / 2f - SEGMENT_THICKNESS / 2f;
 
@@ -38,7 +39,8 @@ public class SevenSegmentMeshes {
 
     // ===== Segment-Definitionen =====
     // Layout der 7 Segmente: x, y, breite, höhe, isHorizontal
-    // Segmentanordnung wie klassisch üblich (A=oben, B=rechts-oben, C=rechts-unten, D=unten, E=links-unten, F=links-oben, G=Mitte)
+    // Segmentanordnung wie klassisch üblich (A=oben, B=rechts-oben, C=rechts-unten,
+    // D=unten, E=links-unten, F=links-oben, G=Mitte)
     private static final float[][] SEGMENT_CONFIGS = {
             {0f, TOP_SEGMENT_Y, HORIZONTAL_SEGMENT_WIDTH, SEGMENT_THICKNESS, 1}, // A (Oben)
             {RIGHT_SEGMENT_X, UPPER_VERTICAL_Y, SEGMENT_THICKNESS, VERTICAL_SEGMENT_HEIGHT, 0}, // B (Rechts oben)
@@ -63,10 +65,16 @@ public class SevenSegmentMeshes {
             {true,  true,  true,  true,  false, true,  true }  // 9
     };
 
+    // Reine Hilfsklasse, wird nie instanziiert
+    private SevenSegmentMeshes() {
+    }
+
     // ===== Mesh-Generatoren =====
     // Generiert ein Mesh für eine einzelne Ziffer (0-9)
     public static Mesh getDigitMesh(int digit) {
-        if (digit < 0 || digit > 9) digit = 0; // Fallback auf 0
+        if (digit < 0 || digit > 9) {
+            digit = 0; // Fallback auf 0
+        }
 
         List<Vector3> vertices = new ArrayList<>();
         List<int[]> edges = new ArrayList<>();
@@ -116,7 +124,8 @@ public class SevenSegmentMeshes {
     // Erzeugt ein Segment als Sechseck mit abgeschrägten Ecken (chamfer), damit die Segmente
     // wie bei einer echten Siebensegmentanzeige spitz zueinander zulaufen, statt rechteckig zu wirken
     private static void addRoundedSegment(List<Vector3> vertices, List<int[]> edges, List<int[]> faces,
-                                          float centerX, float centerY, float width, float height, boolean isHorizontal) {
+                                          float centerX, float centerY, float width, float height,
+                                          boolean isHorizontal) {
         int baseIndex = vertices.size(); // Startindex für die neuen Punkte
         float halfWidth = width / 2f;
         float halfHeight = height / 2f;
@@ -164,14 +173,16 @@ public class SevenSegmentMeshes {
     private static void addMeshTranslated(List<Vector3> targetVertices, List<int[]> targetEdges,
                                           List<int[]> targetFaces, Mesh sourceMesh,
                                           float translateX, float translateY) {
-        if (sourceMesh == null) return;
+        if (sourceMesh == null) {
+            return;
+        }
 
         int baseIndex = targetVertices.size(); // Basis-Index zur Anpassung der Kanten/Flächen
 
         // Punkte kopieren und verschieben
         if (sourceMesh.getVertices() != null) {
             for (Vector3 vertex : sourceMesh.getVertices()) {
-                targetVertices.add(new Vector3(vertex.x + translateX, vertex.y + translateY, vertex.z));
+                targetVertices.add(new Vector3(vertex.getX() + translateX, vertex.getY() + translateY, vertex.getZ()));
             }
         }
 

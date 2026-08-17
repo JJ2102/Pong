@@ -1,7 +1,8 @@
 package utility;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JButton;
+import java.awt.Color;
+import java.awt.Font;
 
 // Eigener JButton, der schon im einheitlichen Look des Spiels erstellt wird
 public class Button extends JButton {

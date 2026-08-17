@@ -3,14 +3,18 @@ package scenemanagement.scenes;
 import scenemanagement.GameWindow;
 import utility.Globals;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JLabel;
+import java.awt.Component;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.util.ArrayList;
+import java.util.List;
 
 // Basis für alle Menü-Szenen, die aus einem Titel und untereinander zentrierten Buttons bestehen
 public class ButtonScene extends Scene {
-    private final ArrayList<Component> components = new ArrayList<>(); // Alle Elemente in der Reihenfolge, in der sie angezeigt werden
-    private JLabel titleLabel; // Überschrift der Szene
+    // Alle Elemente in der Reihenfolge, in der sie angezeigt werden
+    private final transient List<Component> components = new ArrayList<>();
 
     // Erstellt die Menü-Szene mit Hintergrundfarbe und der Überschrift als erstem Element
     public ButtonScene(GameWindow window, String title) {
@@ -19,7 +23,7 @@ public class ButtonScene extends Scene {
         setBackground(Globals.getBackgroundColor());
 
         // Titel im Spiel-Font erstellen und als erstes Element einreihen
-        titleLabel = new JLabel(title);
+        JLabel titleLabel = new JLabel(title);
         titleLabel.setFont(Globals.getMainFont(72));
         titleLabel.setForeground(Globals.getFontColor());
         components.add(titleLabel);
@@ -47,5 +51,6 @@ public class ButtonScene extends Scene {
 
     // Menü-Szenen brauchen standardmäßig keine Update-Logik, Unterklassen können das überschreiben
     @Override
-    protected void update() {}
+    protected void update() {
+    }
 }

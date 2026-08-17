@@ -1,6 +1,6 @@
 package utility;
 
-import javax.swing.*;
+import javax.swing.JSlider;
 
 // Eigener JSlider im Stil des Spiels, wird in den Einstellungen z.B. für die Lautstärke genutzt
 public class Slider extends JSlider {

@@ -2,12 +2,12 @@ package utility;
 
 // Kleine Zeitsperre, die verhindert, dass eine Aktion zu schnell hintereinander ausgelöst wird
 public class Cooldown {
-    private final long duration; // Sperrzeit in Millisekunden
+    private final long durationMs; // Sperrzeit in Millisekunden
     private long nextAllowed; // Zeitpunkt (in ms), ab dem die Aktion wieder erlaubt ist
 
     // Legt die Sperrzeit fest, startet aber sofort einsatzbereit (nextAllowed = 0)
     public Cooldown(long durationMs) {
-        this.duration = durationMs;
+        this.durationMs = durationMs;
         this.nextAllowed = 0;
     }
 
@@ -18,6 +18,6 @@ public class Cooldown {
 
     // Startet die Sperre neu, wird nach dem Ausführen der Aktion aufgerufen
     public void trigger() {
-        nextAllowed = System.currentTimeMillis() + duration; // ab jetzt wieder für duration ms gesperrt
+        nextAllowed = System.currentTimeMillis() + durationMs; // ab jetzt wieder für durationMs ms gesperrt
     }
 }

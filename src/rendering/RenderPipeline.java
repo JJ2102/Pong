@@ -7,8 +7,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 // Transformiert 3D-Weltkoordinaten schrittweise in kameraspezifische Projektionskoordinaten
-public class RenderPipeline {
-    
+public final class RenderPipeline {
+
+    // Reine Hilfsklasse, wird nie instanziiert
+    private RenderPipeline() {
+    }
+
     // Schritt 1: Überführt lokale Objektkoordinaten in Weltkoordinaten (Model-Matrix)
     public static List<Vector3> applyTransform(List<Vector3> vertices, Transform transform) {
         // Erzeuge eine kombinierte Transformationsmatrix aus Position, Rotation und Skalierung
@@ -43,7 +47,8 @@ public class RenderPipeline {
 
         List<Vector3> fovApplied = new ArrayList<>();
         for (Vector3 v : cameraTransformed) {
-            Vector3 projectedVertex = projectionMatrix.multiply(v); // Erzeugt den finalen 3D-Wert vor der 2D-Flachdrückung
+            // Erzeugt den finalen 3D-Wert vor der 2D-Flachdrückung
+            Vector3 projectedVertex = projectionMatrix.multiply(v);
             fovApplied.add(projectedVertex);
         }
         return fovApplied;
@@ -52,7 +57,7 @@ public class RenderPipeline {
     // Führt View- und Projektions-Transformation (Schritt 2 und 3) nacheinander aus
     public static List<Vector3> applyCameraParams(List<Vector3> transformed, Camera camera) {
         // Pipeline abarbeiten: zuerst Kamera-Ausrichtung, dann Sichtfeld-Skalierung
-        List<Vector3> cameraTransformed = RenderPipeline.applyCameraTransform(transformed, camera);
-        return RenderPipeline.applyFov(cameraTransformed, camera.getFov());
+        List<Vector3> cameraTransformed = applyCameraTransform(transformed, camera);
+        return applyFov(cameraTransformed, camera.getFov());
     }
 }

@@ -2,6 +2,7 @@ package math;
 
 import rendering.Transform;
 
+// 4x4-Matrix für die Transformationen der 3D-Renderpipeline
 public class Matrix4x4 {
     private final double[][] matrix = new double[4][4]; // 2D-Array speichert die 4x4 Matrix-Werte
 
@@ -31,15 +32,15 @@ public class Matrix4x4 {
         Vector3 scale = transform.getScale();
 
         // Einzelne Transformationsmatrizen erstellen
-        Matrix4x4 translationMatrix = getTranslationMatrix(position.x, position.y, position.z);
-        Matrix4x4 rotationMatrix = Matrix4x4.getRotationMatrix(rotation.x, rotation.y, rotation.z);
-        Matrix4x4 scaleMatrix = Matrix4x4.getScalingMatrix(scale.x, scale.y, scale.z);
+        Matrix4x4 translationMatrix = getTranslationMatrix(position.getX(), position.getY(), position.getZ());
+        Matrix4x4 rotationMatrix = Matrix4x4.getRotationMatrix(rotation.getX(), rotation.getY(), rotation.getZ());
+        Matrix4x4 scaleMatrix = Matrix4x4.getScalingMatrix(scale.getX(), scale.getY(), scale.getZ());
 
         // Model-Matrix: Alle Objekt-Transformationen (Translation * Rotation * Scale)
         return translationMatrix.multiply(rotationMatrix).multiply(scaleMatrix);
     }
 
-    // Erstellt eine Translations matrix für die Verschiebung
+    // Erstellt eine Translations-matrix für die Verschiebung
     private static Matrix4x4 getTranslationMatrix(double tx, double ty, double tz) {
         // Quelle 1
         /* Translation matrix:
@@ -152,10 +153,10 @@ public class Matrix4x4 {
     public Vector3 multiply(Vector3 v) {
         // Quelle 2
         // neue Komponenten inklusive homogener Koordinaten berechnen
-        double x = v.x * matrix[0][0] + v.y * matrix[0][1] + v.z * matrix[0][2] + matrix[0][3];
-        double y = v.x * matrix[1][0] + v.y * matrix[1][1] + v.z * matrix[1][2] + matrix[1][3];
-        double z = v.x * matrix[2][0] + v.y * matrix[2][1] + v.z * matrix[2][2] + matrix[2][3];
-        double w = v.x * matrix[3][0] + v.y * matrix[3][1] + v.z * matrix[3][2] + matrix[3][3];
+        double x = v.getX() * matrix[0][0] + v.getY() * matrix[0][1] + v.getZ() * matrix[0][2] + matrix[0][3];
+        double y = v.getX() * matrix[1][0] + v.getY() * matrix[1][1] + v.getZ() * matrix[1][2] + matrix[1][3];
+        double z = v.getX() * matrix[2][0] + v.getY() * matrix[2][1] + v.getZ() * matrix[2][2] + matrix[2][3];
+        double w = v.getX() * matrix[3][0] + v.getY() * matrix[3][1] + v.getZ() * matrix[3][2] + matrix[3][3];
 
         // Normalisierung, falls nötig
         if (w != 0 && w != 1) {

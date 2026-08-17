@@ -5,14 +5,14 @@ import math.Vector3;
 import rendering.Mesh;
 import rendering.Transform;
 
-import java.awt.*;
+import java.awt.Color;
 
 // Basisklasse für alle darstellbaren Objekte in der 3D-Szene
 public class Entity {
-    private Mesh mesh;
     private final Transform transform;
     private final Color colorFace;
     private final Color colorEdge;
+    private Mesh mesh;
     private BoxHitbox hitbox;
 
     // Initialisiert eine Entität ohne Mesh an der Startposition mit den angegebenen Farben
@@ -34,7 +34,7 @@ public class Entity {
     }
 
     // Weist der Entität ein neues Mesh zu
-    public void setMesh(Mesh mesh) {
+    public final void setMesh(Mesh mesh) {
         this.mesh = mesh;
     }
 
@@ -54,7 +54,7 @@ public class Entity {
     }
 
     // Weist der Entität eine neue Hitbox zu
-    public void setHitbox(BoxHitbox hitbox) {
+    public final void setHitbox(BoxHitbox hitbox) {
         this.hitbox = hitbox;
     }
 

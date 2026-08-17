@@ -2,7 +2,7 @@ package objects;
 
 import math.Vector3;
 
-import java.awt.*;
+import java.awt.Color;
 
 // Repräsentiert das vom Spieler gesteuerte Paddle
 public class Player extends Paddle {

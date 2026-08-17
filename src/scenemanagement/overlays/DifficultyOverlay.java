@@ -22,7 +22,8 @@ public class DifficultyOverlay extends Overlay {
         easyButton.addActionListener(_ -> startGame(Difficulty.EASY));
         mediumButton.addActionListener(_ -> startGame(Difficulty.MEDIUM));
         hardButton.addActionListener(_ -> startGame(Difficulty.HARD));
-        cancelButton.addActionListener(_ -> window.toggleOverlay(OverlayType.DIFFICULTY)); // blendet das Overlay wieder aus
+        // blendet das Overlay wieder aus
+        cancelButton.addActionListener(_ -> window.toggleOverlay(OverlayType.DIFFICULTY));
 
         addComponent(easyButton);
         addComponent(mediumButton);

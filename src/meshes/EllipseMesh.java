@@ -6,6 +6,7 @@ import rendering.Mesh;
 import java.util.ArrayList;
 import java.util.List;
 
+// Kugelförmiges Mesh, das aus Ringen und Segmenten aufgebaut wird
 public class EllipseMesh extends Mesh {
     // Konstruktor zur Initialisierung des Ellipsen-Meshes
     public EllipseMesh(double radius, int segments, int rings) {
@@ -28,7 +29,7 @@ public class EllipseMesh extends Mesh {
             for (int j = 0; j <= segments; j++) {
                 double u = (double) j / segments;
                 double theta = u * 2.0 * Math.PI; // einmal komplett rundherum
-                
+
                 // Kugelkoordinaten in kartesische Koordinaten umrechnen
                 double x = r * Math.sin(phi) * Math.cos(theta);
                 double y = r * Math.cos(phi);
@@ -43,7 +44,7 @@ public class EllipseMesh extends Mesh {
     private static int[][] generateEdges(int segments, int rings) {
         List<int[]> edges = new ArrayList<>();
         int cols = segments + 1; // Spaltenanzahl
-        
+
         for (int i = 0; i < rings; i++) {
             for (int j = 0; j < segments; j++) {
                 int idx = i * cols + j; // Aktueller Index
@@ -60,17 +61,17 @@ public class EllipseMesh extends Mesh {
     private static int[][] generateFaces(int segments, int rings) {
         List<int[]> faces = new ArrayList<>();
         int cols = segments + 1; // Spaltenanzahl
-        
+
         for (int i = 0; i < rings; i++) {
             for (int j = 0; j < segments; j++) {
                 int idx = i * cols + j; // Basis-Index
-                
+
                 // Indizes der vier Eckpunkte des aktuellen Vierecks
                 int a = idx;
                 int b = idx + 1;
                 int c = idx + cols + 1;
                 int d = idx + cols;
-                
+
                 // Zwei Dreiecke pro Rechteck erstellen (a-b-c und a-c-d)
                 faces.add(new int[]{a, b, c});
                 faces.add(new int[]{a, c, d});

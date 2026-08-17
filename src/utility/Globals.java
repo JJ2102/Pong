@@ -1,10 +1,19 @@
 package utility;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Font;
+import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 
 // Sammlung statischer Hilfsmethoden für Werte, die im ganzen Spiel einheitlich sein sollen (Farben, Schrift, Zufall)
-public class Globals {
+public final class Globals {
+
+    // Reine Hilfsklasse, wird nie instanziiert
+    private Globals() {
+    }
+
     // Erzeugt einen komplett durchsichtigen Cursor, damit die Maus im Spiel nicht stört
     public static Cursor getInvisibleCursor() {
         // Transparentes 16x16-Pixel-Bild als Cursor verwenden
@@ -24,6 +33,7 @@ public class Globals {
     public static Color getFontColor() {
         return Color.GREEN;
     }
+
     // Gleiche Schriftfarbe, aber mit einstellbarer Transparenz (0 = unsichtbar, 255 = voll deckend)
     public static Color getFontColor(int transparency) {
         return new Color(0, 255, 0, transparency);

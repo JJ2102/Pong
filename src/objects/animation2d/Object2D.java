@@ -2,14 +2,14 @@ package objects.animation2d;
 
 import math.Vector2;
 
-import java.awt.*;
+import java.awt.Dimension;
 
 // Basisklasse für 2D-Objekte in der Hintergrund-Animation des Menüs
 public class Object2D {
     protected final int width;
     protected final int height;
-    private Vector2 position;
     protected Vector2 velocity;
+    private Vector2 position;
 
     // Startet mittig im Fenster (für Objekte wie den Ball im Menü-Hintergrund)
     public Object2D(Dimension windowSize, int width, int height) {

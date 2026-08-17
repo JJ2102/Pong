@@ -2,12 +2,18 @@ package rendering;
 
 import math.Vector2;
 
-import java.awt.*;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Polygon;
 
 // Hilfsklasse zum Zeichnen von 2D-Polygonen und Linien
-// Hilfsklasse zum Zeichnen von 2D-Polygonen und Linien
-public class Drawer {
-    
+public final class Drawer {
+
+    // Reine Hilfsklasse, wird nie instanziiert
+    private Drawer() {
+    }
+
     // Wandelt eine projizierte 3D-Fläche anhand der Eckpunkte in ein 2D-Polygon um
     public static Polygon getPolygon(int[] face, Vector2[] projectedVertices) {
         Polygon poly = new Polygon(); // Initialisiere ein leeres 2D-Polygon
@@ -17,7 +23,7 @@ public class Drawer {
 
             // Hinzufügen des projizierten Punkts zum Polygon (Sicherheitscheck gegen Null-Referenzen)
             if (v != null) {
-                poly.addPoint((int) v.x, (int) v.y); // Pixel-Koordinaten benötigen Ganzzahlen (int)
+                poly.addPoint((int) v.getX(), (int) v.getY()); // Pixel-Koordinaten benötigen Ganzzahlen (int)
             }
         }
         return poly;
@@ -35,6 +41,7 @@ public class Drawer {
     public static void drawLine(Graphics2D g, Vector2 v1, Vector2 v2, Color color) {
         g.setColor(color);
         g.setStroke(new BasicStroke(1.0f)); // Linienstärke auf 1 Pixel setzen
-        g.drawLine((int) v1.x, (int) v1.y, (int) v2.x, (int) v2.y); // Start- und Endpunkt verbinden
+        // Start- und Endpunkt verbinden
+        g.drawLine((int) v1.getX(), (int) v1.getY(), (int) v2.getX(), (int) v2.getY());
     }
 }

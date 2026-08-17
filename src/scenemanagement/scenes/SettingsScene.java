@@ -1,12 +1,10 @@
 package scenemanagement.scenes;
 
 import scenemanagement.GameWindow;
+import sound.SoundSettings;
 import utility.Button;
 import utility.InfoLabel;
 import utility.Slider;
-
-import javax.swing.*;
-import java.awt.*;
 
 // Einstellungs-Szene, in der die Lautstärke von Soundeffekten und Musik geregelt wird
 public class SettingsScene extends ButtonScene {
@@ -15,8 +13,9 @@ public class SettingsScene extends ButtonScene {
         super(window, "Settings");
 
         // Aktuelle Lautstärken aus den Sound-Einstellungen holen (0.0 - 1.0) und als Startwerte der Slider nutzen
-        int effectsVolume = (int) (window.getSoundManager().getSoundSettings().getEffectsVolume() * 100); // Effekte Lautstärke in %
-        int musicVolume = (int) (window.getSoundManager().getSoundSettings().getMusicVolume() * 100); // Musik Lautstärke in %
+        SoundSettings soundSettings = window.getSoundManager().getSoundSettings();
+        int effectsVolume = (int) (soundSettings.getEffectsVolume() * 100); // Effekte Lautstärke in %
+        int musicVolume = (int) (soundSettings.getMusicVolume() * 100); // Musik Lautstärke in %
 
         // Regler für die Soundeffekte
         InfoLabel volumeEffectsLabel = new InfoLabel("Volume Effects:");
@@ -24,7 +23,8 @@ public class SettingsScene extends ButtonScene {
         volumeEffectsSlider.addChangeListener(_ -> {
             float volume = volumeEffectsSlider.getValue() / 100f; // Prozent zurück in 0.0 - 1.0 umrechnen
             window.getSoundManager().setEffectsVolume(volume);
-            window.getSoundManager().playSoundEffect("pong"); // Kurze Hörprobe, damit man die neue Lautstärke direkt merkt
+            // Kurze Hörprobe, damit man die neue Lautstärke direkt merkt
+            window.getSoundManager().playSoundEffect("pong");
         });
 
         // Regler für die Hintergrundmusik

@@ -1,15 +1,26 @@
 package sound;
 
-import javax.sound.sampled.*;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.FloatControl;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 
+// Lädt und verwaltet alle Soundeffekte und die Hintergrundmusik des Spiels
 public class SoundManager {
-    private final HashMap<String, Clip> soundEffects = new HashMap<>(); // Name -> Soundeffekt-Clip; Map aller Soundeffekte
-    private final HashMap<String, Clip> backgroundMusic = new HashMap<>(); // Name -> HintergrundMusik-Clip; Map aller Musik Clips
-    private Clip currentBackgroundMusic; // aktuelle HintergrundMusik
+    // Name -> Soundeffekt-Clip; Map aller Soundeffekte
+    private final Map<String, Clip> soundEffects = new HashMap<>();
+    // Name -> HintergrundMusik-Clip; Map aller Musik Clips
+    private final Map<String, Clip> backgroundMusic = new HashMap<>();
 
     private final SoundSettings settings;
+
+    private Clip currentBackgroundMusic; // aktuelle HintergrundMusik
 
     public SoundManager() {
         settings = new SoundSettings();
@@ -17,38 +28,41 @@ public class SoundManager {
 
     // erstellt einen Clip aus einer Audiodatei
     private Clip createClip(String path) {
+        File file = new File(path); // holt sich das File zum Path
+        if (!file.exists()) {
+            throw new IllegalArgumentException("Sound: File Not Found: " + path);
+        }
+
         try {
-            File file = new File(path); // holt sich das File zum Path
-            if (file.exists()) { // falls das File existiert
-                AudioInputStream sound = AudioSystem.getAudioInputStream(file); // Audiodatei laden
-                Clip clip = AudioSystem.getClip(); // Clip erstellen
-                clip.open(sound); // Clip mit Audiodaten füllen
-                return clip;
-            } else {
-                throw new RuntimeException("Sound: File Not Found: " + path);
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("Sound: Error loading file: " + path, e);
+            AudioInputStream sound = AudioSystem.getAudioInputStream(file); // Audiodatei laden
+            Clip clip = AudioSystem.getClip(); // Clip erstellen
+            clip.open(sound); // Clip mit Audiodaten füllen
+            return clip;
+        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+            throw new IllegalStateException("Sound: Error loading file: " + path, e);
         }
     }
 
     // ===== Volume =====
     // setzt die Lautstärke für einen Clip
     private void setVolume(Clip clip, float volume) {
-        if (clip == null) return;
+        if (clip == null) {
+            return;
+        }
         try {
-            FloatControl gain = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN); // Lautstärkeregler holen
-            float dB = volumeToDB(volume, gain.getMinimum(), gain.getMaximum()); // Lautstärke in dB umrechnen
-            gain.setValue(dB); // Lautstärke setzen
+            // Lautstärkeregler holen
+            FloatControl gain = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+            float decibel = volumeToDecibel(volume, gain.getMinimum(), gain.getMaximum());
+            gain.setValue(decibel); // Lautstärke setzen
         } catch (IllegalArgumentException ignored) {
             // MASTER_GAIN nicht verfügbar ⇾ nichts tun
         }
     }
 
     // Konvertiert das Prozentuale Volumen in Decibel
-    private float volumeToDB(float volume, float min, float max) {
-        float dB = (float) (20.0 * Math.log10(volume)); // dB-Wert berechnen
-        return Math.clamp(dB, min, max); // dB-Wert begrenzen
+    private float volumeToDecibel(float volume, float min, float max) {
+        float decibel = (float) (20.0 * Math.log10(volume)); // dB-Wert berechnen
+        return Math.clamp(decibel, min, max); // dB-Wert begrenzen
     }
 
     // ===== Soundeffekte =====
@@ -62,7 +76,9 @@ public class SoundManager {
     // Soundeffekt abspielen
     public void playSoundEffect(String name) {
         Clip clip = soundEffects.get(name); // clip aus der soundeffekt Map holen
-        if (clip == null) return; // falls clip nicht existiert abrechen
+        if (clip == null) { // falls clip nicht existiert abbrechen
+            return;
+        }
 
         // Pausiere, den Clip, falls er bereits läuft, um Überlappungen zu vermeiden
         if (clip.isRunning()) {
@@ -85,7 +101,9 @@ public class SoundManager {
     // Hintergrundmusik abspielen
     public void playBackgroundMusic(String name) {
         Clip clip = backgroundMusic.get(name); // Clip laden
-        if (clip == null) return; // falls clip nicht existiert abrechen
+        if (clip == null) { // falls clip nicht existiert abbrechen
+            return;
+        }
 
         // Stoppe und schließe aktuelle Musik sauber
         stopBackgroundMusic();
@@ -100,7 +118,9 @@ public class SoundManager {
     // Hintergrundmusik stoppen
     public void stopBackgroundMusic() {
         if (currentBackgroundMusic != null) { // falls musik läuft
-            if (currentBackgroundMusic.isRunning()) currentBackgroundMusic.stop(); // stoppe die Musik
+            if (currentBackgroundMusic.isRunning()) {
+                currentBackgroundMusic.stop(); // stoppe die Musik
+            }
             currentBackgroundMusic.close(); // schließe den clip sauber
             currentBackgroundMusic = null; // Setze aktuelle Hintergrundmusik auf null
         }
@@ -115,17 +135,21 @@ public class SoundManager {
         for (Clip clip : backgroundMusic.values()) {
             setVolume(clip, settings.getMusicVolume());
         }
-        if (currentBackgroundMusic != null) setVolume(currentBackgroundMusic, settings.getMusicVolume());
+        if (currentBackgroundMusic != null) {
+            setVolume(currentBackgroundMusic, settings.getMusicVolume());
+        }
     }
 
-    // setzt die Lautstärke für Soundeffekte und Hintergrundmusik
-    public void setEffectsVolume(float v) {
-        settings.setEffectsVolume(v);
+    // ===== Getter und Setter =====
+    // setzt die Lautstärke für Soundeffekte
+    public void setEffectsVolume(float volume) {
+        settings.setEffectsVolume(volume);
         applyVolumes();
     }
 
-    public void setMusicVolume(float v) {
-        settings.setMusicVolume(v);
+    // setzt die Lautstärke für die Hintergrundmusik
+    public void setMusicVolume(float volume) {
+        settings.setMusicVolume(volume);
         applyVolumes();
     }
 

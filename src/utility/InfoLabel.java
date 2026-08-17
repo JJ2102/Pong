@@ -1,6 +1,6 @@
 package utility;
 
-import javax.swing.*;
+import javax.swing.JLabel;
 
 // Eigenes JLabel für Info- und Statustexte, das direkt im Stil des Spiels erstellt wird
 public class InfoLabel extends JLabel {

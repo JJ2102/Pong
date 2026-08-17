@@ -2,7 +2,9 @@ package objects.animation2d;
 
 import math.Vector2;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
 
 // Repräsentiert ein animiertes 2D-Paddle im Hintergrund-Menü
 public class Paddle2D extends Object2D {

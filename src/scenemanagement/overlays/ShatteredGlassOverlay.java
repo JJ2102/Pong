@@ -3,15 +3,20 @@ package scenemanagement.overlays;
 import enums.OverlayType;
 import scenemanagement.GameWindow;
 
-import java.awt.*;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.geom.Line2D;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 // Overlay, das einen zersplitterten Bildschirm zeichnet, wenn der Gegner einen Punkt macht
 public class ShatteredGlassOverlay extends Overlay {
-    private final ArrayList<Line2D> cracks = new ArrayList<>(); // alle Risslinien, die gezeichnet werden
-    private final Random random = new Random(); // sorgt dafür, dass jeder Sprung anders aussieht
+    private final transient List<Line2D> cracks = new ArrayList<>(); // alle Risslinien, die gezeichnet werden
+    private final transient Random random = new Random(); // sorgt dafür, dass jeder Sprung anders aussieht
 
     // Erstellt ein komplett durchsichtiges Overlay ohne Titel, das keine Eingaben abfängt
     public ShatteredGlassOverlay(GameWindow window) {
@@ -28,7 +33,7 @@ public class ShatteredGlassOverlay extends Overlay {
         for (int i = 0; i < numRadialLines; i++) {
             // Winkel mit etwas Zufall berechnen, damit die Strahlen nicht perfekt gleichmäßig verteilt sind
             double angle = (2 * Math.PI / numRadialLines) * i + (random.nextDouble() * 0.5);
-            double length = Math.max(width/2, height/2); // Lang genug, um das Panel zu verlassen
+            double length = Math.max(width / 2.0, height / 2.0); // Lang genug, um das Panel zu verlassen
 
             // Endpunkt des Strahls über Sinus und Cosinus aus Winkel und Länge bestimmen
             int endX = (int) (centerX + Math.cos(angle) * length);

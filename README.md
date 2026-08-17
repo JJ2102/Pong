@@ -51,7 +51,7 @@ aber mit einer modernen selbstentwickelten perspektivischen 3D-Grafik. Das Ziel 
 2. Projekt in einer Java-IDE (z.B. IntelliJ IDEA, Eclipse) öffnen
 3. `src`-Ordner als Quellcode-Verzeichnis markieren
 4. `res`-Ordner als Ressourcen-Verzeichnis markieren
-5. `Game.java` als Einstiegspunkt festlegen und ausführen
+5. `pong/Game.java` als Einstiegspunkt (`pong.Game`) festlegen und ausführen
 
 ---
 
