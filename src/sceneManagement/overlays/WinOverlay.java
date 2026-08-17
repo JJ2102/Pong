@@ -9,7 +9,7 @@ public class WinOverlay extends Overlay {
     // Erstellt das Overlay mit passendem Titel und den Buttons für Revanche oder Hauptmenü
     public WinOverlay(GameWindow window, OverlayType overlayType) {
         // Der Titel hängt davon ab, ob dieses Overlay als LOSE oder als WIN registriert wurde
-        super(window, overlayType == OverlayType.LOSE ? "You Lose!" : "You Win!", 150, true);
+        super(window, overlayType == OverlayType.LOSE ? "You Lose!" : "You Win!", 150, true, overlayType);
 
         // Buttons
         Button playAgainButton = new Button("Play Again");

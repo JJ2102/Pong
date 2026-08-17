@@ -8,7 +8,7 @@ import utility.Button;
 public class PauseOverlay extends Overlay {
     // Erstellt die Buttons zum Fortsetzen, für den Rücksprung ins Menü und zum Beenden
     public PauseOverlay(GameWindow window) {
-        super(window, "Paused", 150, true); // pausiert das laufende Spiel im Hintergrund
+        super(window, "Paused", 150, true, OverlayType.PAUSE); // pausiert das laufende Spiel im Hintergrund
 
         // Buttons
         Button resumeButton = new Button("Resume");

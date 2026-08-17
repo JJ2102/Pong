@@ -1,29 +1,37 @@
 package scenemanagement.overlays;
 
+import enums.OverlayType;
 import scenemanagement.GameWindow;
 import utility.Globals;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 // Basisklasse für alle Overlays (Menüs, die über einer Szene liegen) mit halbtransparentem Hintergrund
-public abstract class Overlay extends JPanel {
+public abstract class Overlay extends JPanel implements KeyListener {
     protected final GameWindow window; // Referenz auf das Hauptfenster, damit Unterklassen Szenen wechseln können
     private final ArrayList<Component> components = new ArrayList<>(); // alle Elemente des Overlays in Anzeigereihenfolge
     private final int transparency; // Alphawert des Hintergrunds (0 = unsichtbar, 255 = deckend)
     private JLabel titleLabel; // Überschrift, die immer ganz oben steht
     private final Color bgColor = Globals.getBackgroundColor();
     private final boolean pauseUnderlying; // legt fest, ob die Szene darunter pausiert werden soll
+    private final OverlayType overlayType;
 
     // Baut das Overlay mit Titel, Transparenz und Pausierverhalten auf
-    public Overlay(GameWindow window, String title, int transparency, boolean pauseUnderlying) {
+    public Overlay(GameWindow window, String title, int transparency, boolean pauseUnderlying, OverlayType overlayType) {
         this.window = window;
         setOpaque(false); // Hintergrund transparent
         setLayout(new GridBagLayout()); // Zentrierte Inhalte
 
-        this.transparency = Math.max(0, Math.min(transparency, 255)); // Transparenzwert begrenzen
+        addKeyListener(this);
+
+        this.transparency = Math.clamp(transparency, 0, 255); // Transparenzwert begrenzen
         this.pauseUnderlying = pauseUnderlying;
+        this.overlayType = overlayType;
 
         // Titel in großer Schrift erzeugen und als erstes Element eintragen
         titleLabel = new JLabel(title);
@@ -70,4 +78,14 @@ public abstract class Overlay extends JPanel {
         g.setColor(new Color(bgColor.getRed(), bgColor.getGreen(), bgColor.getBlue(), transparency));
         g.fillRect(0, 0, getWidth(), getHeight());
     }
+
+    // ===== Tastenereignisse =====
+    @Override public void keyTyped(KeyEvent e) {}
+    @Override public void keyPressed(KeyEvent e) {
+        // schließt overlays mit ESC
+        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+            window.toggleOverlay(overlayType);
+        }
+    }
+    @Override public void keyReleased(KeyEvent e) {}
 }

@@ -1,5 +1,6 @@
 package scenemanagement.overlays;
 
+import enums.OverlayType;
 import scenemanagement.GameWindow;
 
 import java.awt.*;
@@ -14,7 +15,7 @@ public class ShatteredGlassOverlay extends Overlay {
 
     // Erstellt ein komplett durchsichtiges Overlay ohne Titel, das keine Eingaben abfängt
     public ShatteredGlassOverlay(GameWindow window) {
-        super(window, "", 0, false); // Transparenz 0 = kein eingefärbter Hintergrund
+        super(window, "", 0, false, OverlayType.SHATTERED_GLASS); // Transparenz 0 = kein eingefärbter Hintergrund
         setFocusable(false); // darf den Tastaturfokus nicht vom Spiel wegnehmen
     }
 

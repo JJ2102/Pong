@@ -11,7 +11,7 @@ import javax.swing.*;
 public class InfoOverlay extends Overlay {
     // Baut den Erklärtext und den Schließen-Button auf
     public InfoOverlay(GameWindow window) {
-        super(window, "Information", 225, false); // fast deckender Hintergrund, Szene darunter läuft weiter
+        super(window, "Information", 225, false, OverlayType.INFO); // fast deckender Hintergrund, Szene darunter läuft weiter
 
         // Der Text wird als HTML gesetzt, damit Zeilenumbrüche und Fettschrift möglich sind
         JLabel controlsLabel = new JLabel("""

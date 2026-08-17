@@ -9,7 +9,7 @@ import utility.Button;
 public class DifficultyOverlay extends Overlay {
     // Erstellt die drei Schwierigkeits-Buttons sowie einen Abbrechen-Button
     public DifficultyOverlay(GameWindow window) {
-        super(window, "Select Difficulty", 200, true); // pausiert die Szene darunter
+        super(window, "Select Difficulty", 200, true, OverlayType.DIFFICULTY); // pausiert die Szene darunter
 
         // Buttons
         Button easyButton = new Button("Easy");
