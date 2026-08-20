@@ -5,11 +5,7 @@ import enums.OverlayType;
 import hitboxes.BoxHitbox;
 import math.Vector2;
 import math.Vector3;
-import objects.Ball;
-import objects.Box;
-import objects.Enemy;
-import objects.Player;
-import objects.SevenSegmentDisplay;
+import objects.*;
 import rendering.Camera;
 import rendering.Renderer;
 import scenemanagement.GameWindow;
@@ -42,6 +38,11 @@ public class GameScene extends Scene {
     private final transient Enemy aiPlayer; // Paddle der KI
     private final transient Box box; // Der Spielraum bzw. die Wände drumherum
     private final transient Ball ball;
+
+    // KoordinatenAchsen
+    private final transient Vector xAxis;
+    private final transient Vector yAxis;
+    private final transient Vector zAxis;
 
     // Punkteanzeige, die als 3D-Objekt an der Seitenwand hängt
     private final transient SevenSegmentDisplay scoreDisplay;
@@ -83,6 +84,11 @@ public class GameScene extends Scene {
         double cameraPositionZ = -BOX_DEPTH - 1;
         // Kamera leicht hinter der vorderen Box-Wand platzieren
         camera.setPosition(new Vector3(0, 0, cameraPositionZ));
+
+        // Koordinatensystem
+        xAxis = new Vector(new Vector3(0, 0, 0), new Vector3(1, 0, 0), 1, Color.RED);
+        yAxis = new Vector(new Vector3(0, 0, 0), new Vector3(0, 1, 0), 1, Color.GREEN);
+        zAxis = new Vector(new Vector3(0, 0, 0), new Vector3(0, 0, 1), 1, Color.BLUE);
 
         // Spielobjekte initialisieren
         box = new Box(BOX_DEPTH);
@@ -259,6 +265,11 @@ public class GameScene extends Scene {
         renderer.renderEntity(g2d, player, camera);
 
         if (window.isDebug()) {
+            // Koordinatensystem rendern (X=Rot, Y=Grün, Z=Blau)
+            renderer.renderEntity(g2d, xAxis, camera);
+            renderer.renderEntity(g2d, yAxis, camera);
+            renderer.renderEntity(g2d, zAxis, camera);
+
             // Debug-Modus: Alle Hitboxes (Paddles, Tore, Ball) anzeigen
             renderer.renderBoxHitbox(g2d, ball.getHitbox(), camera, Color.BLUE);
             renderer.renderBoxHitbox(g2d, aiPlayer.getHitbox(), camera, Color.YELLOW);
