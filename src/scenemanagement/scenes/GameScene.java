@@ -93,7 +93,7 @@ public class GameScene extends Scene {
 
         // Spielobjekte initialisieren
         box = new Box(BOX_DEPTH);
-        ball = new Ball();
+        ball = new Ball(box.getSize());
 
         // Score Display (7-Segment) konfigurieren und in der Welt platzieren
         scoreDisplay = new SevenSegmentDisplay();

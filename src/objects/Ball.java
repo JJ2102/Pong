@@ -12,15 +12,24 @@ import java.awt.Color;
 public class Ball extends Entity {
     private static final double RADIUS = 0.2;
 
+    // Grenzen für den Mittelpunkt des Balls, damit sein Rand genau die Wand berührt
+    private final double maxX;
+    private final double maxY;
+
     private Vector3 velocity;
 
     // Initialisiert den Ball mit seinem Mesh, seiner Hitbox und einer zufälligen Startgeschwindigkeit
-    public Ball() {
+    public Ball(Vector3 boxSize) {
         super(Color.YELLOW, Color.ORANGE);
         Mesh boxMesh = new EllipseMesh(RADIUS, 10, 10);
         setMesh(boxMesh);
 
-        double size = RADIUS * 1.5;
+        // Wandgrenzen aus der tatsächlichen Boxgröße ableiten statt fester Zahlen
+        this.maxX = boxSize.getX() - RADIUS;
+        this.maxY = boxSize.getY() - RADIUS;
+
+        // Die Hitbox umschließt den Ball genau: halbe Kantenlänge entspricht dem Radius
+        double size = RADIUS * 2;
         setHitbox(new BoxHitbox(getTransform().getPosition(), new Vector3(size, size, size)));
 
         // Zufällige Anfangsgeschwindigkeit setzen
@@ -66,10 +75,10 @@ public class Ball extends Entity {
 
         // Einfache Kollisionserkennung mit den Wänden
         Vector3 position = getTransform().getPosition();
-        if (position.getX() > 2 - RADIUS || position.getX() < -2 + RADIUS) {
+        if (position.getX() > maxX || position.getX() < -maxX) {
             velocity.setX(-velocity.getX());
         }
-        if (position.getY() > 1 - RADIUS || position.getY() < -1 + RADIUS) {
+        if (position.getY() > maxY || position.getY() < -maxY) {
             velocity.setY(-velocity.getY());
         }
 
