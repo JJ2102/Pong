@@ -78,12 +78,13 @@ public class GameScene extends Scene {
         super(window);
         setCursor(Globals.getInvisibleCursor()); // Mauszeiger im Spiel unsichtbar machen
 
-        // Renderer und Kamera initialisieren
-        renderer = new Renderer(getWidth(), getHeight());
+        // Kamera und Renderer initialisieren
         camera = new Camera();
         double cameraPositionZ = -BOX_DEPTH - 1;
         // Kamera leicht hinter der vorderen Box-Wand platzieren
         camera.setPosition(new Vector3(0, 0, cameraPositionZ));
+        // Der Renderer zeichnet ab jetzt immer aus Sicht dieser Kamera
+        renderer = new Renderer(getWidth(), getHeight(), camera);
 
         // Koordinatensystem
         xAxis = new Vector(new Vector3(0, 0, 0), new Vector3(1, 0, 0), 1, Color.RED);
@@ -175,7 +176,7 @@ public class GameScene extends Scene {
         if (scorer == PlayerType.AI) {
             aiScore++;
             // Bildschirm brechen-Effekt am aktuellen Ort des Balls erzeugen
-            Vector2 ballScreenPosition = renderer.worldToScreen(ball.getTransform().getPosition(), camera);
+            Vector2 ballScreenPosition = renderer.worldToScreen(ball.getTransform().getPosition());
             window.getShatteredGlassOverlay().generateShatter(
                     (int) ballScreenPosition.getX(), (int) ballScreenPosition.getY(),
                     window.getWidth(), window.getHeight());
@@ -258,24 +259,24 @@ public class GameScene extends Scene {
         renderer.updateSize(getWidth(), getHeight()); // Zeichenfläche kann beim ersten Frame noch 0 gewesen sein
 
         // Reihenfolge beachten: Von hinten nach vorne rendern
-        renderer.renderEntity(g2d, box, camera);
-        renderer.renderEntity(g2d, aiPlayer, camera);
-        renderer.renderEntity(g2d, scoreDisplay, camera);
-        renderer.renderEntity(g2d, ball, camera);
-        renderer.renderEntity(g2d, player, camera);
+        renderer.renderEntity(g2d, box);
+        renderer.renderEntity(g2d, aiPlayer);
+        renderer.renderEntity(g2d, scoreDisplay);
+        renderer.renderEntity(g2d, ball);
+        renderer.renderEntity(g2d, player);
 
         if (window.isDebug()) {
             // Koordinatensystem rendern (X=Rot, Y=Grün, Z=Blau)
-            renderer.renderEntity(g2d, xAxis, camera);
-            renderer.renderEntity(g2d, yAxis, camera);
-            renderer.renderEntity(g2d, zAxis, camera);
+            renderer.renderEntity(g2d, xAxis);
+            renderer.renderEntity(g2d, yAxis);
+            renderer.renderEntity(g2d, zAxis);
 
             // Debug-Modus: Alle Hitboxes (Paddles, Tore, Ball) anzeigen
-            renderer.renderBoxHitbox(g2d, ball.getHitbox(), camera, Color.BLUE);
-            renderer.renderBoxHitbox(g2d, aiPlayer.getHitbox(), camera, Color.YELLOW);
-            renderer.renderBoxHitbox(g2d, goalAiHitbox, camera, Color.RED);
-            renderer.renderBoxHitbox(g2d, player.getHitbox(), camera, Color.YELLOW);
-            renderer.renderBoxHitbox(g2d, goalPlayerHitbox, camera, Color.RED);
+            renderer.renderBoxHitbox(g2d, ball.getHitbox(), Color.BLUE);
+            renderer.renderBoxHitbox(g2d, aiPlayer.getHitbox(), Color.YELLOW);
+            renderer.renderBoxHitbox(g2d, goalAiHitbox, Color.RED);
+            renderer.renderBoxHitbox(g2d, player.getHitbox(), Color.YELLOW);
+            renderer.renderBoxHitbox(g2d, goalPlayerHitbox, Color.RED);
 
             // FPS oben links anzeigen
             g2d.setFont(new Font("Monospace", Font.BOLD, 20));
@@ -311,7 +312,7 @@ public class GameScene extends Scene {
     public void mouseMoved(MouseEvent e) {
         // Wandelt 2D-Maus-Pixel-Koordinaten in 3D-Weltkoordinaten für das Paddle um
         Vector2 mouseScreenPosition = new Vector2(e.getX(), e.getY());
-        mousePosition = renderer.screenToWorld(mouseScreenPosition, PLAYER_POSITION_Z, camera);
+        mousePosition = renderer.screenToWorld(mouseScreenPosition, PLAYER_POSITION_Z);
     }
 
     // Tastenkürzel im Spiel: Escape öffnet/schließt die Pause, F3 schaltet die Debug-Ansicht um

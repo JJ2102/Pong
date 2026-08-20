@@ -20,12 +20,15 @@ public class Renderer {
     private static final Stroke EDGE_STROKE = new BasicStroke(1.0f);   // Normale Objektkanten sind 1px dünn
     private static final Stroke HITBOX_STROKE = new BasicStroke(2.0f); // Hitbox-Linien werden dicker gezeichnet
 
+    private final Camera camera; // Blickpunkt, aus dem alle Objekte gezeichnet werden
+
     private int width;
     private int height;
     private double scale;
 
-    // Initialisiert den Renderer anhand der Fenstermaße
-    public Renderer(int width, int height) {
+    // Initialisiert den Renderer anhand der Fenstermaße und des Blickpunkts
+    public Renderer(int width, int height, Camera camera) {
+        this.camera = camera;
         this.width = width;
         this.height = height;
         // Skalierung stellt sicher, dass quadratische Proportionen erhalten bleiben
@@ -40,8 +43,8 @@ public class Renderer {
     }
 
     // Wandelt 2D-Bildschirmkoordinaten in 3D-Weltkoordinaten auf einer Z-Ebene um
-    public Vector3 screenToWorld(Vector2 screenPosition, double planeZ, Camera camera) {
-        if (width <= 0 || height <= 0 || camera == null) {
+    public Vector3 screenToWorld(Vector2 screenPosition, double planeZ) {
+        if (width <= 0 || height <= 0) {
             // Abbruch mit Rohwerten bei ungültigem Zustand
             return new Vector3(screenPosition.getX(), screenPosition.getY(), planeZ);
         }
@@ -87,17 +90,17 @@ public class Renderer {
     }
 
     // Zeichnet eine 3D-Entität auf den 2D-Bildschirm
-    public void renderEntity(Graphics2D g, Entity entity, Camera camera) {
-        renderEntity(g, entity, camera, true);
+    public void renderEntity(Graphics2D g, Entity entity) {
+        renderEntity(g, entity, true);
     }
 
     // Zeichnet eine 3D-Entität auf den 2D-Bildschirm, optional inkl. gefüllten Flächen
-    public void renderEntity(Graphics2D g, Entity entity, Camera camera, boolean renderFaces) {
-        renderEntity(g, entity, camera, renderFaces, EDGE_STROKE);
+    public void renderEntity(Graphics2D g, Entity entity, boolean renderFaces) {
+        renderEntity(g, entity, renderFaces, EDGE_STROKE);
     }
 
     // Zeichnet eine 3D-Entität mit einer vorgegebenen Linienstärke für die Kanten
-    private void renderEntity(Graphics2D g, Entity entity, Camera camera, boolean renderFaces, Stroke edgeStroke) {
+    private void renderEntity(Graphics2D g, Entity entity, boolean renderFaces, Stroke edgeStroke) {
         if (entity == null || entity.getMesh() == null) {
             return;
         }
@@ -131,7 +134,7 @@ public class Renderer {
     }
 
     // Zeichnet eine Drahtgitterdarstellung (Kanten) der 3D-Hitbox zur Visualisierung
-    public void renderBoxHitbox(Graphics2D g, BoxHitbox hitbox, Camera camera, Color color) {
+    public void renderBoxHitbox(Graphics2D g, BoxHitbox hitbox, Color color) {
         if (hitbox == null) {
             return;
         }
@@ -144,12 +147,12 @@ public class Renderer {
         boxEntity.getTransform().setPosition(hitbox.getCenter());
 
         // Nur die Kanten zeichnen, dafür etwas dicker als gewöhnliche Objektkanten
-        renderEntity(g, boxEntity, camera, false, HITBOX_STROKE);
+        renderEntity(g, boxEntity, false, HITBOX_STROKE);
     }
 
     // ===== Utility-Methoden =====
     // Hilfsmethode: Konvertiert 3D-Welt- in 2D-Bildschirmkoordinaten
-    public Vector2 worldToScreen(Vector3 v, Camera camera) {
+    public Vector2 worldToScreen(Vector3 v) {
         // Der Punkt liegt bereits in Weltkoordinaten, daher sind nur View und Projektion nötig
         return project(RenderPipeline.getViewProjection(camera).multiply(v));
     }
