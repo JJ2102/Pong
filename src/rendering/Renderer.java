@@ -29,46 +29,33 @@ public class Renderer {
     // Initialisiert den Renderer anhand der Fenstermaße und des Blickpunkts
     public Renderer(int width, int height, Camera camera) {
         this.camera = camera;
-        this.width = width;
-        this.height = height;
-        // Skalierung stellt sicher, dass quadratische Proportionen erhalten bleiben
-        this.scale = Math.min(width, height) / 2.0;
+        updateSize(width, height);
     }
 
     // Aktualisiert die Abmessungen und den Skalierungsfaktor (z.B. bei Fensteränderungen)
-    public void updateSize(int width, int height) {
+    public final void updateSize(int width, int height) {
         this.width = width;
         this.height = height;
-        this.scale = Math.min(width, height) / 2.0; // Passt die Skalierung nach Resize dynamisch an
+        // Sichert quadratische Proportionen und bleibt auch bei einer noch nicht
+        // ausgelegten Zeichenfläche (Breite/Höhe 0) garantiert größer als null
+        this.scale = Math.max(1, Math.min(width, height)) / 2.0;
     }
 
     // Wandelt 2D-Bildschirmkoordinaten in 3D-Weltkoordinaten auf einer Z-Ebene um
     public Vector3 screenToWorld(Vector2 screenPosition, double planeZ) {
-        if (width <= 0 || height <= 0) {
-            // Abbruch mit Rohwerten bei ungültigem Zustand
-            return new Vector3(screenPosition.getX(), screenPosition.getY(), planeZ);
-        }
-
-        // Mappt die Maus-/Bildschirmpixel zurück in den genutzten Bereich -1 bis 1 unter Beachtung der Skalierung
-        double fovAppliedX = (screenPosition.getX() - width / 2.0) / scale;
-        double fovAppliedY = (screenPosition.getY() - height / 2.0) / scale;
-
         Vector3 cameraPosition = camera.getPosition();
-        double fov = camera.getFov();
 
-        // Bestimmt die Distanz zwischen der Kamera und der Zielfläche (Z-Ebene)
-        double depth = planeZ - cameraPosition.getZ();
-        if (depth <= 0) {
-            // Falls sich die Kamera hinter der Ebene befindet, liefert die Rechnung unsinnige Werte
-            return new Vector3(cameraPosition.getX(), cameraPosition.getY(), planeZ);
-        }
+        // Schritt 1: Pixel zurück in den normalisierten Raum, den auch die Projektion nutzt
+        Vector2 normalized = unproject(screenPosition);
 
-        // Berechnet die endgültigen Welt-X/Y Koordinaten unter Berücksichtigung des Sichtkegels (FOV)
-        double worldX = cameraPosition.getX() + fovAppliedX * depth / fov;
-        // Y wird invertiert (Bildschirm-Y wächst nach unten, Welt-Y nach oben)
-        double worldY = cameraPosition.getY() - fovAppliedY * depth / fov;
+        // Schritt 2: Die Projektion teilt durch die Tiefe, hier wird also damit multipliziert
+        double factor = (planeZ - cameraPosition.getZ()) / camera.getFov();
 
-        return new Vector3(worldX, worldY, planeZ);
+        // Schritt 3: Das Ergebnis liegt relativ zur Kamera, also deren Position aufaddieren
+        return new Vector3(
+                cameraPosition.getX() + normalized.getX() * factor,
+                cameraPosition.getY() + normalized.getY() * factor,
+                planeZ);
     }
 
     // Projiziert einen 3D-Vektor auf die 2D-Bildschirmfläche
@@ -78,6 +65,14 @@ public class Renderer {
         // Auch hier wird die y-Achse für 2D-Darstellung invertiert
         double screenY = (height / 2.0 - vector.getY() * scale);
         return new Vector2(screenX, screenY);
+    }
+
+    // Umkehrung von project: rechnet Bildschirmpixel zurück in den normalisierten Raum (-1 bis 1)
+    private Vector2 unproject(Vector2 screenPosition) {
+        double x = (screenPosition.getX() - width / 2.0) / scale;
+        // Dieselbe Spiegelung der y-Achse wie in project, nur rückwärts
+        double y = (height / 2.0 - screenPosition.getY()) / scale;
+        return new Vector2(x, y);
     }
 
     // Wendet die kombinierte Pipeline-Matrix auf alle Punkte an und projiziert sie in einem Durchlauf
