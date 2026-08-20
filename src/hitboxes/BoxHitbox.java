@@ -16,6 +16,16 @@ public class BoxHitbox {
         this.position = position;
     }
 
+    // Gibt den Mittelpunkt der Box zurück
+    public Vector3 getCenter() {
+        return new Vector3(position.getX(), position.getY(), position.getZ());
+    }
+
+    // Gibt die Abmessungen der Box zurück (Breite, Höhe, Tiefe)
+    public Vector3 getSize() {
+        return new Vector3(size.getX(), size.getY(), size.getZ());
+    }
+
     public Vector3 getMin() {
         // Gibt die Ecke unten, hinten, links der Box zurück
         return new Vector3(

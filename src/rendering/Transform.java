@@ -15,31 +15,6 @@ public class Transform {
         this.scale = new Vector3(1, 1, 1);
     }
 
-    // Initialisiert eine Transformation mit vorgegebenen Vektoren
-    public Transform(Vector3 position, Vector3 rotation, Vector3 scale) {
-        this.position = position;
-        this.rotation = rotation;
-        this.scale = scale;
-    }
-
-    // Liefert eine Invertierung der gewählten Transformations-Komponenten (z.B. für die Kamera)
-    public Transform invert(boolean position, boolean rotation, boolean scale) {
-        // Kopie der aktuellen Werte erstellen
-        Transform inverted = new Transform(this.position, this.rotation, this.scale);
-
-        if (position) {
-            inverted.position = this.position.invert(); // Position umkehren (aus +5 wird -5)
-        }
-        if (rotation) {
-            inverted.rotation = this.rotation.invert(); // Rotation umkehren
-        }
-        if (scale) {
-            inverted.scale = this.scale.invert(); // Skalierung invertieren (aus 2 wird 1/2)
-        }
-
-        return inverted; // Liefert die invertierte Kopie zurück, ohne das Original zu verändern
-    }
-
     // ===== Hilfsmethoden =====
     public Vector3 getPosition() {
         return position;

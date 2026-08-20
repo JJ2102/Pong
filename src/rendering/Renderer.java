@@ -1,8 +1,10 @@
 package rendering;
 
 import hitboxes.BoxHitbox;
+import math.Matrix4x4;
 import math.Vector2;
 import math.Vector3;
+import meshes.RectangleMesh;
 import objects.Entity;
 
 import java.awt.BasicStroke;
@@ -10,11 +12,14 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
 import java.awt.RenderingHints;
-import java.util.ArrayList;
+import java.awt.Stroke;
 import java.util.List;
 
 // Hauptklasse zum Berechnen und Zeichnen von 3D-Szenen auf dem 2D-Bildschirm
 public class Renderer {
+    private static final Stroke EDGE_STROKE = new BasicStroke(1.0f);   // Normale Objektkanten sind 1px dünn
+    private static final Stroke HITBOX_STROKE = new BasicStroke(2.0f); // Hitbox-Linien werden dicker gezeichnet
+
     private int width;
     private int height;
     private double scale;
@@ -72,11 +77,11 @@ public class Renderer {
         return new Vector2(screenX, screenY);
     }
 
-    // Projiziert eine Liste von 3D-Punkten der Reihe nach auf 2D-Bildschirmkoordinaten
-    private Vector2[] projectAll(List<Vector3> vectors) {
-        Vector2[] projected = new Vector2[vectors.size()];
-        for (int i = 0; i < vectors.size(); i++) {
-            projected[i] = project(vectors.get(i));
+    // Wendet die kombinierte Pipeline-Matrix auf alle Punkte an und projiziert sie in einem Durchlauf
+    private Vector2[] projectAll(List<Vector3> vertices, Matrix4x4 modelViewProjection) {
+        Vector2[] projected = new Vector2[vertices.size()];
+        for (int i = 0; i < vertices.size(); i++) {
+            projected[i] = project(modelViewProjection.multiply(vertices.get(i)));
         }
         return projected;
     }
@@ -88,7 +93,12 @@ public class Renderer {
 
     // Zeichnet eine 3D-Entität auf den 2D-Bildschirm, optional inkl. gefüllten Flächen
     public void renderEntity(Graphics2D g, Entity entity, Camera camera, boolean renderFaces) {
-        if (entity == null || entity.getMesh() == null || entity.getMesh().getVertices() == null) {
+        renderEntity(g, entity, camera, renderFaces, EDGE_STROKE);
+    }
+
+    // Zeichnet eine 3D-Entität mit einer vorgegebenen Linienstärke für die Kanten
+    private void renderEntity(Graphics2D g, Entity entity, Camera camera, boolean renderFaces, Stroke edgeStroke) {
+        if (entity == null || entity.getMesh() == null) {
             return;
         }
 
@@ -98,21 +108,14 @@ public class Renderer {
         Mesh mesh = entity.getMesh();
 
         // --- Render-Pipeline durchlaufen ---
-        // 1. Lokale Punkte an die Position/Rotation des Objekts in der Welt rücken
-        List<Vector3> transformed = RenderPipeline.applyTransform(mesh.getVertices(), entity.getTransform());
-        // 2. Punkte relativ zur Kamera platzieren und ans Sichtfeld anpassen
-        List<Vector3> fovApplied = RenderPipeline.applyCameraParams(transformed, camera);
-
-        // 3. Auf 2D-Pixel-Koordinaten projizieren
-        Vector2[] projectedVertices = projectAll(fovApplied);
+        // 1. Model-, View- und Projektionsmatrix einmal pro Objekt zu einer Matrix kombinieren
+        Matrix4x4 modelViewProjection = RenderPipeline.getModelViewProjection(entity.getTransform(), camera);
+        // 2. Alle Eckpunkte damit auf 2D-Pixel-Koordinaten bringen
+        Vector2[] projectedVertices = projectAll(mesh.getVertices(), modelViewProjection);
 
         // --- Gefüllte Flächen zeichnen ---
-        if (mesh.getFaces() != null && renderFaces) {
+        if (renderFaces) {
             for (int[] face : mesh.getFaces()) {
-                if (face == null || face.length == 0) { // Leere/ungültige Flächen ignorieren
-                    continue;
-                }
-
                 // Verbindet die projizierten 2D-Eckpunkte zu einem Polygon und füllt es mit Farbe
                 Polygon poly = Drawer.getPolygon(face, projectedVertices);
                 Drawer.drawPolygon(g, poly, entity.getFaceColor());
@@ -120,84 +123,34 @@ public class Renderer {
         }
 
         // --- Kanten (Wireframe) zeichnen ---
-        if (mesh.getEdges() != null) {
-            for (int[] edge : mesh.getEdges()) {
-                if (edge == null || edge.length < 2) { // Eine Kante braucht immer Start- und Endpunkt
-                    continue;
-                }
-
-                int i0 = edge[0];
-                int i1 = edge[1];
-                // Index-Out-Of-Bounds-Schutz
-                if (i0 < 0 || i1 < 0 || i0 >= projectedVertices.length || i1 >= projectedVertices.length) {
-                    continue;
-                }
-
-                Vector2 v1 = projectedVertices[i0];
-                Vector2 v2 = projectedVertices[i1];
-
-                // Verbindet Start- und Endpunkt mit einer farbigen Linie
-                if (v1 != null && v2 != null) {
-                    Drawer.drawLine(g, v1, v2, entity.getEdgeColor());
-                }
-            }
+        g.setStroke(edgeStroke); // Linienstärke einmal für alle Kanten dieses Objekts setzen
+        for (int[] edge : mesh.getEdges()) {
+            // Verbindet Start- und Endpunkt mit einer farbigen Linie
+            Drawer.drawLine(g, projectedVertices[edge[0]], projectedVertices[edge[1]], entity.getEdgeColor());
         }
     }
 
     // Zeichnet eine Drahtgitterdarstellung (Kanten) der 3D-Hitbox zur Visualisierung
     public void renderBoxHitbox(Graphics2D g, BoxHitbox hitbox, Camera camera, Color color) {
-        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        if (hitbox == null) {
+            return;
+        }
 
-        // --- SCHRITT 1: Die 8 Eckpunkte der Box aus Min/Max berechnen ---
-        Vector3 min = hitbox.getMin();
-        Vector3 max = hitbox.getMax();
+        // Eine Hitbox ist ein achsenparalleler Quader, dafür gibt es mit RectangleMesh bereits die passende Geometrie
+        Vector3 size = hitbox.getSize();
+        Entity boxEntity = new Entity(color, color);
+        // RectangleMesh erwartet die halben Kantenlängen, die Hitbox speichert die vollen
+        boxEntity.setMesh(new RectangleMesh(size.getX() / 2, size.getY() / 2, size.getZ() / 2));
+        boxEntity.getTransform().setPosition(hitbox.getCenter());
 
-        List<Vector3> corners = new ArrayList<>();
-        corners.add(new Vector3(min.getX(), min.getY(), min.getZ())); // 0: Vorne-unten-links
-        corners.add(new Vector3(max.getX(), min.getY(), min.getZ())); // 1: Vorne-unten-rechts
-        corners.add(new Vector3(max.getX(), max.getY(), min.getZ())); // 2: Vorne-oben-rechts
-        corners.add(new Vector3(min.getX(), max.getY(), min.getZ())); // 3: Vorne-oben-links
-        corners.add(new Vector3(min.getX(), min.getY(), max.getZ())); // 4: Hinten-unten-links
-        corners.add(new Vector3(max.getX(), min.getY(), max.getZ())); // 5: Hinten-unten-rechts
-        corners.add(new Vector3(max.getX(), max.getY(), max.getZ())); // 6: Hinten-oben-rechts
-        corners.add(new Vector3(min.getX(), max.getY(), max.getZ())); // 7: Hinten-oben-links
-
-        // --- SCHRITT 2: Punkte in Kamerakoordinaten umwandeln und projizieren ---
-        List<Vector3> fovApplied = RenderPipeline.applyCameraParams(corners, camera);
-        Vector2[] projected = projectAll(fovApplied);
-
-        // --- SCHRITT 3: Alle 12 Kanten des Quaders einzeichnen ---
-        g.setColor(color);
-        g.setStroke(new BasicStroke(2)); // Die Hitbox-Linien werden etwas dicker (2px) gezeichnet
-
-        // Vordere Fläche (4 Kanten)
-        Drawer.drawLine(g, projected[0], projected[1], color);
-        Drawer.drawLine(g, projected[1], projected[2], color);
-        Drawer.drawLine(g, projected[2], projected[3], color);
-        Drawer.drawLine(g, projected[3], projected[0], color);
-
-        // Hintere Fläche (4 Kanten)
-        Drawer.drawLine(g, projected[4], projected[5], color);
-        Drawer.drawLine(g, projected[5], projected[6], color);
-        Drawer.drawLine(g, projected[6], projected[7], color);
-        Drawer.drawLine(g, projected[7], projected[4], color);
-
-        // Verbindende Kanten zwischen vorne und hinten (4 Kanten)
-        Drawer.drawLine(g, projected[0], projected[4], color);
-        Drawer.drawLine(g, projected[1], projected[5], color);
-        Drawer.drawLine(g, projected[2], projected[6], color);
-        Drawer.drawLine(g, projected[3], projected[7], color);
+        // Nur die Kanten zeichnen, dafür etwas dicker als gewöhnliche Objektkanten
+        renderEntity(g, boxEntity, camera, false, HITBOX_STROKE);
     }
 
     // ===== Utility-Methoden =====
     // Hilfsmethode: Konvertiert 3D-Welt- in 2D-Bildschirmkoordinaten
     public Vector2 worldToScreen(Vector3 v, Camera camera) {
-        List<Vector3> vectorList = new ArrayList<>();
-        vectorList.add(v);
-
-        // Durchläuft nur Schritt 2 & 3 der Pipeline für einen einzelnen Punkt
-        Vector3 appliedFov = RenderPipeline.applyCameraParams(vectorList, camera).getFirst();
-
-        return project(appliedFov); // Führt die finale 2D-Projektion aus
+        // Der Punkt liegt bereits in Weltkoordinaten, daher sind nur View und Projektion nötig
+        return project(RenderPipeline.getViewProjection(camera).multiply(v));
     }
 }

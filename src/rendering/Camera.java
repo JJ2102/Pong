@@ -1,5 +1,6 @@
 package rendering;
 
+import math.Matrix4x4;
 import math.Vector3;
 
 // Repräsentiert die 3D-Kamera der Szene
@@ -14,9 +15,9 @@ public class Camera {
         transform.setRotation(new Vector3(0, 0, 0));
     }
 
-    // Liefert die invertierte Transformation (nötig für die Berechnung der View-Matrix)
-    public Transform getInvertedTransform() {
-        return transform.invert(true, true, false);
+    // Liefert die View-Matrix, die alle Objekte relativ zur Kamera ausrichtet
+    public Matrix4x4 getViewMatrix() {
+        return Matrix4x4.getViewMatrix(transform);
     }
 
     // ===== Getter und Setter =====

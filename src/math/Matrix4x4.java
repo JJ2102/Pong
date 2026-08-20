@@ -40,6 +40,20 @@ public class Matrix4x4 {
         return translationMatrix.multiply(rotationMatrix).multiply(scaleMatrix);
     }
 
+    // Erstellt die View-Matrix der Kamera (invertierte Rotation * invertierte Translation)
+    public static Matrix4x4 getViewMatrix(Transform transform) {
+        Vector3 position = transform.getPosition();
+        Vector3 rotation = transform.getRotation();
+
+        // Rotationsmatrizen sind orthogonal, daher ist die Transponierte gleich der Inversen
+        Matrix4x4 inverseRotation = getRotationMatrix(rotation.getX(), rotation.getY(), rotation.getZ()).transpose();
+        // Gegenbewegung zur Kameraposition
+        Matrix4x4 inverseTranslation = getTranslationMatrix(-position.getX(), -position.getY(), -position.getZ());
+
+        // Reihenfolge ist entscheidend: erst gegen die Position verschieben, dann gegen die Rotation drehen
+        return inverseRotation.multiply(inverseTranslation);
+    }
+
     // Erstellt eine Translations-matrix für die Verschiebung
     private static Matrix4x4 getTranslationMatrix(double tx, double ty, double tz) {
         // Quelle 1
@@ -144,6 +158,17 @@ public class Matrix4x4 {
                 for (int k = 0; k < 4; k++) {
                     result.matrix[row][col] += matrix[row][k] * m.matrix[k][col];
                 }
+            }
+        }
+        return result;
+    }
+
+    // Transponiert die Matrix (vertauscht Zeilen und Spalten)
+    public Matrix4x4 transpose() {
+        Matrix4x4 result = new Matrix4x4();
+        for (int row = 0; row < 4; row++) {
+            for (int col = 0; col < 4; col++) {
+                result.matrix[col][row] = matrix[row][col];
             }
         }
         return result;
