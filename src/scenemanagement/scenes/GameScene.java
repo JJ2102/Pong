@@ -141,7 +141,8 @@ public class GameScene extends Scene {
 
         // Leichte Kamera-Bewegung basierend auf der Mausposition für Parallaxen-Effekt
         Vector3 targetCameraPosition = mousePosition.divide(15);
-        Vector3 cameraPosition = camera.getPosition().leap(targetCameraPosition, 0.5);
+        Vector3 cameraPosition = camera.getPosition().
+                lerp(targetCameraPosition, 0.5);
         camera.setPosition(new Vector3(cameraPosition.getX(), cameraPosition.getY(), camera.getPosition().getZ()));
 
         // Während des Countdowns bewegen sich nur Spieler und Kamera, der Rest bleibt stehen

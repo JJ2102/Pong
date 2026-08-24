@@ -24,7 +24,7 @@ public class Ball extends Entity {
         Mesh boxMesh = new EllipseMesh(RADIUS, 10, 10);
         setMesh(boxMesh);
 
-        // Wandgrenzen aus der tatsächlichen Boxgröße ableiten statt fester Zahlen
+        // Wandgrenzen aus der tatsächlichen Boxgröße ableiten
         this.maxX = boxSize.getX() - RADIUS;
         this.maxY = boxSize.getY() - RADIUS;
 
@@ -75,14 +75,18 @@ public class Ball extends Entity {
 
         // Einfache Kollisionserkennung mit den Wänden
         Vector3 position = getTransform().getPosition();
-        if (position.getX() > maxX || position.getX() < -maxX) {
+        if (isOut(-maxX, maxX, position.getX())) {
             velocity.setX(-velocity.getX());
         }
-        if (position.getY() > maxY || position.getY() < -maxY) {
+        if (isOut(-maxY, maxY, position.getY())) {
             velocity.setY(-velocity.getY());
         }
 
         getHitbox().setPosition(getTransform().getPosition());
+    }
+
+    private boolean isOut(double min, double max, double value) {
+        return value > max || value < min;
     }
 
     // Liefert eine Debug-Ausgabe des Balls

@@ -28,7 +28,7 @@ public class Enemy extends Paddle {
 
     // Bewegt den Gegner weich (interpoliert) in Richtung der Ballposition
     public void move(Vector3 ballPosition, double difficulty) {
-        getTransform().setPosition(getTransform().getPosition().leap(ballPosition, difficulty));
+        getTransform().setPosition(getTransform().getPosition().lerp(ballPosition, difficulty));
 
         // Begrenze die Position innerhalb der Box, die Z-Ebene bleibt dabei fest
         Vector3 position = getTransform().getPosition();
