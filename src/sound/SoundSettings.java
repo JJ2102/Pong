@@ -2,7 +2,7 @@ package sound;
 
 // Hält die aktuellen Lautstärke-Einstellungen für Soundeffekte und Hintergrundmusik
 public class SoundSettings {
-    private float effectsVolume = 1.0f; // Lautstärke für Soundeffekte (0.0 bis 1.0)
+    private float effectsVolume = 0.8f; // Lautstärke für Soundeffekte (0.0 bis 1.0)
     private float musicVolume = 0.1f; // Lautstärke für Hintergrundmusik (0.0 bis 1.0)
 
     // Effects Volume
