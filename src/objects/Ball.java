@@ -16,6 +16,10 @@ public class Ball extends Entity {
     private final double maxX;
     private final double maxY;
 
+    // Speed
+    private final double maxSpeed = 0.05;
+    private final double minSpeed = 0.03;
+
     private Vector3 velocity;
 
     // Initialisiert den Ball mit seinem Mesh, seiner Hitbox und einer zufälligen Startgeschwindigkeit
@@ -38,7 +42,7 @@ public class Ball extends Entity {
 
     // Generiert einen zufälligen Geschwindigkeitswert
     private double randomSpeed() {
-        return Globals.randomSpeed(0.03, 0.05);
+        return Globals.randomSpeed(minSpeed, maxSpeed);
     }
 
     // Setzt die Geschwindigkeit des Balls in alle Richtungen auf Zufallswerte
