@@ -8,7 +8,7 @@ import java.awt.Color;
 public class Player extends Paddle {
     // Initialisiert den Spieler an der Startposition mit festgelegten Farben
     public Player(Vector3 position) {
-        super(position, new Color(0, 0, 255, 100), new Color(0, 255, 255));
+            super(position, new Color(0, 0, 255, 100), Color.CYAN);
     }
 
     // Bewegt den Spieler an die angegebene Position und aktualisiert die Hitbox

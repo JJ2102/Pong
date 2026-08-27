@@ -13,11 +13,7 @@ import utility.Cooldown;
 import utility.Countdown;
 import utility.Globals;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
@@ -98,8 +94,8 @@ public class GameScene extends Scene {
         // Score Display (7-Segment) konfigurieren und in der Welt platzieren
         scoreDisplay = new SevenSegmentDisplay();
         scoreDisplay.getTransform().setScale(new Vector3(0.5, 0.5, 0.5));
-        scoreDisplay.getTransform().setPosition(new Vector3(box.getSize().getX() - 0.1, 0, -0.5));
-        scoreDisplay.getTransform().setRotation(new Vector3(0, Math.toRadians(90), 0));
+        scoreDisplay.getTransform().setPosition(new Vector3(-box.getSize().getX() + 0.1, 0, -0.5));
+        scoreDisplay.getTransform().setRotation(new Vector3(0, Math.toRadians(-90), 0));
 
         // 3 Sekunden Countdown (für den Start jeder Runde) erstellen
         countdown = new Countdown(3000);
@@ -187,7 +183,7 @@ public class GameScene extends Scene {
         }
 
         window.getSoundManager().playSoundEffect("score");
-        scoreDisplay.setScore(aiScore, playerScore); // Punktetafel aktualisieren
+        scoreDisplay.setScore(playerScore, aiScore); // Punktetafel aktualisieren
         ball.reset(); // Ball zurück in die Mitte
 
         // Überprüfen, ob jemand die nötigen Punkte zum Sieg erreicht hat
@@ -286,12 +282,24 @@ public class GameScene extends Scene {
         }
 
         // Punktestand zentriert oben einblenden
+        // Punktestand zentriert oben einblenden
         g2d.setFont(Globals.getMainFont(36));
-        g2d.setColor(Color.GREEN);
         String scoreText = playerScore + " : " + aiScore;
         FontMetrics fm = g2d.getFontMetrics(); // Liefert die Maße des aktuellen Fonts
         int textWidth = fm.stringWidth(scoreText); // Textbreite wird zum Zentrieren gebraucht
-        g2d.drawString(scoreText, (getWidth() - textWidth) / 2, 50);
+        int textX = (getWidth() - textWidth) / 2; // Linke Kante des Textes
+        int baselineY = 50; // Grundlinie, auf der der Text sitzt
+
+        // Umrandete Striche links und rechts neben dem Punktestand
+        int lineTop = baselineY - fm.getAscent(); // Oberkante des Textes
+        int lineBottom = baselineY + fm.getDescent(); // Unterkante des Textes
+        int leftX = textX - 15; // Abstand zwischen Text und Strich
+        int rightX = textX + textWidth + 15;
+        drawOutlinedLine(g2d, leftX, lineTop, leftX, lineBottom, Color.BLUE, Color.CYAN, 3f, 1f);
+        drawOutlinedLine(g2d, rightX, lineTop, rightX, lineBottom, Color.RED, Color.PINK, 3f, 1f);
+
+        g2d.setColor(Color.GREEN);
+        g2d.drawString(scoreText, textX, baselineY);
 
         // Countdown groß in der Mitte einblenden
         if (gameState == GameState.COUNTING_DOWN && countdown.isRunning()) {
@@ -304,6 +312,23 @@ public class GameScene extends Scene {
             textWidth = fm.stringWidth(text);
             g2d.drawString(text, (getWidth() - textWidth) / 2, getHeight() / 2);
         }
+    }
+
+    private void drawOutlinedLine(Graphics2D g, int x1, int y1, int x2, int y2,
+                                  Color color, Color outlineColor, float thickness, float outlineWidth) {
+        Stroke previousStroke = g.getStroke(); // Stroke des Aufrufers merken
+
+        // Der Rand liegt auf beiden Seiten an, daher zählt die Randbreite doppelt
+        g.setStroke(new BasicStroke(thickness + 2 * outlineWidth));
+        g.setColor(outlineColor);
+        g.drawLine(x1, y1, x2, y2);
+
+        // Die eigentliche Linie deckt die Mitte wieder ab, außen bleibt der Rand stehen
+        g.setStroke(new BasicStroke(thickness));
+        g.setColor(color);
+        g.drawLine(x1, y1, x2, y2);
+
+        g.setStroke(previousStroke); // Stroke wiederherstellen, damit nachfolgendes Zeichnen unverändert bleibt
     }
 
     // ===== Key/MouseListener Methoden =====

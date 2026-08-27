@@ -16,7 +16,7 @@ public class Enemy extends Paddle {
 
     // Initialisiert den Gegner und berechnet seine Bewegungsgrenzen anhand der Boxgröße
     public Enemy(Vector3 position, Vector3 boxSize) {
-        super(position, Color.RED, new Color(255, 0, 255));
+        super(position, Color.RED, Color.PINK);
 
         this.positionZ = position.getZ();
 
