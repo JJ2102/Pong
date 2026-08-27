@@ -1,7 +1,6 @@
 package scenemanagement.scenes;
 
 import enums.OverlayType;
-import enums.SceneType;
 import math.Vector2;
 import objects.animation2d.Ball2D;
 import objects.animation2d.Paddle2D;
@@ -39,7 +38,7 @@ public class MenuScene extends ButtonScene {
         // Erst Schwierigkeit wählen, dann startet das Spiel
         startButton.addActionListener(_ -> window.toggleOverlay(OverlayType.DIFFICULTY));
         infoButton.addActionListener(_ -> window.toggleOverlay(OverlayType.INFO));
-        settingsButton.addActionListener(_ -> window.setCurrentScene(SceneType.SETTINGS));
+        settingsButton.addActionListener(_ -> window.showSettings());
         exitButton.addActionListener(_ -> System.exit(0));
 
         // Buttons in der gewünschten Reihenfolge unter den Titel einreihen
@@ -97,10 +96,8 @@ public class MenuScene extends ButtonScene {
     // Tastenkürzel im Menü: Enter startet das Spiel, Escape beendet das Programm
     @Override
     public void keyPressed(KeyEvent e) {
-        switch (e.getKeyCode()) {
-            case KeyEvent.VK_ENTER -> window.setCurrentScene(SceneType.GAME); // Schnelles Starten mit Enter
-            case KeyEvent.VK_ESCAPE -> System.exit(0); // Beenden mit Escape
-            default -> {}
+        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+            System.exit(0); // Beenden mit Escape
         }
     }
 }

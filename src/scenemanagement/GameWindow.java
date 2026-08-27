@@ -23,8 +23,6 @@ public class GameWindow extends JFrame {
     private final transient SceneManager sceneManager;
     private final transient SoundManager soundManager;
 
-    private SceneType currentScene; // speichert die aktuelle Szene
-
     private boolean debug = false; // wird für debugausgaben genutzt
 
     private ShatteredGlassOverlay shatteredGlassOverlay;
@@ -47,7 +45,6 @@ public class GameWindow extends JFrame {
 
         // Fenster Einstellungen Setzen
         setDefaultWindowOptions();
-        sceneManager.setScene(currentScene); // Startszene anzeigen
         pack(); // Passt die Fenstergröße an den Inhalt an
         setLocationRelativeTo(null); // Zentriert das Fenster auf dem Bildschirm
         setVisible(true);
@@ -85,7 +82,7 @@ public class GameWindow extends JFrame {
         shatteredGlassOverlay = new ShatteredGlassOverlay(this);
         sceneManager.registerOverlay(OverlayType.SHATTERED_GLASS, shatteredGlassOverlay);
 
-        currentScene = SceneType.MENU; // Standard-Szene festlegen
+        sceneManager.setScene(SceneType.MENU);
 
         // ===== soundManager =====
         // Kurze Soundeffekte in den Speicher laden
@@ -108,7 +105,7 @@ public class GameWindow extends JFrame {
 
     // Startet das Spiel durch Wechsel zur Spielszene
     public void startGame() {
-        setCurrentScene(SceneType.GAME);
+        sceneManager.setScene(SceneType.GAME);
     }
 
     // Setzt das Spiel zurück und kehrt zum Hauptmenü zurück
@@ -122,7 +119,11 @@ public class GameWindow extends JFrame {
         gameScene.reset();
 
         // Zeigt wieder das Hauptmenü an
-        setCurrentScene(SceneType.MENU);
+        sceneManager.setScene(SceneType.MENU);
+    }
+
+    public void showSettings() {
+        sceneManager.setScene(SceneType.SETTINGS);
     }
 
     // ===== Overlay Methoden =====
@@ -146,11 +147,6 @@ public class GameWindow extends JFrame {
     }
 
     // ===== Getter und Setter =====
-    public void setCurrentScene(SceneType scene) {
-        this.currentScene = scene;
-        sceneManager.setScene(scene);
-    }
-
     public Dimension getWindowSize() {
         return windowSize;
     }
