@@ -4,7 +4,7 @@ import enums.OverlayType;
 import math.Vector2;
 import objects.animation2d.Ball2D;
 import objects.animation2d.Paddle2D;
-import scenemanagement.GameWindow;
+import pong.GameWindow;
 import utility.Button;
 
 import java.awt.*;
@@ -24,7 +24,7 @@ public class MenuScene extends ButtonScene {
 
         // Objekte der Hintergrund-Animation erzeugen, die Paddles kleben am linken bzw. rechten Fensterrand
         Dimension windowSize = window.getWindowSize();
-        ball = new Ball2D(windowSize, 70);
+        ball = new Ball2D(windowSize, 50);
         leftPaddle = new Paddle2D(new Vector2(10, (double) windowSize.height / 2), windowSize);
         rightPaddle = new Paddle2D(new Vector2(windowSize.width - 10, (double) windowSize.height / 2), windowSize);
 

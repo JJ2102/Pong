@@ -1,7 +1,7 @@
 package scenemanagement.overlays;
 
 import enums.OverlayType;
-import scenemanagement.GameWindow;
+import pong.GameWindow;
 import utility.Button;
 
 // Pausenmenü, das während des Spiels mit ESC eingeblendet wird

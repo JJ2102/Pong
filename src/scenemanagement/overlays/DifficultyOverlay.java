@@ -2,7 +2,7 @@ package scenemanagement.overlays;
 
 import enums.Difficulty;
 import enums.OverlayType;
-import scenemanagement.GameWindow;
+import pong.GameWindow;
 import utility.Button;
 
 // Overlay zur Auswahl des Schwierigkeitsgrads, bevor eine Runde gestartet wird

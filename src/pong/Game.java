@@ -1,7 +1,5 @@
 package pong;
 
-import scenemanagement.GameWindow;
-
 import java.awt.Dimension;
 import java.awt.Toolkit;
 

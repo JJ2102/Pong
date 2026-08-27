@@ -1,6 +1,6 @@
 package scenemanagement.scenes;
 
-import scenemanagement.GameWindow;
+import pong.GameWindow;
 import sound.SoundSettings;
 import utility.Button;
 import utility.InfoLabel;

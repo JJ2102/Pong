@@ -1,6 +1,6 @@
 package scenemanagement.scenes;
 
-import scenemanagement.GameWindow;
+import pong.GameWindow;
 import utility.Globals;
 
 import javax.swing.JLabel;

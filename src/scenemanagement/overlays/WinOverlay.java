@@ -1,7 +1,7 @@
 package scenemanagement.overlays;
 
 import enums.OverlayType;
-import scenemanagement.GameWindow;
+import pong.GameWindow;
 import utility.Button;
 
 // Endbildschirm nach einer Partie, wird je nach übergebenem Typ als Sieg- oder Niederlage-Overlay genutzt

@@ -1,7 +1,7 @@
 package scenemanagement.overlays;
 
 import enums.OverlayType;
-import scenemanagement.GameWindow;
+import pong.GameWindow;
 
 import java.awt.BasicStroke;
 import java.awt.Color;

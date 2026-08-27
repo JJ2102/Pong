@@ -1,7 +1,8 @@
-package scenemanagement;
+package pong;
 
 import enums.OverlayType;
 import enums.SceneType;
+import scenemanagement.SceneManager;
 import scenemanagement.overlays.DifficultyOverlay;
 import scenemanagement.overlays.InfoOverlay;
 import scenemanagement.overlays.PauseOverlay;

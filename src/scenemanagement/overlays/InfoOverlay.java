@@ -1,7 +1,7 @@
 package scenemanagement.overlays;
 
 import enums.OverlayType;
-import scenemanagement.GameWindow;
+import pong.GameWindow;
 import utility.Button;
 import utility.Globals;
 

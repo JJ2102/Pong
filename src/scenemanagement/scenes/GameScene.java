@@ -8,7 +8,7 @@ import math.Vector3;
 import objects.*;
 import rendering.Camera;
 import rendering.Renderer;
-import scenemanagement.GameWindow;
+import pong.GameWindow;
 import utility.Cooldown;
 import utility.Countdown;
 import utility.Globals;

@@ -1,6 +1,6 @@
 package scenemanagement.scenes;
 
-import scenemanagement.GameWindow;
+import pong.GameWindow;
 
 import javax.swing.JPanel;
 import javax.swing.Timer;
