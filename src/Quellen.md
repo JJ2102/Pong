@@ -26,3 +26,5 @@
 # Sonstiges
 - Pong als Arcade Game: https://de.wikipedia.org/wiki/Pong, 26.05.2026
 - Atari: https://de.wikipedia.org/wiki/Atari,_Inc._(1972), 26.05.2026
+- Veröffentlichung Pong: https://8bit-museum.de/videospiele/stage-1-die-steinzeit/level-2-atari-steigt-auf/, 30.08.2026
+- 
