@@ -1,6 +1,6 @@
 package objects;
 
-import hitboxes.BoxHitbox;
+import objects.hitboxes.BoxHitbox;
 import math.Vector3;
 import rendering.Mesh;
 import rendering.Transform;

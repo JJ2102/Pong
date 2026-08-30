@@ -1,24 +1,27 @@
-package hitboxes;
+package objects.hitboxes;
 
 import math.Vector3;
+import meshes.RectangleMesh;
+import objects.Entity;
+
+import java.awt.*;
 
 // Achsenparallele 3D-Hitbox, die über Mittelpunkt und Größe definiert wird
-public class BoxHitbox {
+public class BoxHitbox extends Entity {
     private final Vector3 size; // Breite, Höhe, Tiefe
-    private Vector3 position; // Mittelpunkt der Box
 
-    public BoxHitbox(Vector3 center, Vector3 size) {
-        this.position = center;
+    public BoxHitbox(Vector3 center, Vector3 size, Color color) {
+        super(color, color);
+        setPosition(center);
         this.size = size;
+
+        this.setMesh(
+                new RectangleMesh(size.getX() / 2, size.getY() / 2, size.getZ() / 2)
+        );
     }
 
-    public void setPosition(Vector3 position) {
-        this.position = position;
-    }
-
-    // Gibt den Mittelpunkt der Box zurück
-    public Vector3 getCenter() {
-        return new Vector3(position.getX(), position.getY(), position.getZ());
+    public void setPosition(Vector3 center) {
+        getTransform().setPosition(center);
     }
 
     // Gibt die Abmessungen der Box zurück (Breite, Höhe, Tiefe)
@@ -29,18 +32,18 @@ public class BoxHitbox {
     public Vector3 getMin() {
         // Gibt die Ecke unten, hinten, links der Box zurück
         return new Vector3(
-                position.getX() - size.getX() / 2,
-                position.getY() - size.getY() / 2,
-                position.getZ() - size.getZ() / 2
+                getTransform().getPosition().getX() - size.getX() / 2,
+                getTransform().getPosition().getY() - size.getY() / 2,
+                getTransform().getPosition().getZ() - size.getZ() / 2
         );
     }
 
     public Vector3 getMax() {
         // Gibt die Ecke oben, vorne, rechts der Box zurück
         return new Vector3(
-                position.getX() + size.getX() / 2,
-                position.getY() + size.getY() / 2,
-                position.getZ() + size.getZ() / 2
+                getTransform().getPosition().getX() + size.getX() / 2,
+                getTransform().getPosition().getY() + size.getY() / 2,
+                getTransform().getPosition().getZ() + size.getZ() / 2
         );
     }
 
@@ -57,6 +60,6 @@ public class BoxHitbox {
 
     @Override
     public String toString() {
-        return "BoxHitbox{" + "position=" + position + ", size=" + size + '}';
+        return "BoxHitbox{" + "position=" + getTransform().getPosition() + ", size=" + size + '}';
     }
 }

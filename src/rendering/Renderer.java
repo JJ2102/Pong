@@ -1,6 +1,6 @@
 package rendering;
 
-import hitboxes.BoxHitbox;
+import objects.hitboxes.BoxHitbox;
 import math.Matrix4x4;
 import math.Vector2;
 import math.Vector3;
@@ -18,7 +18,6 @@ import java.util.List;
 // Hauptklasse zum Berechnen und Zeichnen von 3D-Szenen auf dem 2D-Bildschirm
 public class Renderer {
     private static final Stroke EDGE_STROKE = new BasicStroke(1.0f);   // Normale Objektkanten sind 1px dünn
-    private static final Stroke HITBOX_STROKE = new BasicStroke(2.0f); // Hitbox-Linien werden dicker gezeichnet
 
     private final Camera camera; // Blickpunkt, aus dem alle Objekte gezeichnet werden
 
@@ -86,16 +85,11 @@ public class Renderer {
 
     // Zeichnet eine 3D-Entität auf den 2D-Bildschirm
     public void renderEntity(Graphics2D g, Entity entity) {
-        renderEntity(g, entity, true);
-    }
-
-    // Zeichnet eine 3D-Entität auf den 2D-Bildschirm, optional inkl. gefüllten Flächen
-    public void renderEntity(Graphics2D g, Entity entity, boolean renderFaces) {
-        renderEntity(g, entity, renderFaces, EDGE_STROKE);
+        renderEntity(g, entity, true, EDGE_STROKE);
     }
 
     // Zeichnet eine 3D-Entität mit einer vorgegebenen Linienstärke für die Kanten
-    private void renderEntity(Graphics2D g, Entity entity, boolean renderFaces, Stroke edgeStroke) {
+    public void renderEntity(Graphics2D g, Entity entity, boolean renderFaces, Stroke edgeStroke) {
         if (entity == null || entity.getMesh() == null) {
             return;
         }
@@ -126,23 +120,6 @@ public class Renderer {
             // Verbindet Start- und Endpunkt mit einer farbigen Linie
             Drawer.drawLine(g, projectedVertices[edge[0]], projectedVertices[edge[1]], entity.getEdgeColor());
         }
-    }
-
-    // Zeichnet eine Drahtgitterdarstellung (Kanten) der 3D-Hitbox zur Visualisierung
-    public void renderBoxHitbox(Graphics2D g, BoxHitbox hitbox, Color color) {
-        if (hitbox == null) {
-            return;
-        }
-
-        // Eine Hitbox ist ein achsenparalleler Quader, dafür gibt es mit RectangleMesh bereits die passende Geometrie
-        Vector3 size = hitbox.getSize();
-        Entity boxEntity = new Entity(color, color);
-        // RectangleMesh erwartet die halben Kantenlängen, die Hitbox speichert die vollen
-        boxEntity.setMesh(new RectangleMesh(size.getX() / 2, size.getY() / 2, size.getZ() / 2));
-        boxEntity.getTransform().setPosition(hitbox.getCenter());
-
-        // Nur die Kanten zeichnen, dafür etwas dicker als gewöhnliche Objektkanten
-        renderEntity(g, boxEntity, false, HITBOX_STROKE);
     }
 
     // ===== Utility-Methoden =====

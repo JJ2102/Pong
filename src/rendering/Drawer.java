@@ -2,9 +2,7 @@ package rendering;
 
 import math.Vector2;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.Polygon;
+import java.awt.*;
 
 // Hilfsklasse zum Zeichnen von 2D-Polygonen und Linien
 public final class Drawer {
@@ -36,5 +34,22 @@ public final class Drawer {
         g.setColor(color);
         // Start- und Endpunkt verbinden
         g.drawLine((int) v1.getX(), (int) v1.getY(), (int) v2.getX(), (int) v2.getY());
+    }
+
+    public static void drawOutlinedLine(Graphics2D g, int x1, int y1, int x2, int y2,
+                                  Color color, Color outlineColor, float thickness, float outlineWidth) {
+        Stroke previousStroke = g.getStroke(); // Stroke des Aufrufers merken
+
+        // Der Rand liegt auf beiden Seiten an, daher zählt die Randbreite doppelt
+        g.setStroke(new BasicStroke(thickness + 2 * outlineWidth));
+        g.setColor(outlineColor);
+        g.drawLine(x1, y1, x2, y2);
+
+        // Die eigentliche Linie deckt die Mitte wieder ab, außen bleibt der Rand stehen
+        g.setStroke(new BasicStroke(thickness));
+        g.setColor(color);
+        g.drawLine(x1, y1, x2, y2);
+
+        g.setStroke(previousStroke); // Stroke wiederherstellen, damit nachfolgendes Zeichnen unverändert bleibt
     }
 }

@@ -1,6 +1,6 @@
 package objects;
 
-import hitboxes.BoxHitbox;
+import objects.hitboxes.BoxHitbox;
 import math.Vector3;
 import meshes.EllipseMesh;
 import rendering.Mesh;
@@ -34,7 +34,7 @@ public class Ball extends Entity {
 
         // Die Hitbox umschließt den Ball genau: halbe Kantenlänge entspricht dem Radius
         double size = RADIUS * 2;
-        setHitbox(new BoxHitbox(getTransform().getPosition(), new Vector3(size, size, size)));
+        setHitbox(new BoxHitbox(getTransform().getPosition(), new Vector3(size, size, size), Color.BLUE));
 
         // Zufällige Anfangsgeschwindigkeit setzen
         setRandomSpeed();

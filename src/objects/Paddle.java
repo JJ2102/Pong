@@ -1,6 +1,6 @@
 package objects;
 
-import hitboxes.BoxHitbox;
+import objects.hitboxes.BoxHitbox;
 import math.Vector3;
 import meshes.RectangleMesh;
 import rendering.Mesh;
@@ -18,6 +18,6 @@ public class Paddle extends Entity {
         Mesh panelMesh = new RectangleMesh(X_SIZE, Y_SIZE, 0);
         setMesh(panelMesh);
         getTransform().setPosition(position);
-        setHitbox(new BoxHitbox(getTransform().getPosition(), new Vector3(X_SIZE * 2, Y_SIZE * 2, 0)));
+        setHitbox(new BoxHitbox(getTransform().getPosition(), new Vector3(X_SIZE * 2, Y_SIZE * 2, 0), Color.YELLOW));
     }
 }

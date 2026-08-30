@@ -2,11 +2,12 @@ package scenemanagement.scenes;
 
 import enums.Difficulty;
 import enums.OverlayType;
-import hitboxes.BoxHitbox;
+import objects.hitboxes.BoxHitbox;
 import math.Vector2;
 import math.Vector3;
 import objects.*;
 import rendering.Camera;
+import rendering.Drawer;
 import rendering.Renderer;
 import pong.GameWindow;
 import utility.Cooldown;
@@ -111,8 +112,8 @@ public class GameScene extends Scene {
         // Hitboxes für Tore generieren (an der Vorder- und Rückwand der Box)
         Vector3 boxSize = box.getSize();
         Vector3 hitboxSize = new Vector3(boxSize.getX() * 2, boxSize.getY() * 2, 0);
-        goalPlayerHitbox = new BoxHitbox(new Vector3(0, 0, -BOX_DEPTH), hitboxSize);
-        goalAiHitbox = new BoxHitbox(new Vector3(0, 0, BOX_DEPTH), hitboxSize);
+        goalPlayerHitbox = new BoxHitbox(new Vector3(0, 0, -BOX_DEPTH), hitboxSize, Color.RED);
+        goalAiHitbox = new BoxHitbox(new Vector3(0, 0, BOX_DEPTH), hitboxSize, Color.RED);
 
         // Spieler-Paddle vorne platzieren
         player = new Player(new Vector3(0, 0, PLAYER_POSITION_Z));
@@ -269,11 +270,12 @@ public class GameScene extends Scene {
             renderer.renderEntity(g2d, zAxis);
 
             // Debug-Modus: Alle Hitboxes (Paddles, Tore, Ball) anzeigen
-            renderer.renderBoxHitbox(g2d, ball.getHitbox(), Color.BLUE);
-            renderer.renderBoxHitbox(g2d, aiPlayer.getHitbox(), Color.YELLOW);
-            renderer.renderBoxHitbox(g2d, goalAiHitbox, Color.RED);
-            renderer.renderBoxHitbox(g2d, player.getHitbox(), Color.YELLOW);
-            renderer.renderBoxHitbox(g2d, goalPlayerHitbox, Color.RED);
+            Stroke hitboxStroke = new BasicStroke(2.0f);
+            renderer.renderEntity(g2d, ball.getHitbox(), false, hitboxStroke);
+            renderer.renderEntity(g2d, aiPlayer.getHitbox(), false, hitboxStroke);
+            renderer.renderEntity(g2d, goalAiHitbox, false, hitboxStroke);
+            renderer.renderEntity(g2d, player.getHitbox(), false, hitboxStroke);
+            renderer.renderEntity(g2d, goalPlayerHitbox, false, hitboxStroke);
 
             // FPS oben links anzeigen
             g2d.setFont(new Font("Monospace", Font.BOLD, 20));
@@ -295,8 +297,8 @@ public class GameScene extends Scene {
         int lineBottom = baselineY + fm.getDescent(); // Unterkante des Textes
         int leftX = textX - 15; // Abstand zwischen Text und Strich
         int rightX = textX + textWidth + 15;
-        drawOutlinedLine(g2d, leftX, lineTop, leftX, lineBottom, Color.BLUE, Color.CYAN, 3f, 1f);
-        drawOutlinedLine(g2d, rightX, lineTop, rightX, lineBottom, Color.RED, Color.PINK, 3f, 1f);
+        Drawer.drawOutlinedLine(g2d, leftX, lineTop, leftX, lineBottom, Color.BLUE, Color.CYAN, 3f, 1f);
+        Drawer.drawOutlinedLine(g2d, rightX, lineTop, rightX, lineBottom, Color.RED, Color.PINK, 3f, 1f);
 
         g2d.setColor(Color.GREEN);
         g2d.drawString(scoreText, textX, baselineY);
@@ -312,23 +314,6 @@ public class GameScene extends Scene {
             textWidth = fm.stringWidth(text);
             g2d.drawString(text, (getWidth() - textWidth) / 2, getHeight() / 2);
         }
-    }
-
-    private void drawOutlinedLine(Graphics2D g, int x1, int y1, int x2, int y2,
-                                  Color color, Color outlineColor, float thickness, float outlineWidth) {
-        Stroke previousStroke = g.getStroke(); // Stroke des Aufrufers merken
-
-        // Der Rand liegt auf beiden Seiten an, daher zählt die Randbreite doppelt
-        g.setStroke(new BasicStroke(thickness + 2 * outlineWidth));
-        g.setColor(outlineColor);
-        g.drawLine(x1, y1, x2, y2);
-
-        // Die eigentliche Linie deckt die Mitte wieder ab, außen bleibt der Rand stehen
-        g.setStroke(new BasicStroke(thickness));
-        g.setColor(color);
-        g.drawLine(x1, y1, x2, y2);
-
-        g.setStroke(previousStroke); // Stroke wiederherstellen, damit nachfolgendes Zeichnen unverändert bleibt
     }
 
     // ===== Key/MouseListener Methoden =====
