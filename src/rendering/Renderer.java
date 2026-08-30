@@ -1,14 +1,11 @@
 package rendering;
 
-import objects.hitboxes.BoxHitbox;
 import math.Matrix4x4;
 import math.Vector2;
 import math.Vector3;
-import meshes.RectangleMesh;
 import objects.Entity;
 
 import java.awt.BasicStroke;
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
 import java.awt.RenderingHints;
@@ -42,19 +39,12 @@ public class Renderer {
 
     // Wandelt 2D-Bildschirmkoordinaten in 3D-Weltkoordinaten auf einer Z-Ebene um
     public Vector3 screenToWorld(Vector2 screenPosition, double planeZ) {
-        Vector3 cameraPosition = camera.getPosition();
-
         // Schritt 1: Pixel zurück in den normalisierten Raum, den auch die Projektion nutzt
+        // Nur dieser Schritt hängt von der Fenstergröße ab und bleibt deshalb hier
         Vector2 normalized = unproject(screenPosition);
 
-        // Schritt 2: Die Projektion teilt durch die Tiefe, hier wird also damit multipliziert
-        double factor = (planeZ - cameraPosition.getZ()) / camera.getFov();
-
-        // Schritt 3: Das Ergebnis liegt relativ zur Kamera, also deren Position aufaddieren
-        return new Vector3(
-                cameraPosition.getX() + normalized.getX() * factor,
-                cameraPosition.getY() + normalized.getY() * factor,
-                planeZ);
+        // Schritt 2: View und Projektion kehrt die Pipeline um, die sie auch vorwärts berechnet
+        return RenderPipeline.reverseViewProjection(normalized, planeZ, camera);
     }
 
     // Projiziert einen 3D-Vektor auf die 2D-Bildschirmfläche
