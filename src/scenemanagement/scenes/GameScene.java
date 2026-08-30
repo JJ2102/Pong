@@ -25,6 +25,8 @@ public class GameScene extends Scene {
     private static final double BOX_DEPTH = 1.5;
     // Z-Ebene, auf der sich das Spieler-Paddle bewegt (knapp vor der Wand)
     private static final double PLAYER_POSITION_Z = -BOX_DEPTH + 0.2;
+    private static final int SCORE_BASELINE_Y = 50; // Grundlinie, auf der der Punktestand sitzt
+    private static final int SCORE_LINE_GAP = 15; // Abstand zwischen Punktestand und den Strichen daneben
 
     // Renderer
     private final transient Renderer renderer; // rechnet die 3D-Objekte auf die 2D-Zeichenfläche um
@@ -284,35 +286,26 @@ public class GameScene extends Scene {
         }
 
         // Punktestand zentriert oben einblenden
-        // Punktestand zentriert oben einblenden
         g2d.setFont(Globals.getMainFont(36));
         String scoreText = playerScore + " : " + aiScore;
-        FontMetrics fm = g2d.getFontMetrics(); // Liefert die Maße des aktuellen Fonts
-        int textWidth = fm.stringWidth(scoreText); // Textbreite wird zum Zentrieren gebraucht
-        int textX = (getWidth() - textWidth) / 2; // Linke Kante des Textes
-        int baselineY = 50; // Grundlinie, auf der der Text sitzt
+        // Die Maße werden vorab geholt, weil sich die Striche daran ausrichten
+        Rectangle scoreBounds = Drawer.getCenteredStringBounds(g2d, scoreText, getWidth() / 2, SCORE_BASELINE_Y);
 
         // Umrandete Striche links und rechts neben dem Punktestand
-        int lineTop = baselineY - fm.getAscent(); // Oberkante des Textes
-        int lineBottom = baselineY + fm.getDescent(); // Unterkante des Textes
-        int leftX = textX - 15; // Abstand zwischen Text und Strich
-        int rightX = textX + textWidth + 15;
+        int leftX = scoreBounds.x - SCORE_LINE_GAP; // Abstand zwischen Text und Strich
+        int rightX = scoreBounds.x + scoreBounds.width + SCORE_LINE_GAP;
+        int lineTop = scoreBounds.y; // Oberkante des Textes
+        int lineBottom = scoreBounds.y + scoreBounds.height; // Unterkante des Textes
         Drawer.drawOutlinedLine(g2d, leftX, lineTop, leftX, lineBottom, Color.BLUE, Color.CYAN, 3f, 1f);
         Drawer.drawOutlinedLine(g2d, rightX, lineTop, rightX, lineBottom, Color.RED, Color.PINK, 3f, 1f);
 
-        g2d.setColor(Color.GREEN);
-        g2d.drawString(scoreText, textX, baselineY);
+        Drawer.drawCenteredString(g2d, scoreText, getWidth() / 2, SCORE_BASELINE_Y, Color.GREEN);
 
         // Countdown groß in der Mitte einblenden
         if (gameState == GameState.COUNTING_DOWN && countdown.isRunning()) {
             g2d.setFont(Globals.getMainFont(120));
-            g2d.setColor(Globals.getFontColor(200));
             String text = String.valueOf(countdown.getRemainingSeconds());
-
-            // Auch hier wird der Text über seine Breite horizontal zentriert
-            fm = g2d.getFontMetrics();
-            textWidth = fm.stringWidth(text);
-            g2d.drawString(text, (getWidth() - textWidth) / 2, getHeight() / 2);
+            Drawer.drawCenteredString(g2d, text, getWidth() / 2, getHeight() / 2, Globals.getFontColor(200));
         }
     }
 

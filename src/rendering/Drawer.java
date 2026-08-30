@@ -4,7 +4,7 @@ import math.Vector2;
 
 import java.awt.*;
 
-// Hilfsklasse zum Zeichnen von 2D-Polygonen und Linien
+// Hilfsklasse zum Zeichnen von 2D-Polygonen, Linien und Text
 public final class Drawer {
 
     // Reine Hilfsklasse, wird nie instanziiert
@@ -36,6 +36,7 @@ public final class Drawer {
         g.drawLine((int) v1.getX(), (int) v1.getY(), (int) v2.getX(), (int) v2.getY());
     }
 
+    // Zeichnet eine Linie mit einem andersfarbigen Rand drumherum
     public static void drawOutlinedLine(Graphics2D g, int x1, int y1, int x2, int y2,
                                   Color color, Color outlineColor, float thickness, float outlineWidth) {
         Stroke previousStroke = g.getStroke(); // Stroke des Aufrufers merken
@@ -51,5 +52,25 @@ public final class Drawer {
         g.drawLine(x1, y1, x2, y2);
 
         g.setStroke(previousStroke); // Stroke wiederherstellen, damit nachfolgendes Zeichnen unverändert bleibt
+    }
+
+    // Zeichnet Text horizontal um centerX zentriert, baselineY ist die Grundlinie
+    // Den Font legt der Aufrufer vorher über g.setFont fest
+    public static void drawCenteredString(Graphics2D g, String text, int centerX, int baselineY, Color color) {
+        Rectangle bounds = getCenteredStringBounds(g, text, centerX, baselineY);
+        g.setColor(color);
+        g.drawString(text, bounds.x, baselineY);
+    }
+
+    // Liefert das Rechteck, das drawCenteredString mit denselben Werten füllen würde
+    // Nützlich, um etwas neben oder hinter dem Text zu platzieren, ohne selbst zu messen
+    public static Rectangle getCenteredStringBounds(Graphics2D g, String text, int centerX, int baselineY) {
+        FontMetrics fm = g.getFontMetrics(); // Liefert die Maße des aktuellen Fonts
+        int textWidth = fm.stringWidth(text);
+
+        // Die Grundlinie sitzt zwischen Ober- und Unterlänge, daher wird nach oben der Ascent
+        // abgezogen und die Höhe aus Ascent und Descent zusammengesetzt
+        return new Rectangle(centerX - textWidth / 2, baselineY - fm.getAscent(),
+                textWidth, fm.getAscent() + fm.getDescent());
     }
 }
