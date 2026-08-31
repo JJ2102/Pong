@@ -21,24 +21,25 @@ public class SphereMesh extends Mesh {
     // ===== Mesh-Generatoren =====
     // Einen Eckpunkt (Vertex) für jeden schnittpunkt
     // eines Stacks (horizontal) und Sektors (vertikal) erzeugen
-    private static List<Vector3> generateVertices(double r, int sectors, int stacks) {
+    private static List<Vector3> generateVertices(double radius, int sectors, int stacks) {
         List<Vector3> vertices = new ArrayList<>();
-        // Zeilen (Stacks) durchgehen
-        for (int i = 0; i <= stacks; i++) {
-            double v = (double) i / stacks;
-            double phi = v * Math.PI; // von 0 (Nordpol) bis PI (Südpol)
-            // Spalten (Sektors) durchgehen
-            for (int j = 0; j <= sectors; j++) {
-                double u = (double) j / sectors;
-                double theta = u * 2.0 * Math.PI; // einmal komplett rundherum
+        double sectorStep = 2 * Math.PI / sectors;
+        double stackStep = Math.PI / stacks;
+        double sectorAngle, stackAngle, x, y, z, xz;
 
-                // Kugelkoordinaten in kartesische Koordinaten umrechnen
-                double x = r * Math.sin(phi) * Math.cos(theta);
-                double y = r * Math.cos(phi);
-                double z = r * Math.sin(phi) * Math.sin(theta);
+        for (int i = 0; i <= stacks; i++) {
+            stackAngle = Math.PI / 2 - i * stackStep; // Von +90° bis -90°
+            xz = radius * Math.cos(stackAngle);
+            y = radius * Math.sin(stackAngle);
+
+            for (int j = 0; j <= sectors; j++) {
+                sectorAngle = j * sectorStep; // Von 0° bis 360°
+                x = xz * Math.cos(sectorAngle);
+                z = xz * Math.sin(sectorAngle);
                 vertices.add(new Vector3(x, y, z));
             }
         }
+
         return vertices;
     }
 
