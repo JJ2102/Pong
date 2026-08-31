@@ -1,7 +1,7 @@
 package objects;
 
 import math.Vector3;
-import meshes.RectangleMesh;
+import meshes.CuboidMesh;
 import rendering.Mesh;
 
 import java.awt.Color;
@@ -14,7 +14,7 @@ public class Box extends Entity {
     public Box(double depth) {
         super(Color.BLACK, Color.WHITE);
         this.size = new Vector3(2.45, 1.4, depth);
-        Mesh boxMesh = new RectangleMesh(size.getX(), size.getY(), size.getZ());
+        Mesh boxMesh = new CuboidMesh(size.getX(), size.getY(), size.getZ());
         setMesh(boxMesh);
     }
 

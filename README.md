@@ -23,7 +23,7 @@ aber mit einer modernen selbstentwickelten perspektivischen 3D-Grafik. Das Ziel 
 | `Matrix4x4`      | 4×4-Matrix für Transformationsberechnungen                                 |
 | `Vektor3`        | 3-dimensionaler Vektor für Geschwindigkeit und Position                    |
 | `Entity`         | Oberklasse aller Objekte, besteht aus einem `Transform` und einem `Mesh`   |
-| `Mesh`           | Oberklasse für konkrete Formen wie `RectangleMesh` oder `EllipseMesh`      |
+| `Mesh`           | Oberklasse für konkrete Formen wie `CuboidMesh` oder `SphereMesh`      |
 | `Transform`      | Speichert Rotation, Position und Skalierung als `Vektor3`                  |
 | `RenderPipeline` | Transformiert eine `Entity` so, dass sie projiziert werden kann            |
 | `Drawer`         | Zeichnet die projizierten Eckdaten auf das Panel                           |

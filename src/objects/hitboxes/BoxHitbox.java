@@ -1,7 +1,7 @@
 package objects.hitboxes;
 
 import math.Vector3;
-import meshes.RectangleMesh;
+import meshes.CuboidMesh;
 import objects.Entity;
 
 import java.awt.*;
@@ -16,7 +16,7 @@ public class BoxHitbox extends Entity {
         this.size = size;
 
         this.setMesh(
-                new RectangleMesh(size.getX() / 2, size.getY() / 2, size.getZ() / 2)
+                new CuboidMesh(size.getX() / 2, size.getY() / 2, size.getZ() / 2)
         );
     }
 

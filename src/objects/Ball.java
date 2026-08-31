@@ -2,7 +2,7 @@ package objects;
 
 import objects.hitboxes.BoxHitbox;
 import math.Vector3;
-import meshes.EllipseMesh;
+import meshes.SphereMesh;
 import rendering.Mesh;
 import utility.Globals;
 
@@ -25,7 +25,7 @@ public class Ball extends Entity {
     // Initialisiert den Ball mit seinem Mesh, seiner Hitbox und einer zufälligen Startgeschwindigkeit
     public Ball(Vector3 boxSize) {
         super(Color.YELLOW, Color.ORANGE);
-        Mesh boxMesh = new EllipseMesh(RADIUS, 10, 10);
+        Mesh boxMesh = new SphereMesh(RADIUS, 10, 10);
         setMesh(boxMesh);
 
         // Wandgrenzen aus der tatsächlichen Boxgröße ableiten

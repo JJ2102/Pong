@@ -6,20 +6,20 @@ import rendering.Mesh;
 import java.util.Arrays;
 
 // Quaderförmiges Mesh mit 8 Eckpunkten, 12 Kanten und 6 Flächen
-public class RectangleMesh extends Mesh {
+public class CuboidMesh extends Mesh {
     // Konstruktor zur Initialisierung eines Quaders (Rechteck-Mesh im 3D-Raum)
-    public RectangleMesh(double xSize, double ySize, double zSize) {
+    public CuboidMesh(double xSize, double ySize, double zSize) {
         super(
                 // ===== Eckpunkte (Vertices) =====
                 Arrays.asList(
-                        new Vector3(-xSize, -ySize, zSize),  // Ecke 0: Vorne unten Links
-                        new Vector3(xSize, -ySize, zSize),   // Ecke 1: Vorne unten Rechts
-                        new Vector3(xSize, ySize, zSize),    // Ecke 2: Vorne oben Rechts
-                        new Vector3(-xSize, ySize, zSize),   // Ecke 3: Vorne oben Links
-                        new Vector3(-xSize, -ySize, -zSize), // Ecke 4: Hinten unten Links
-                        new Vector3(xSize, -ySize, -zSize),  // Ecke 5: Hinten unten Rechts
-                        new Vector3(xSize, ySize, -zSize),   // Ecke 6: Hinten oben Rechts
-                        new Vector3(-xSize, ySize, -zSize)   // Ecke 7: Hinten oben Links
+                        new Vector3(-xSize / 2, -ySize / 2, zSize / 2),  // Ecke 0: Vorne unten Links
+                        new Vector3(xSize / 2, -ySize / 2, zSize / 2),   // Ecke 1: Vorne unten Rechts
+                        new Vector3(xSize / 2, ySize / 2, zSize / 2),    // Ecke 2: Vorne oben Rechts
+                        new Vector3(-xSize / 2, ySize / 2, zSize / 2),   // Ecke 3: Vorne oben Links
+                        new Vector3(-xSize / 2, -ySize / 2, -zSize / 2), // Ecke 4: Hinten unten Links
+                        new Vector3(xSize / 2, -ySize / 2, -zSize / 2),  // Ecke 5: Hinten unten Rechts
+                        new Vector3(xSize / 2, ySize / 2, -zSize / 2),   // Ecke 6: Hinten oben Rechts
+                        new Vector3(-xSize / 2, ySize / 2, -zSize / 2)   // Ecke 7: Hinten oben Links
                 ),
                 // ===== Kanten (Edges) =====
                 new int[][] {

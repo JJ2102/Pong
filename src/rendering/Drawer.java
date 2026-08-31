@@ -37,7 +37,7 @@ public final class Drawer {
     }
 
     // Zeichnet eine Linie mit einem andersfarbigen Rand drumherum
-    public static void drawOutlinedLine(Graphics2D g, int x1, int y1, int x2, int y2,
+    public static    void drawOutlinedLine(Graphics2D g, int x1, int y1, int x2, int y2,
                                   Color color, Color outlineColor, float thickness, float outlineWidth) {
         Stroke previousStroke = g.getStroke(); // Stroke des Aufrufers merken
 

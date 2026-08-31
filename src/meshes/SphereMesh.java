@@ -7,27 +7,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 // Kugelförmiges Mesh, das aus Ringen und Segmenten aufgebaut wird
-public class EllipseMesh extends Mesh {
+public class SphereMesh extends Mesh {
     // Konstruktor zur Initialisierung des Ellipsen-Meshes
-    public EllipseMesh(double radius, int segments, int rings) {
+    public SphereMesh(double radius, int sectors, int stacks) {
+
         super(
-                generateVertices(radius, segments, rings),
-                generateEdges(segments, rings),
-                generateFaces(segments, rings)
+                generateVertices(radius, sectors, stacks),
+                generateEdges(sectors, stacks),
+                generateFaces(sectors, stacks)
         );
     }
 
     // ===== Mesh-Generatoren =====
-    // Erzeugt die Eckpunkte (Vertices) einer Kugel
-    private static List<Vector3> generateVertices(double r, int segments, int rings) {
+    // Einen Eckpunkt (Vertex) für jeden schnittpunkt
+    // eines Stacks (horizontal) und Sektors (vertikal) erzeugen
+    private static List<Vector3> generateVertices(double r, int sectors, int stacks) {
         List<Vector3> vertices = new ArrayList<>();
-        // Zeilen (Ringe) durchgehen
-        for (int i = 0; i <= rings; i++) {
-            double v = (double) i / rings;
+        // Zeilen (Stacks) durchgehen
+        for (int i = 0; i <= stacks; i++) {
+            double v = (double) i / stacks;
             double phi = v * Math.PI; // von 0 (Nordpol) bis PI (Südpol)
-            // Spalten (Segmente) durchgehen
-            for (int j = 0; j <= segments; j++) {
-                double u = (double) j / segments;
+            // Spalten (Sektors) durchgehen
+            for (int j = 0; j <= sectors; j++) {
+                double u = (double) j / sectors;
                 double theta = u * 2.0 * Math.PI; // einmal komplett rundherum
 
                 // Kugelkoordinaten in kartesische Koordinaten umrechnen
@@ -41,12 +43,12 @@ public class EllipseMesh extends Mesh {
     }
 
     // Erzeugt die Kanten zwischen benachbarten Punkten
-    private static int[][] generateEdges(int segments, int rings) {
+    private static int[][] generateEdges(int sectors, int stacks) {
         List<int[]> edges = new ArrayList<>();
-        int cols = segments + 1; // Spaltenanzahl
+        int cols = sectors + 1; // Spaltenanzahl
 
-        for (int i = 0; i < rings; i++) {
-            for (int j = 0; j < segments; j++) {
+        for (int i = 0; i < stacks; i++) {
+            for (int j = 0; j < sectors; j++) {
                 int idx = i * cols + j; // Aktueller Index
                 // horizontale Kante
                 edges.add(new int[]{idx, idx + 1});
@@ -58,12 +60,12 @@ public class EllipseMesh extends Mesh {
     }
 
     // Erzeugt die Dreiecksflächen für das Mesh
-    private static int[][] generateFaces(int segments, int rings) {
+    private static int[][] generateFaces(int sectors, int stacks) {
         List<int[]> faces = new ArrayList<>();
-        int cols = segments + 1; // Spaltenanzahl
+        int cols = sectors + 1; // Spaltenanzahl
 
-        for (int i = 0; i < rings; i++) {
-            for (int j = 0; j < segments; j++) {
+        for (int i = 0; i < stacks; i++) {
+            for (int j = 0; j < sectors; j++) {
                 int idx = i * cols + j; // Basis-Index
 
                 // Indizes der vier Eckpunkte des aktuellen Vierecks

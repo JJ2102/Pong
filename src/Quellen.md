@@ -22,6 +22,8 @@
 - Invisibile Cursor https://stackoverflow.com/questions/1984071/how-to-hide-cursor-in-a-swing-application, 27.04.2026
 - Vector3 Lerp: https://docs.unity3d.com/ScriptReference/Vector3.Lerp.html, 22.08.2026
 - Draw dashed line: https://stackoverflow.com/questions/21989082/drawing-dashed-line-in-java, 27.08.2026
+- Sphere Mesh: https://www.songho.ca/opengl/gl_sphere.html, 31.08.2026
+
 
 # Sonstiges
 - Pong als Arcade Game: https://de.wikipedia.org/wiki/Pong, 26.05.2026
