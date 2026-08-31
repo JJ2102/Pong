@@ -11,13 +11,9 @@ public class BoxHitbox extends Entity {
     private final Vector3 size; // Breite, Höhe, Tiefe
 
     public BoxHitbox(Vector3 center, Vector3 size, Color color) {
-        super(color, color);
+        super(color, color, new CuboidMesh(size.getX(), size.getY(), size.getZ()));
         setPosition(center);
         this.size = size;
-
-        this.setMesh(
-                new CuboidMesh(size.getX(), size.getY(), size.getZ())
-        );
     }
 
     public void setPosition(Vector3 center) {

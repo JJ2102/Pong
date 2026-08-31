@@ -93,7 +93,7 @@ public class GameScene extends Scene {
         zAxis = new Vector(new Vector3(0, 0, 0), new Vector3(0, 0, 1), 1, Color.BLUE);
 
         // Spielobjekte initialisieren
-        box = new Box(BOX_DEPTH);
+        box = new Box(new Vector3(4.90, 2.8, BOX_DEPTH));
         ball = new Ball(box.getSize());
 
         // Score Display (7-Segment) konfigurieren und in der Welt platzieren

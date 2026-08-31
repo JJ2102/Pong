@@ -15,9 +15,7 @@ public class Paddle extends Entity {
 
     // Initialisiert das Paddle an der übergebenen Position mit Mesh und Hitbox
     public Paddle(Vector3 position, Color colorFace, Color colorEdge) {
-        super(colorFace, colorEdge);
-        Mesh panelMesh = new CuboidMesh(X_SIZE, Y_SIZE, 0);
-        setMesh(panelMesh);
+        super(colorFace, colorEdge, new CuboidMesh(X_SIZE, Y_SIZE, 0));
         getTransform().setPosition(position);
         setHitbox(new BoxHitbox(getTransform().getPosition(), new Vector3(X_SIZE, Y_SIZE, 0), Color.YELLOW));
     }

@@ -16,8 +16,9 @@ public class Entity {
     private BoxHitbox hitbox;
 
     // Initialisiert eine Entität ohne Mesh an der Startposition mit den angegebenen Farben
-    public Entity(Color colorFace, Color colorEdge) {
-        this.mesh = null;
+    public Entity(Color colorFace, Color colorEdge, Mesh mesh) {
+        this.mesh = mesh;
+        this.hitbox = null;
         this.transform = new Transform();
         this.colorFace = colorFace;
         this.colorEdge = colorEdge;

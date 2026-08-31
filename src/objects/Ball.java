@@ -3,7 +3,6 @@ package objects;
 import objects.hitboxes.BoxHitbox;
 import math.Vector3;
 import meshes.SphereMesh;
-import rendering.Mesh;
 import utility.Globals;
 
 import java.awt.Color;
@@ -17,16 +16,14 @@ public class Ball extends Entity {
     private final double maxY;
 
     // Speed
-    private final double maxSpeed = 0.05;
-    private final double minSpeed = 0.03;
+    private final double MAX_SPEED = 0.05;
+    private final double MIN_SPEED = 0.03;
 
     private Vector3 velocity;
 
     // Initialisiert den Ball mit seinem Mesh, seiner Hitbox und einer zufälligen Startgeschwindigkeit
     public Ball(Vector3 boxSize) {
-        super(Color.YELLOW, Color.ORANGE);
-        Mesh boxMesh = new SphereMesh(RADIUS, 10, 10);
-        setMesh(boxMesh);
+        super(Color.YELLOW, Color.ORANGE, new SphereMesh(RADIUS, 10, 10));
 
         // Wandgrenzen aus der tatsächlichen Boxgröße ableiten, die Wand steht bei der halben Ausdehnung
         Vector3 halfBoxSize = boxSize.divide(2);
@@ -43,7 +40,7 @@ public class Ball extends Entity {
 
     // Generiert einen zufälligen Geschwindigkeitswert
     private double randomSpeed() {
-        return Globals.randomSpeed(minSpeed, maxSpeed);
+        return Globals.randomSpeed(MIN_SPEED, MAX_SPEED);
     }
 
     // Setzt die Geschwindigkeit des Balls in alle Richtungen auf Zufallswerte
