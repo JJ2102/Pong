@@ -27,11 +27,13 @@ public class SphereMesh extends Mesh {
         double stackStep = Math.PI / stacks;
         double sectorAngle, stackAngle, x, y, z, xz;
 
+        // Schleife über die Stacks (von oben nach unten)
         for (int i = 0; i <= stacks; i++) {
-            stackAngle = Math.PI / 2 - i * stackStep; // Von +90° bis -90°
+            stackAngle = Math.PI / 2 - i * stackStep; // Von pi/2 bis -pi/2
             xz = radius * Math.cos(stackAngle);
             y = radius * Math.sin(stackAngle);
 
+            // Schleife über die Sektoren (von links nach rechts)
             for (int j = 0; j <= sectors; j++) {
                 sectorAngle = j * sectorStep; // Von 0° bis 360°
                 x = xz * Math.cos(sectorAngle);
