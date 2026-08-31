@@ -28,9 +28,10 @@ public class Ball extends Entity {
         Mesh boxMesh = new SphereMesh(RADIUS, 10, 10);
         setMesh(boxMesh);
 
-        // Wandgrenzen aus der tatsächlichen Boxgröße ableiten
-        this.maxX = boxSize.getX() - RADIUS;
-        this.maxY = boxSize.getY() - RADIUS;
+        // Wandgrenzen aus der tatsächlichen Boxgröße ableiten, die Wand steht bei der halben Ausdehnung
+        Vector3 halfBoxSize = boxSize.divide(2);
+        this.maxX = halfBoxSize.getX() - RADIUS;
+        this.maxY = halfBoxSize.getY() - RADIUS;
 
         // Die Hitbox umschließt den Ball genau: halbe Kantenlänge entspricht dem Radius
         double size = RADIUS * 2;

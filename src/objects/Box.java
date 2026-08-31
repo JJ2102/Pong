@@ -13,7 +13,7 @@ public class Box extends Entity {
     // Initialisiert die Box anhand der vorgegebenen Tiefe
     public Box(double depth) {
         super(Color.BLACK, Color.WHITE);
-        this.size = new Vector3(2.45, 1.4, depth);
+        this.size = new Vector3(4.90, 2.8, depth);
         Mesh boxMesh = new CuboidMesh(size.getX(), size.getY(), size.getZ());
         setMesh(boxMesh);
     }

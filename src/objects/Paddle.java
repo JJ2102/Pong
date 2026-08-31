@@ -9,8 +9,9 @@ import java.awt.Color;
 
 // Basisklasse für die 3D-Paddles (Spieler und Gegner)
 public class Paddle extends Entity {
-    protected static final double X_SIZE = 0.3;
-    protected static final double Y_SIZE = 0.3;
+    // Volle Kantenlängen des Paddles
+    protected static final double X_SIZE = 0.6;
+    protected static final double Y_SIZE = 0.6;
 
     // Initialisiert das Paddle an der übergebenen Position mit Mesh und Hitbox
     public Paddle(Vector3 position, Color colorFace, Color colorEdge) {
@@ -18,6 +19,6 @@ public class Paddle extends Entity {
         Mesh panelMesh = new CuboidMesh(X_SIZE, Y_SIZE, 0);
         setMesh(panelMesh);
         getTransform().setPosition(position);
-        setHitbox(new BoxHitbox(getTransform().getPosition(), new Vector3(X_SIZE * 2, Y_SIZE * 2, 0), Color.YELLOW));
+        setHitbox(new BoxHitbox(getTransform().getPosition(), new Vector3(X_SIZE, Y_SIZE, 0), Color.YELLOW));
     }
 }

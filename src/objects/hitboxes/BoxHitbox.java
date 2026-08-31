@@ -16,7 +16,7 @@ public class BoxHitbox extends Entity {
         this.size = size;
 
         this.setMesh(
-                new CuboidMesh(size.getX() / 2, size.getY() / 2, size.getZ() / 2)
+                new CuboidMesh(size.getX(), size.getY(), size.getZ())
         );
     }
 

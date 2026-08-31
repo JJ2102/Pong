@@ -20,10 +20,12 @@ public class Enemy extends Paddle {
 
         this.positionZ = position.getZ();
 
-        this.minX = -boxSize.getX() + X_SIZE;
-        this.maxX = boxSize.getX() - X_SIZE;
-        this.minY = -boxSize.getY() + Y_SIZE;
-        this.maxY = boxSize.getY() - Y_SIZE;
+        // Grenzen gelten für den Mittelpunkt, daher zählen von Box und Paddle jeweils die halben Ausdehnungen
+        Vector3 halfBoxSize = boxSize.divide(2);
+        this.minX = -halfBoxSize.getX() + X_SIZE / 2;
+        this.maxX = halfBoxSize.getX() - X_SIZE / 2;
+        this.minY = -halfBoxSize.getY() + Y_SIZE / 2;
+        this.maxY = halfBoxSize.getY() - Y_SIZE / 2;
     }
 
     // Bewegt den Gegner weich (interpoliert) in Richtung der Ballposition

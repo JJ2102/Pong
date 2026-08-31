@@ -21,10 +21,12 @@ import java.awt.event.MouseEvent;
 // Die eigentliche Spielszene, in der das 3D-Pong gespielt wird
 public class GameScene extends Scene {
     private static final int WINNING_SCORE = 4; // Punkte, die zum Sieg nötig sind
-    // halbe Tiefe des Spielfelds (von der Mitte bis zu einer Wand)
-    private static final double BOX_DEPTH = 1.5;
+    // volle Tiefe des Spielfelds (von Wand zu Wand)
+    private static final double BOX_DEPTH = 3;
+    // halbe Tiefe (von der Mitte bis zu einer Wand), damit liegen die Wände bei z = ±BOX_HALF_DEPTH
+    private static final double BOX_HALF_DEPTH = BOX_DEPTH / 2;
     // Z-Ebene, auf der sich das Spieler-Paddle bewegt (knapp vor der Wand)
-    private static final double PLAYER_POSITION_Z = -BOX_DEPTH + 0.2;
+    private static final double PLAYER_POSITION_Z = -BOX_HALF_DEPTH + 0.2;
     private static final int SCORE_BASELINE_Y = 50; // Grundlinie, auf der der Punktestand sitzt
     private static final int SCORE_LINE_GAP = 15; // Abstand zwischen Punktestand und den Strichen daneben
 
@@ -79,7 +81,7 @@ public class GameScene extends Scene {
 
         // Kamera und Renderer initialisieren
         camera = new Camera();
-        double cameraPositionZ = -BOX_DEPTH - 1;
+        double cameraPositionZ = -BOX_HALF_DEPTH - 1;
         // Kamera leicht hinter der vorderen Box-Wand platzieren
         camera.setPosition(new Vector3(0, 0, cameraPositionZ));
         // Der Renderer zeichnet ab jetzt immer aus Sicht dieser Kamera
@@ -97,7 +99,8 @@ public class GameScene extends Scene {
         // Score Display (7-Segment) konfigurieren und in der Welt platzieren
         scoreDisplay = new SevenSegmentDisplay();
         scoreDisplay.getTransform().setScale(new Vector3(0.5, 0.5, 0.5));
-        scoreDisplay.getTransform().setPosition(new Vector3(-box.getSize().getX() + 0.1, 0, -0.5));
+        // hängt an der linken Seitenwand, also bei der halben Boxbreite
+        scoreDisplay.getTransform().setPosition(new Vector3(-box.getSize().getX() / 2 + 0.1, 0, -0.5));
         scoreDisplay.getTransform().setRotation(new Vector3(0, Math.toRadians(-90), 0));
 
         // 3 Sekunden Countdown (für den Start jeder Runde) erstellen
@@ -113,9 +116,9 @@ public class GameScene extends Scene {
 
         // Hitboxes für Tore generieren (an der Vorder- und Rückwand der Box)
         Vector3 boxSize = box.getSize();
-        Vector3 hitboxSize = new Vector3(boxSize.getX() * 2, boxSize.getY() * 2, 0);
-        goalPlayerHitbox = new BoxHitbox(new Vector3(0, 0, -BOX_DEPTH), hitboxSize, Color.RED);
-        goalAiHitbox = new BoxHitbox(new Vector3(0, 0, BOX_DEPTH), hitboxSize, Color.RED);
+        Vector3 hitboxSize = new Vector3(boxSize.getX(), boxSize.getY(), 0);
+        goalPlayerHitbox = new BoxHitbox(new Vector3(0, 0, -BOX_HALF_DEPTH), hitboxSize, Color.RED);
+        goalAiHitbox = new BoxHitbox(new Vector3(0, 0, BOX_HALF_DEPTH), hitboxSize, Color.RED);
 
         // Spieler-Paddle vorne platzieren
         player = new Player(new Vector3(0, 0, PLAYER_POSITION_Z));
