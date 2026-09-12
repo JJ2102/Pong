@@ -6,8 +6,9 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
-import java.io.File;
+import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,20 +27,21 @@ public class SoundManager {
         settings = new SoundSettings();
     }
 
-    // erstellt einen Clip aus einer Audiodatei
-    private Clip createClip(String path) {
-        File file = new File(path); // holt sich das File zum Path
-        if (!file.exists()) {
-            throw new IllegalArgumentException("Sound: File Not Found: " + path);
+    // erstellt einen Clip aus einer Audiodatei im Classpath (z.B. "/sounds/pong.wav")
+    private Clip createClip(String resourcePath) {
+        InputStream stream = SoundManager.class.getResourceAsStream(resourcePath);
+        if (stream == null) {
+            throw new IllegalArgumentException("Sound: Resource Not Found: " + resourcePath);
         }
 
-        try {
-            AudioInputStream sound = AudioSystem.getAudioInputStream(file); // Audiodatei laden
+        // AudioSystem braucht mark/reset ⇾ Stream puffern, sonst IOException bei Jar-Streams
+        try (InputStream buffered = new BufferedInputStream(stream)) {
+            AudioInputStream sound = AudioSystem.getAudioInputStream(buffered); // Audiodatei laden
             Clip clip = AudioSystem.getClip(); // Clip erstellen
             clip.open(sound); // Clip mit Audiodaten füllen
             return clip;
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
-            throw new IllegalStateException("Sound: Error loading file: " + path, e);
+            throw new IllegalStateException("Sound: Error loading resource: " + resourcePath, e);
         }
     }
 
