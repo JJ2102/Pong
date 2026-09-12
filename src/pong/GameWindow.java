@@ -16,6 +16,7 @@ import sound.SoundManager;
 import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
+import java.util.List;
 
 // Hauptfenster des Spiels, verwaltet alle Szenen und Overlays sowie die Soundausgabe
 public class GameWindow extends JFrame {
@@ -36,7 +37,12 @@ public class GameWindow extends JFrame {
         super("Pong 3D"); // Fenstertitel
         this.windowSize = windowSize; // Fenstergröße speichern
 
-        setIconImage(loadIcon("/icon/pong.png")); // Fenster-Icon setzen
+        // Fenster-Icon in mehreren Größen setzen; Windows wählt die passende für Titelleiste, Taskleiste und Alt-Tab
+        setIconImages(List.of(
+                loadIcon("/icon/pong-16.png"),
+                loadIcon("/icon/pong-32.png"),
+                loadIcon("/icon/pong-64.png")
+        ));
 
         // Manager initialisieren
         sceneManager = new SceneManager(this.windowSize);
