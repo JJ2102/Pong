@@ -32,8 +32,8 @@ public class Renderer {
     public final void updateSize(int width, int height) {
         this.width = width;
         this.height = height;
-        // Sichert quadratische Proportionen und bleibt auch bei einer noch nicht
-        // ausgelegten Zeichenfläche (Breite/Höhe 0) garantiert größer als null
+
+        // 1. Kleinster Wert von Breite und Höhe mindestens 1 wird genommen und halbiert
         this.scale = Math.max(1, Math.min(width, height)) / 2.0;
     }
 
@@ -49,9 +49,9 @@ public class Renderer {
 
     // Projiziert einen 3D-Vektor auf die 2D-Bildschirmfläche
     private Vector2 project(Vector3 vector) {
-        // Multipliziert den normalisierten Raum (-1 bis 1) mit der Skalierung und zentriert das Ergebnis
+        //halbe Fensterbreite + Versatz relativ zur Fenstermitte
         double screenX = (width / 2.0 + vector.getX() * scale);
-        // Auch hier wird die y-Achse für 2D-Darstellung invertiert
+        // halbe Fensterhöhe - Versatz relativ zur Fenstermitte (y-Achse ist in swing nach unten gerichtet)
         double screenY = (height / 2.0 - vector.getY() * scale);
         return new Vector2(screenX, screenY);
     }

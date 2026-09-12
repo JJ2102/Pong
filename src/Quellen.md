@@ -1,9 +1,16 @@
 # Mathematische Quellen
-1. projektion und Matrix-Translation: http://theissenonline.de/Mathematik/Zentralprojektion.pdf, 09.02.2026
-2. Matrix-Translation: https://www.mathematik.uni-marburg.de/~thormae/lectures/graphics1/graphics_5_2_ger_web.html#1, 24.08.2026
-3. Matrix mal Vektor: https://wwwold.mathematik.tu-dortmund.de/lsviii/new/media/veranstaltungen/wise1112/linala/LA5.pdf (Definition 5.1), 09.02.2026
-4. Matrix mal Matrix: https://page.math.tu-berlin.de/~moehring/Coma/Skript-I-Java/algorithmenaufarrays.pdf (6.2 Lineare Gleichungssysteme, Seite 121), 09.02.2026
-5. Inverse Matrix: https://www.mathcentre.ac.uk/resources/Engineering%20maths%20first%20aid%20kit/latexsource%20and%20diagrams/5_5.pdf, 09.03.2026
+## Matrizen
+### Allgemein
+- Matrix mal Matrix: https://page.math.tu-berlin.de/~moehring/Coma/Skript-I-Java/algorithmenaufarrays.pdf (6.2 Lineare Gleichungssysteme, Seite 121), 09.02.2026
+- Matrix mal Vektor: https://wwwold.mathematik.tu-dortmund.de/lsviii/new/media/veranstaltungen/wise1112/linala/LA5.pdf (Definition 5.1), 09.02.2026
+- Inverse Matrix: https://www.mathcentre.ac.uk/resources/Engineering%20maths%20first%20aid%20kit/latexsource%20and%20diagrams/5_5.pdf, 09.03.2026
+
+### ModelViewProjection-Matrix
+- Translations-, Skalierungs-Matrix: https://www.cg.tuwien.ac.at/courses/CG1/textblaetter/02%20Geometrische%20Transformationen.pdf, 03.09.2026
+- allgemeine Rotationsmatrix: https://tams.informatik.uni-hamburg.de/lehre/2010ss/vorlesung/Introduction_to_robotics/folien/Vorlesung2_druck4to1.pdf, 03.09.2026
+- projection matrix: https://www.mathematik.uni-marburg.de/~thormae/lectures/graphics1/graphics_6_1_ger_web.html#1, 03.09.2026
+- Model-Matrix: https://registry.khronos.org/glTF/specs/2.0/glTF-2.0.html (3.5.3. Transformations), 03.09.2026
+- ModelViewProjection-Matrix: https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/WebGL_model_view_projection (View Matrix), 03.09.2026
 
 # Sound- und Audioquellen
 - pong: https://pixabay.com/de/sound-effects/musical-bowling-ball-90863/, 14.01.2026

@@ -18,10 +18,10 @@ public class Entity {
     // Initialisiert eine Entität ohne Mesh an der Startposition mit den angegebenen Farben
     public Entity(Color colorFace, Color colorEdge, Mesh mesh) {
         this.mesh = mesh;
-        this.hitbox = null;
         this.transform = new Transform();
         this.colorFace = colorFace;
         this.colorEdge = colorEdge;
+        this.hitbox = null;
     }
 
     // Gibt die Transformationsdaten (Position, Rotation, Skalierung) zurück

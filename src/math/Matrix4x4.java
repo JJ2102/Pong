@@ -125,8 +125,16 @@ public class Matrix4x4 {
     }
 
     // Erstellt eine Projektionsmatrix für die 3D-Projektion
-    public static Matrix4x4 getProjectionMatrix(double fov) {
+    public static Matrix4x4
+    getProjectionMatrix(double fov) {
         Matrix4x4 p = new Matrix4x4();
+
+        /* Projektionsmatrix:
+         * fov  0   0  0
+         *  0  fov  0  0
+         *  0   0   1  0
+         *  0   0   1  0
+         */
 
         // FOV-Werte setzen
         p.setValue(0, 0, fov);
@@ -158,7 +166,6 @@ public class Matrix4x4 {
 
     // Multipliziert die Matrix mit einem 3D-Vektor
     public Vector3 multiply(Vector3 v) {
-        // Quelle 2
         // neue Komponenten inklusive homogener Koordinaten berechnen
         double x = v.getX() * matrix[0][0] + v.getY() * matrix[0][1] + v.getZ() * matrix[0][2] + matrix[0][3];
         double y = v.getX() * matrix[1][0] + v.getY() * matrix[1][1] + v.getZ() * matrix[1][2] + matrix[1][3];
