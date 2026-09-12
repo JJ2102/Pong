@@ -13,8 +13,9 @@ import scenemanagement.scenes.MenuScene;
 import scenemanagement.scenes.SettingsScene;
 import sound.SoundManager;
 
-import javax.swing.JFrame;
-import java.awt.Dimension;
+import javax.swing.*;
+import java.awt.*;
+import java.net.URL;
 
 // Hauptfenster des Spiels, verwaltet alle Szenen und Overlays sowie die Soundausgabe
 public class GameWindow extends JFrame {
@@ -35,6 +36,8 @@ public class GameWindow extends JFrame {
         super("Pong 3D"); // Fenstertitel
         this.windowSize = windowSize; // Fenstergröße speichern
 
+        setIconImage(loadIcon("/icon/pong.png")); // Fenster-Icon setzen
+
         // Manager initialisieren
         sceneManager = new SceneManager(this.windowSize);
         // JLayeredPane als Container setzen, um Ebenen zu ermöglichen
@@ -49,6 +52,15 @@ public class GameWindow extends JFrame {
         pack(); // Passt die Fenstergröße an den Inhalt an
         setLocationRelativeTo(null); // Zentriert das Fenster auf dem Bildschirm
         setVisible(true);
+    }
+
+    // lädt das Fenster-Icon aus dem Classpath
+    private Image loadIcon(String resourcePath) {
+        URL url = GameWindow.class.getResource(resourcePath);
+        if (url == null) {
+            throw new IllegalArgumentException("Icon: Resource Not Found: " + resourcePath);
+        }
+        return new ImageIcon(url).getImage();
     }
 
     // Erstellt und registriert alle verfügbaren Szenen und Overlays, sowie die Soundeffekte
