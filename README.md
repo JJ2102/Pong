@@ -36,7 +36,7 @@ aber mit einer modernen selbstentwickelten perspektivischen 3D-Grafik. Das Ziel 
 ## Voraussetzungen & Installation
 
 ### Spielen (JAR)
-1. Java 23 oder höher installieren
+1. Java 26 oder höher installieren
 2. [JAR-Datei von GitHub herunterladen](https://github.com/JJ2102/Pong/releases/download/v1.0/Pong.jar)
 3. JAR-Datei mit Doppelklick oder über die Kommandozeile ausführen:
    ```bash
