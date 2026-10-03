@@ -51,7 +51,7 @@ public class Countdown {
         timer.start();
     }
 
-    // Hält den Countdown an, die Restzeit bleibt dabei stehen
+    // Hält den Countdown an
     public void stop() {
         timer.stop();
     }

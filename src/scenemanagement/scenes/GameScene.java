@@ -214,7 +214,7 @@ public class GameScene extends Scene {
     public void reset() {
         playerScore = 0;
         aiScore = 0;
-        scoreDisplay.setScore(aiScore, playerScore);
+        scoreDisplay.setScore(playerScore, aiScore);
         ball.reset();
         aiPlayer.reset();
     }
