@@ -138,6 +138,8 @@ public class GameScene extends Scene {
             calculateFps(); // FPS nur mitzählen, wenn sie auch angezeigt werden
         }
 
+        renderer.updateSize(window.getWidth(), window.getHeight()); // Zeichenfläche kann beim ersten Frame noch 0 gewesen sein
+
         // Spieler folgt der Maus
         player.moveTo(mousePosition);
 
@@ -259,8 +261,6 @@ public class GameScene extends Scene {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-        renderer.updateSize(getWidth(), getHeight()); // Zeichenfläche kann beim ersten Frame noch 0 gewesen sein
 
         // Reihenfolge beachten: Von hinten nach vorne rendern
         renderer.renderEntity(g2d, box);
