@@ -18,7 +18,10 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
-// Die eigentliche Spielszene, in der das 3D-Pong gespielt wird
+/**
+ * Die eigentliche Spielszene, in der das 3D-Pong gespielt wird.
+ * Verwaltet Spielobjekte, Punktestand, Countdown und das Rendern aus Sicht der Kamera.
+ */
 public class GameScene extends Scene {
     private static final int WINNING_SCORE = 4; // Punkte, die zum Sieg nötig sind
     // volle Tiefe des Spielfelds (von Wand zu Wand)
@@ -74,7 +77,11 @@ public class GameScene extends Scene {
     // Positionen
     private transient Vector3 mousePosition = new Vector3(0, 0, PLAYER_POSITION_Z); // Aktuelle Mausposition im 3D-Raum
 
-    // Initialisiert Renderer, Kamera, Box, Ball, Spieler und Gegner sowie die Tore
+    /**
+     * Initialisiert Renderer, Kamera, Box, Ball, Spieler und Gegner sowie die Tore.
+     *
+     * @param window Hauptfenster, zu dem die Szene gehört
+     */
     public GameScene(GameWindow window) {
         super(window);
         setCursor(Globals.getInvisibleCursor()); // Mauszeiger im Spiel unsichtbar machen
@@ -131,7 +138,10 @@ public class GameScene extends Scene {
 
     // ===== Spiel-Logik =====
 
-    // Wird in jedem Frame aufgerufen: Aktualisiert Positionen, prüft Kollisionen und Tore
+    /**
+     * Wird in jedem Frame aufgerufen: aktualisiert Positionen, prüft Kollisionen und Tore.
+     * Während des Countdowns bewegen sich nur Spieler und Kamera.
+     */
     @Override
     protected void update() {
         if (window.isDebug()) {
@@ -176,7 +186,14 @@ public class GameScene extends Scene {
         aiPlayer.move(ball.getTransform().getPosition(), gameDifficulty.getValue());
     }
 
-    // Zählt einen Punkt für den Torschützen, aktualisiert das UI und prüft auf Sieg
+    /**
+     * Zählt einen Punkt für den Torschützen, aktualisiert die Anzeige und prüft auf Sieg.
+     * <p>
+     * Punktet die KI, wird zusätzlich der Glasbruch-Effekt am Ort des Balls angezeigt.
+     * Hat noch niemand gewonnen, beginnt der Countdown für die nächste Runde.
+     *
+     * @param scorer Seite, die den Punkt erzielt hat
+     */
     private void addPoint(PlayerType scorer) {
         if (scorer == PlayerType.AI) {
             aiScore++;
@@ -212,7 +229,9 @@ public class GameScene extends Scene {
         countdown.restart();
     }
 
-    // Setzt den Spielstand, Ball und Gegner für ein komplett neues Spiel zurück
+    /**
+     * Setzt den Spielstand, Ball und Gegner für ein komplett neues Spiel zurück.
+     */
     public void reset() {
         playerScore = 0;
         aiScore = 0;
@@ -223,7 +242,9 @@ public class GameScene extends Scene {
 
     // ===== Laufzeit (Lifecycle) =====
 
-    // Friert das Spiel ein (z.B. beim Öffnen des Pausenmenüs): Game-Loop und Countdown anhalten
+    /**
+     * Friert das Spiel ein (z. B. beim Öffnen des Pausenmenüs): Game-Loop und Countdown werden angehalten.
+     */
     @Override
     public void onPause() {
         if (getTimer().isRunning()) {
@@ -234,7 +255,9 @@ public class GameScene extends Scene {
         }
     }
 
-    // Lässt das Spiel weiterlaufen, ein unterbrochener Countdown wird dabei fortgesetzt
+    /**
+     * Lässt das Spiel weiterlaufen, ein unterbrochener Countdown wird dabei fortgesetzt.
+     */
     @Override
     public void onResume() {
         if (!getTimer().isRunning()) {
@@ -245,7 +268,9 @@ public class GameScene extends Scene {
         }
     }
 
-    // Startet eine komplett neue Partie: Punkte zurücksetzen und mit dem Countdown beginnen
+    /**
+     * Startet eine komplett neue Partie: setzt die Punkte zurück und beginnt mit dem Countdown.
+     */
     public void restart() {
         reset();
         gameState = GameState.COUNTING_DOWN;
@@ -255,7 +280,12 @@ public class GameScene extends Scene {
 
     // ===== Rendering =====
 
-    // Zeichnet die gesamte Szene: 3D-Objekte, Punktestand, Countdown und im Debug-Modus die Hitboxes
+    /**
+     * Zeichnet die gesamte Szene: 3D-Objekte, Punktestand, Countdown und im Debug-Modus
+     * zusätzlich Koordinatenachsen, Hitboxes und FPS.
+     *
+     * @param g Grafikkontext, in den gezeichnet wird
+     */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -315,7 +345,11 @@ public class GameScene extends Scene {
 
     // ===== Key/MouseListener Methoden =====
 
-    // Merkt sich bei jeder Mausbewegung die Zielposition für das Spieler-Paddle
+    /**
+     * Merkt sich bei jeder Mausbewegung die Zielposition für das Spieler-Paddle.
+     *
+     * @param e Mausereignis mit der aktuellen Mausposition in Pixeln
+     */
     @Override
     public void mouseMoved(MouseEvent e) {
         // Wandelt 2D-Maus-Pixel-Koordinaten in 3D-Weltkoordinaten für das Paddle um
@@ -323,7 +357,11 @@ public class GameScene extends Scene {
         mousePosition = renderer.screenToWorld(mouseScreenPosition, PLAYER_POSITION_Z);
     }
 
-    // Tastenkürzel im Spiel: Escape öffnet/schließt die Pause, F3 schaltet die Debug-Ansicht um
+    /**
+     * Verarbeitet die Tastenkürzel im Spiel: Escape öffnet bzw. schließt die Pause, F3 schaltet die Debug-Ansicht um.
+     *
+     * @param e Tastenereignis
+     */
     @Override
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
@@ -341,7 +379,9 @@ public class GameScene extends Scene {
 
     // ===== Debug Methoden =====
 
-    // Misst die Zeit seit dem letzten Frame und rechnet sie in Bilder pro Sekunde um
+    /**
+     * Misst die Zeit seit dem letzten Frame und rechnet sie in Bilder pro Sekunde um.
+     */
     private void calculateFps() {
         long currentTime = System.currentTimeMillis();
         long deltaTime = currentTime - lastFrameTime; // Vergangene Zeit seit dem letzten Aufruf in ms
@@ -354,9 +394,13 @@ public class GameScene extends Scene {
 
     // ===== Verschachtelte Typen =====
 
-    // unterscheidet, für wen ein Punkt gezählt wird
+    /**
+     * Unterscheidet, für wen ein Punkt gezählt wird.
+     */
     private enum PlayerType { PLAYER, AI }
 
-    // läuft das Spiel gerade, oder wartet es auf den Rundenstart?
+    /**
+     * Gibt an, ob das Spiel gerade läuft oder auf den Rundenstart wartet.
+     */
     private enum GameState { PLAYING, COUNTING_DOWN }
 }

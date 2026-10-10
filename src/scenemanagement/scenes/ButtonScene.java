@@ -11,12 +11,19 @@ import java.awt.Insets;
 import java.util.ArrayList;
 import java.util.List;
 
-// Basis für alle Menü-Szenen, die aus einem Titel und untereinander zentrierten Buttons bestehen
+/**
+ * Basis für alle Menü-Szenen, die aus einem Titel und untereinander zentrierten Buttons bestehen.
+ */
 public class ButtonScene extends Scene {
     // Alle Elemente in der Reihenfolge, in der sie angezeigt werden
     private final transient List<Component> components = new ArrayList<>();
 
-    // Erstellt die Menü-Szene mit Hintergrundfarbe und der Überschrift als erstem Element
+    /**
+     * Erstellt die Menü-Szene mit Hintergrundfarbe und der Überschrift als erstem Element.
+     *
+     * @param window Hauptfenster, zu dem die Szene gehört
+     * @param title Überschrift der Szene
+     */
     public ButtonScene(GameWindow window, String title) {
         super(window);
         setLayout(new GridBagLayout()); // Zentrierte Inhalte
@@ -29,12 +36,18 @@ public class ButtonScene extends Scene {
         components.add(titleLabel);
     }
 
-    // Reiht ein weiteres Element (z.B. Button oder Slider) unter den bisherigen ein
+    /**
+     * Reiht ein weiteres Element (z. B. Button oder Slider) unter den bisherigen ein.
+     *
+     * @param component anzuzeigendes Element
+     */
     protected void addComponent(Component component) {
         components.add(component);
     }
 
-    // Fügt alle gesammelten Elemente untereinander zentriert ins Layout ein
+    /**
+     * Fügt alle gesammelten Elemente untereinander zentriert ins Layout ein.
+     */
     protected void positionComponents() {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0; // Alles landet in einer einzigen Spalte
@@ -49,7 +62,9 @@ public class ButtonScene extends Scene {
         }
     }
 
-    // Menü-Szenen brauchen standardmäßig keine Update-Logik, Unterklassen können das überschreiben
+    /**
+     * Tut nichts, da Menü-Szenen standardmäßig keine Update-Logik brauchen; Unterklassen können das überschreiben.
+     */
     @Override
     protected void update() {
     }

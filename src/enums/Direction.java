@@ -1,6 +1,9 @@
 package enums;
 
-// Richtung in die der Ball aus dem Spielfeld hinausgeht
+/**
+ * Enum, das angibt,
+ * in welcher Achse der Ball am Rand des Spielfeldes angekommen ist.
+ */
 public enum Direction {
     X, // links/rechts
     Y, // oben/unten

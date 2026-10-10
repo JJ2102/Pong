@@ -8,7 +8,10 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.geom.Ellipse2D;
 
-// Repräsentiert den animierten 2D-Ball im Hintergrund-Menü
+/**
+ * Stellt den animierten 2D-Ball in der Hintergrund-Animation des Menüs dar.
+ * Der Ball fliegt mit zufälliger Geschwindigkeit durch das Fenster und prallt an den {@link Paddle2D}-Paddles ab.
+ */
 public class Ball2D extends Object2D {
     private static final double MIN_SPEED = 10.0;
     private static final double MAX_SPEED = 15.0;
@@ -17,20 +20,32 @@ public class Ball2D extends Object2D {
     private final int radius;
     private Vector2 velocity;
 
-    // Initialisiert den Ball mit einer zufälligen Startgeschwindigkeit
+    /**
+     * Initialisiert den Ball mittig im Fenster mit einer zufälligen Startgeschwindigkeit.
+     *
+     * @param windowSize Größe der zeichenbaren Fläche
+     * @param size Durchmesser des Balls in Pixeln
+     */
     public Ball2D(Dimension windowSize, int size) {
         super(windowSize, size, size);
         this.radius = size / 2;
         this.velocity = getNewVelocity();
     }
 
-    // Setzt den Ball zurück in die Fenstermitte und würfelt eine neue Richtung aus
+    /**
+     * Setzt den Ball zurück in die Fenstermitte und würfelt eine neue Richtung aus.
+     */
     public void reset() {
         setPosition(new Vector2((double) windowSize.width / 2, (double) windowSize.height / 2));
         velocity = getNewVelocity();
     }
 
-    // Zufällige Geschwindigkeit: fester Betrag, flacher Winkel nach links oder rechts
+    /**
+     * Erzeugt eine zufällige Geschwindigkeit mit einem Betrag zwischen {@code MIN_SPEED} und {@code MAX_SPEED}
+     * und einem flachen Winkel (höchstens {@code MAX_ANGLE}) nach links oder rechts.
+     *
+     * @return neuer Geschwindigkeitsvektor
+     */
     private Vector2 getNewVelocity() {
         double speed = MIN_SPEED + Math.random() * (MAX_SPEED - MIN_SPEED);
         double angle = (Math.random() * 2 - 1) * MAX_ANGLE; // -45° bis +45°
@@ -39,17 +54,26 @@ public class Ball2D extends Object2D {
         return new Vector2(directionX * speed * Math.cos(angle), speed * Math.sin(angle));
     }
 
-    // Kehrt die horizontale Bewegungsrichtung um
+    /**
+     * Kehrt die horizontale Bewegungsrichtung um.
+     */
     public void switchXDirection() {
         velocity.setX(velocity.getX() * -1);
     }
 
-    // Kehrt die vertikale Bewegungsrichtung um
+    /**
+     * Kehrt die vertikale Bewegungsrichtung um.
+     */
     public void switchYDirection() {
         velocity.setY(velocity.getY() * -1);
     }
 
-    // Bewegt den Ball einen Schritt weiter und lässt ihn an den Paddles abprallen
+    /**
+     * Bewegt den Ball einen Schritt weiter und lässt ihn an den Paddles abprallen.
+     *
+     * @param paddleLeft linkes Paddle
+     * @param paddleRight rechtes Paddle
+     */
     public void move(Paddle2D paddleLeft, Paddle2D paddleRight) {
         setPosition(getPosition().add(velocity));
 
@@ -57,7 +81,14 @@ public class Ball2D extends Object2D {
         bounceOff(paddleRight);
     }
 
-    // Prüft die Überlappung mit einem Paddle (Rechteck gegen Ball-Hüllquadrat) und prallt daran ab
+    /**
+     * Prüft die Überlappung mit einem Paddle (Rechteck gegen Ball-Hüllquadrat) und lässt den Ball daran abprallen.
+     * <p>
+     * Der Ball prallt nur ab, wenn er auf das Paddle zufliegt, und wird anschließend aus dem Paddle
+     * herausgeschoben, damit die Kollision im nächsten Schritt nicht erneut auslöst.
+     *
+     * @param paddle Paddle, an dem der Ball abprallen kann
+     */
     private void bounceOff(Paddle2D paddle) {
         // Abstand der Mittelpunkte
         double distanceX = getPosition().getX() - paddle.getPosition().getX();
@@ -79,7 +110,12 @@ public class Ball2D extends Object2D {
         setPosition(getPosition().add(new Vector2(Math.signum(distanceX) * overlapX, 0)));
     }
 
-    // Prüft, ob der Ball den linken/rechten oder den oberen/unteren Fensterrand erreicht hat
+    /**
+     * Prüft, ob der Ball den linken/rechten oder den oberen/unteren Fensterrand erreicht hat.
+     *
+     * @return {@link Direction#X} bei Berührung des linken oder rechten Rands, {@link Direction#Y} bei Berührung
+     *         des oberen oder unteren Rands, sonst {@link Direction#NONE}
+     */
     public Direction isOut() {
         boolean outLeft = getPosition().getX() - radius <= 0;
         boolean outRight = getPosition().getX() + radius >= windowSize.width;
@@ -95,7 +131,11 @@ public class Ball2D extends Object2D {
         }
     }
 
-    // Zeichnet den Ball auf das übergebene Grafics2D-Objekt
+    /**
+     * Zeichnet den Ball als weißen Kreis auf das übergebene Graphics2D-Objekt.
+     *
+     * @param g2d Grafikkontext, auf den gezeichnet wird
+     */
     @Override
     public void paintMe(Graphics2D g2d) {
         double posX = getPosition().getX() - radius;

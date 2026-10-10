@@ -2,9 +2,17 @@ package utility;
 
 import javax.swing.JSlider;
 
-// Eigener JSlider im Stil des Spiels, wird in den Einstellungen z.B. für die Lautstärke genutzt
+/**
+ * Eigener {@link JSlider} im Stil des Spiels, wird in den Einstellungen z. B. für die Lautstärke genutzt.
+ */
 public class Slider extends JSlider {
-    // Erstellt den Slider mit Wertebereich und Startwert und richtet Ticks sowie Farben ein
+    /**
+     * Erstellt den Slider mit Wertebereich und Startwert und richtet Ticks sowie Farben ein.
+     *
+     * @param min kleinster Wert
+     * @param max größter Wert
+     * @param value Startwert
+     */
     public Slider(int min, int max, int value) {
         super(min, max, value);
         setMajorTickSpacing((max - min) / 5); // Hauptstriche alle 20% des Bereichs

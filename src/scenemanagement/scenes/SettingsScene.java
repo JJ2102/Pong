@@ -6,9 +6,16 @@ import utility.Button;
 import utility.InfoLabel;
 import utility.Slider;
 
-// Einstellungs-Szene, in der die Lautstärke von Soundeffekten und Musik geregelt wird
+/**
+ * Einstellungs-Szene, in der die Lautstärke von Soundeffekten und Musik geregelt wird.
+ */
 public class SettingsScene extends ButtonScene {
-    // Baut die Einstellungsseite mit den beiden Lautstärke-Reglern und dem Zurück-Button auf
+    /**
+     * Baut die Einstellungsseite mit den beiden Lautstärke-Reglern und dem Zurück-Button auf.
+     * Die Regler starten mit den aktuell eingestellten Lautstärken.
+     *
+     * @param window Hauptfenster, über das der Sound-Manager erreicht und ins Menü zurückgewechselt wird
+     */
     public SettingsScene(GameWindow window) {
         super(window, "Settings");
 

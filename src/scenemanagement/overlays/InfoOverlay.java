@@ -7,9 +7,15 @@ import utility.Globals;
 
 import javax.swing.JLabel;
 
-// Overlay mit der Steuerungs- und Spielerklärung, aufrufbar aus dem Hauptmenü
+/**
+ * Overlay mit der Steuerungs- und Spielerklärung, aufrufbar aus dem Hauptmenü.
+ */
 public class InfoOverlay extends Overlay {
-    // Baut den Erklärtext und den Schließen-Button auf
+    /**
+     * Baut den Erklärtext und den Schließen-Button auf.
+     *
+     * @param window Hauptfenster, über das das Overlay wieder ausgeblendet wird
+     */
     public InfoOverlay(GameWindow window) {
         // fast deckender Hintergrund, Szene darunter läuft weiter
         super(window, "Information", 225, false, OverlayType.INFO);
@@ -25,6 +31,11 @@ public class InfoOverlay extends Overlay {
         positionComponents(); // ordnet Titel, Text und Button untereinander an
     }
 
+    /**
+     * Erstellt das Label mit der Spielanleitung als HTML-Text im Spiel-Font.
+     *
+     * @return Label mit dem formatierten Erklärtext
+     */
     private static JLabel createControlsLabel() {
         JLabel controlsLabel = new JLabel("""
                 <html>

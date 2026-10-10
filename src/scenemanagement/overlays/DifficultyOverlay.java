@@ -5,9 +5,15 @@ import enums.OverlayType;
 import pong.GameWindow;
 import utility.Button;
 
-// Overlay zur Auswahl des Schwierigkeitsgrads, bevor eine Runde gestartet wird
+/**
+ * Overlay zur Auswahl des Schwierigkeitsgrads, bevor eine Runde gestartet wird.
+ */
 public class DifficultyOverlay extends Overlay {
-    // Erstellt die drei Schwierigkeits-Buttons sowie einen Abbrechen-Button
+    /**
+     * Erstellt die drei Schwierigkeits-Buttons sowie einen Abbrechen-Button.
+     *
+     * @param window Hauptfenster, über das das Spiel gestartet wird
+     */
     public DifficultyOverlay(GameWindow window) {
         super(window, "Select Difficulty", 200, true, OverlayType.DIFFICULTY); // pausiert die Szene darunter
 
@@ -33,7 +39,11 @@ public class DifficultyOverlay extends Overlay {
         positionComponents(); // ordnet Titel und Buttons untereinander an
     }
 
-    // Schließt das Overlay, übergibt den gewählten Schwierigkeitsgrad an die Spielszene und startet das Spiel
+    /**
+     * Schließt das Overlay, übergibt den gewählten Schwierigkeitsgrad an die Spielszene und startet das Spiel.
+     *
+     * @param difficulty gewählter Schwierigkeitsgrad
+     */
     private void startGame(Difficulty difficulty) {
         window.toggleOverlay(OverlayType.DIFFICULTY);
         window.getGameScene().setDifficulty(difficulty);

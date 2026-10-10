@@ -2,18 +2,26 @@ package math;
 
 import rendering.Transform;
 
-// 4x4-Matrix für die Transformationen der 3D-Renderpipeline
+/**
+ * Die Matrix4x4-Klasse repräsentiert eine 4x4-Matrix, die in der 3D-Grafik für Transformationen verwendet wird.
+ * Sie bietet Methoden zur Erstellung von Transformationsmatrizen (Translation, Rotation, Skalierung) und zur
+ * Multiplikation von Matrizen und Vektoren.
+ */
 public class Matrix4x4 {
     private final double[][] matrix = new double[4][4]; // 2D-Array speichert die 4x4 Matrix-Werte
 
-    // Gibt die Einheitsmatrix zurück
+    /**
+     * Gibt eine neue 4x4 Einheitsmatrix zurück.
+     * <pre>
+     * ⎡ 1  0  0  0 ⎤
+     * ⎢ 0  1  0  0 ⎥
+     * ⎢ 0  0  1  0 ⎥
+     * ⎣ 0  0  0  1 ⎦
+     * </pre>
+     *
+     * @return eine 4x4 Einheitsmatrix
+     */
     public static Matrix4x4 getUnitMatrix() {
-        /*
-         * 1 0 0 0
-         * 0 1 0 0
-         * 0 0 1 0
-         * 0 0 0 1
-         */
         Matrix4x4 unitMatrix = new Matrix4x4(); // neue Matrix erstellen
         // Hauptdiagonale auf 1 setzen
         unitMatrix.matrix[0][0] = 1;
@@ -24,7 +32,15 @@ public class Matrix4x4 {
     }
 
     // ===== Matrix-Generatoren =====
-    // Erstellt eine kombinierte Transformationsmatrix (Translation * Rotation * Scale)
+    /**
+     * Erstellt eine Transformationsmatrix
+     * aus den Positions-, Rotations- und Skalierungswerten eines {@link Transform}-Objekts.
+     * <p>
+     * Ergibt sich aus der Multiplikation {@code Translation * Rotation * Scale}.
+     *
+     * @param transform {@link Transform} eines 3D-Objekts
+     * @return erstellte Transformationsmatrix
+     */
     public static Matrix4x4 getTransformationMatrix(Transform transform) {
         // Position, Rotation und Skalierung aus dem Transform-Objekt holen
         Vector3 position = transform.getPosition();
@@ -40,22 +56,39 @@ public class Matrix4x4 {
         return translationMatrix.multiply(rotationMatrix).multiply(scaleMatrix);
     }
 
-    // Erstellt die View-Matrix der Kamera (Gegenbewegung zu ihrer Position)
+    /**
+     * Erstellt eine View-Matrix für die Kamera basierend auf ihrer Position im 3D-Raum.
+     * <pre>
+     * ⎡ 1  0  0  -Cx ⎤
+     * ⎢ 0  1  0  -Cy ⎥
+     * ⎢ 0  0  1  -Cz ⎥
+     * ⎣ 0  0  0   1  ⎦
+     * </pre>
+     *
+     * @param cameraPosition {@link Vector3} Position der Kamera im 3D-Raum
+     * @return erstellte View-Matrix für die Kamera
+     */
     public static Matrix4x4 getViewMatrix(Vector3 cameraPosition) {
         // Die Kamera kann nur verschoben werden, daher ist die View-Matrix
         // schlicht die Gegenbewegung zu ihrer Position
         return getTranslationMatrix(-cameraPosition.getX(), -cameraPosition.getY(), -cameraPosition.getZ());
     }
 
-    // Erstellt eine Translations-matrix für die Verschiebung
+    /**
+     * Erstellt eine Translationsmatrix für die Verschiebung eines Objekts im 3D-Raum.
+     * <pre>
+     * ⎡ 1  0  0  Tx ⎤
+     * ⎢ 0  1  0  Ty ⎥
+     * ⎢ 0  0  1  Tz ⎥
+     * ⎣ 0  0  0  1  ⎦
+     * </pre>
+     *
+     * @param tx Verschiebung entlang der X-Achse
+     * @param ty Verschiebung entlang der Y-Achse
+     * @param tz Verschiebung entlang der Z-Achse
+     * @return erstellte Translationsmatrix
+     */
     private static Matrix4x4 getTranslationMatrix(double tx, double ty, double tz) {
-        // Quelle 1
-        /* Translation matrix:
-        * 1 0 0 Tx
-        * 0 1 0 Ty
-        * 0 0 1 Tz
-        * 0 0 0 1
-        */
         Matrix4x4 translationMatrix = getUnitMatrix(); // startet mit der Einheitsmatrix
         // Verschiebung-Werte in die vierte Spalte eintragen
         translationMatrix.setValue(0, 3, tx);
@@ -64,58 +97,72 @@ public class Matrix4x4 {
         return translationMatrix;
     }
 
-    // Erstellt eine Rotationsmatrix aus den Rotationswinkeln (X, Y, Z)
+    /**
+     * Erstellt eine Rotationsmatrix für die Rotation eines Objekts im 3D-Raum.
+     * Die Rotationen werden in der Reihenfolge Z, Y, X angewendet.
+     * <pre>
+     * Rotation um X-Achse:
+     * ⎡ 1  0      0      0 ⎤
+     * ⎢ 0  cosθ  -sinθ   0 ⎥
+     * ⎢ 0  sinθ   cosθ   0 ⎥
+     * ⎣ 0  0      0      1 ⎦
+     *
+     * Rotation um Y-Achse:
+     * ⎡ cosφ   0   sinφ   0 ⎤
+     * ⎢ 0      1    0     0 ⎥
+     * ⎢ -sinφ  0   cosφ   0 ⎥
+     * ⎣ 0      0    0     1 ⎦
+     *
+     * Rotation um Z-Achse:
+     * ⎡ cosψ -sinψ   0    0 ⎤
+     * ⎢ sinψ  cosψ   0    0 ⎥
+     * ⎢ 0      0     1    0 ⎥
+     * ⎣ 0      0     0    1 ⎦
+     * </pre>
+     *
+     * @param rotationX Rotation um die X-Achse in Radiant
+     * @param rotationY Rotation um die Y-Achse in Radiant
+     * @param rotationZ Rotation um die Z-Achse in Radiant
+     * @return erstellte Rotationsmatrix
+     */
     private static Matrix4x4 getRotationMatrix(double rotationX, double rotationY, double rotationZ) {
-        // Quelle 1
-        /* Rotation matrix X:
-         * 1 0    0     0
-         * 0 cos  -sin  0
-         * 0 sin  cos   0
-         * 0 0    0     1
-         */
         Matrix4x4 rotX = getUnitMatrix();
         rotX.setValue(1, 1, Math.cos(rotationX));
         rotX.setValue(1, 2, -Math.sin(rotationX));
         rotX.setValue(2, 1, Math.sin(rotationX));
         rotX.setValue(2, 2, Math.cos(rotationX));
 
-        /* Rotation matrix Y:
-         * cos 0 sin 0
-         * 0   1 0   0
-         * -sin0 cos 0
-         * 0   0 0   1
-         */
         Matrix4x4 rotY = getUnitMatrix();
         rotY.setValue(0, 0, Math.cos(rotationY));
         rotY.setValue(0, 2, Math.sin(rotationY));
         rotY.setValue(2, 0, -Math.sin(rotationY));
         rotY.setValue(2, 2, Math.cos(rotationY));
 
-        /* Rotation matrix Z:
-         * cos -sin 0 0
-         * sin cos  0 0
-         * 0   0    1 0
-         * 0   0    0 1
-         */
         Matrix4x4 rotZ = getUnitMatrix();
         rotZ.setValue(0, 0, Math.cos(rotationZ));
         rotZ.setValue(0, 1, -Math.sin(rotationZ));
         rotZ.setValue(1, 0, Math.sin(rotationZ));
         rotZ.setValue(1, 1, Math.cos(rotationZ));
 
-        // Kombiniere die Rotationen: Rz * Ry * Rx (achten auf die Reihenfolge)
+        // Multiplikation der Rotationsmatrizen in der Reihenfolge Z, Y, X
         return rotZ.multiply(rotY).multiply(rotX);
     }
 
-    // Erstellt eine Skalierungsmatrix
+    /**
+     * Erstellt eine Skalierungsmatrix für die Skalierung eines Objekts im 3D-Raum.
+     * <pre>
+     * ⎡ Sx  0   0   0 ⎤
+     * ⎢ 0   Sy  0   0 ⎥
+     * ⎢ 0   0   Sz  0 ⎥
+     * ⎣ 0   0   0   1 ⎦
+     * </pre>
+     *
+     * @param sx Skalierungsfaktor entlang der X-Achse
+     * @param sy Skalierungsfaktor entlang der Y-Achse
+     * @param sz Skalierungsfaktor entlang der Z-Achse
+     * @return erstellte Skalierungsmatrix
+     */
     private static Matrix4x4 getScalingMatrix(double sx, double sy, double sz) {
-        // Quelle 1
-        /* Scaling matrix:
-         * Sx 0  0  0
-         * 0  Sy 0  0
-         * 0  0  Sz 0
-         * 0  0  0  1
-         */
         Matrix4x4 scalingMatrix = getUnitMatrix(); // startet mit der Einheitsmatrix
         // Skalierungsfaktoren auf der Hauptdiagonale setzen
         scalingMatrix.setValue(0, 0, sx);
@@ -124,17 +171,21 @@ public class Matrix4x4 {
         return scalingMatrix;
     }
 
-    // Erstellt eine Projektionsmatrix für die 3D-Projektion
+    /**
+     * Erstellt eine Projektionsmatrix für die 3D-Projektion.
+     * <pre>
+     * ⎡ fov  0   0  0 ⎤
+     * ⎢  0  fov  0  0 ⎥
+     * ⎢  0   0   1  0 ⎥
+     * ⎣  0   0   1  0 ⎦
+     * </pre>
+     *
+     * @param fov ein Zoom-Faktor, der die Breite des Sichtfeldes bestimmt (Field of View)
+     * @return erstellte Projektionsmatrix
+     */
     public static Matrix4x4
     getProjectionMatrix(double fov) {
         Matrix4x4 p = new Matrix4x4();
-
-        /* Projektionsmatrix:
-         * fov  0   0  0
-         *  0  fov  0  0
-         *  0   0   1  0
-         *  0   0   1  0
-         */
 
         // FOV-Werte setzen
         p.setValue(0, 0, fov);
@@ -148,29 +199,41 @@ public class Matrix4x4 {
     }
 
     // ===== Matrix-Operationen =====
-    // Multipliziert zwei 4x4 Matrizen
-    public Matrix4x4 multiply(Matrix4x4 m) {
-        // Quelle 3
-        Matrix4x4 result = new Matrix4x4(); // Ergebnismatrix erstellen
-        // Zeilen und Spalten durchgehen und Matrixprodukt berechnen
+    /**
+     * Multipliziert diese Matrix mit einer anderen Matrix.
+     *
+     * @param matrix die rechte Matrix des Produkts
+     * @return eine neue Matrix mit dem Ergebnis. {@code this} und {@code matrix} bleiben unverändert
+     */
+    public Matrix4x4 multiply(Matrix4x4 matrix) {
+        Matrix4x4 result = new Matrix4x4();
+        // Jeder Eintrag ist das Skalarprodukt aus Zeile row von this und Spalte col von matrix
         for (int row = 0; row < 4; row++) {
             for (int col = 0; col < 4; col++) {
                 result.matrix[row][col] = 0;
                 for (int k = 0; k < 4; k++) {
-                    result.matrix[row][col] += matrix[row][k] * m.matrix[k][col];
+                    result.matrix[row][col] += this.matrix[row][k] * matrix.matrix[k][col];
                 }
             }
         }
         return result;
     }
 
-    // Multipliziert die Matrix mit einem 3D-Vektor
-    public Vector3 multiply(Vector3 v) {
+    /**
+     * Multipliziert die aktuelle Matrix mit einem Vektor.
+     * <p>
+     * Der Vektor wird als Punkt mit {@code w = 1} behandelt. Ergibt sich ein {@code w} ungleich 0 und 1,
+     * wird das Ergebnis durch {@code w} geteilt (perspektivische Division).
+     *
+     * @param vector {@link Vector3}, der transformiert wird
+     * @return neuer, mit der Matrix multiplizierter Vektor
+     */
+    public Vector3 multiply(Vector3 vector) {
         // neue Komponenten inklusive homogener Koordinaten berechnen
-        double x = v.getX() * matrix[0][0] + v.getY() * matrix[0][1] + v.getZ() * matrix[0][2] + matrix[0][3];
-        double y = v.getX() * matrix[1][0] + v.getY() * matrix[1][1] + v.getZ() * matrix[1][2] + matrix[1][3];
-        double z = v.getX() * matrix[2][0] + v.getY() * matrix[2][1] + v.getZ() * matrix[2][2] + matrix[2][3];
-        double w = v.getX() * matrix[3][0] + v.getY() * matrix[3][1] + v.getZ() * matrix[3][2] + matrix[3][3];
+        double x = vector.getX() * matrix[0][0] + vector.getY() * matrix[0][1] + vector.getZ() * matrix[0][2] + matrix[0][3];
+        double y = vector.getX() * matrix[1][0] + vector.getY() * matrix[1][1] + vector.getZ() * matrix[1][2] + matrix[1][3];
+        double z = vector.getX() * matrix[2][0] + vector.getY() * matrix[2][1] + vector.getZ() * matrix[2][2] + matrix[2][3];
+        double w = vector.getX() * matrix[3][0] + vector.getY() * matrix[3][1] + vector.getZ() * matrix[3][2] + matrix[3][3];
 
         // Normalisierung, falls nötig
         if (w != 0 && w != 1) {
@@ -180,12 +243,17 @@ public class Matrix4x4 {
     }
 
     // ===== Hilfsmethoden =====
-    // Setzt einen Wert an einer bestimmten Position in der Matrix
+    /**
+     * Setzt den Wert an der angegebenen Position in der Matrix.
+     *
+     * @param row Zeilenindex (0-3)
+     * @param col Spaltenindex (0-3)
+     * @param value Wert, der gesetzt werden soll
+     */
     public void setValue(int row, int col, double value) {
         matrix[row][col] = value;
     }
 
-    // Gibt die Matrix als formatierte Zeichenkette für die Konsole zurück
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

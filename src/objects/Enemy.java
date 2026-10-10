@@ -4,7 +4,10 @@ import math.Vector3;
 
 import java.awt.Color;
 
-// Repräsentiert das gegnerische (KI-gesteuerte) Paddle
+/**
+ * Stellt das gegnerische, vom Computer gesteuerte Paddle dar.
+ * Es folgt der Ballposition innerhalb der Box auf einer festen Z-Ebene.
+ */
 public class Enemy extends Paddle {
     // Min und Max-Werte für die Bewegung
     private final double minX;
@@ -14,7 +17,12 @@ public class Enemy extends Paddle {
 
     private final double positionZ;
 
-    // Initialisiert den Gegner und berechnet seine Bewegungsgrenzen anhand der Boxgröße
+    /**
+     * Initialisiert den Gegner und berechnet seine Bewegungsgrenzen anhand der Boxgröße.
+     *
+     * @param position Startposition des Gegners, deren Z-Wert fest beibehalten wird
+     * @param boxSize Größe der Spielfeld-Box
+     */
     public Enemy(Vector3 position, Vector3 boxSize) {
         super(position, Color.RED, Color.PINK);
 
@@ -28,7 +36,12 @@ public class Enemy extends Paddle {
         this.maxY = halfBoxSize.getY() - Y_SIZE / 2;
     }
 
-    // Bewegt den Gegner weich (interpoliert) in Richtung der Ballposition
+    /**
+     * Bewegt den Gegner weich (linear interpoliert) in Richtung der Ballposition und begrenzt ihn auf die Box.
+     *
+     * @param ballPosition aktuelle Position des Balls
+     * @param difficulty Interpolationsfaktor; je größer, desto schneller folgt der Gegner dem Ball
+     */
     public void move(Vector3 ballPosition, double difficulty) {
         getTransform().setPosition(getTransform().getPosition().lerp(ballPosition, difficulty));
 
@@ -41,7 +54,9 @@ public class Enemy extends Paddle {
         getHitbox().setPosition(position);
     }
 
-    // Setzt den Gegner auf seine X/Y-Startposition (in der Mitte) zurück
+    /**
+     * Setzt den Gegner auf seine X/Y-Startposition in der Mitte zurück.
+     */
     public void reset() {
         getTransform().setPosition(new Vector3(0, 0, getTransform().getPosition().getZ()));
     }

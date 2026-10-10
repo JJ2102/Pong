@@ -11,7 +11,10 @@ import java.awt.Dimension;
 import java.util.EnumMap;
 import java.util.Map;
 
-// Verwaltet die Anzeige und das Umschalten von Szenen und Overlays (Menüs, Spiel, Pause)
+/**
+ * Verwaltet die Anzeige und das Umschalten von Szenen und Overlays (Menüs, Spiel, Pause).
+ * Szenen liegen auf der unteren, Overlays auf der oberen Ebene eines {@link JLayeredPane}.
+ */
 public class SceneManager {
     private final JLayeredPane layeredPane;
     private final Dimension size;
@@ -22,7 +25,11 @@ public class SceneManager {
     private SceneType activeSceneId = null; // aktuelle Szene
     private OverlayType activeOverlayId = null; // aktuelles Overlay
 
-    // Initialisiert den SceneManager mit der Fenstergröße und bereitet den JLayeredPane vor
+    /**
+     * Initialisiert den SceneManager mit der Fenstergröße und bereitet den {@link JLayeredPane} vor.
+     *
+     * @param size Fenstergröße, die alle Szenen und Overlays einnehmen
+     */
     public SceneManager(Dimension size) {
         this.size = size; // Fenstergröße
         this.layeredPane = new JLayeredPane(); // Erlaubt das Stapeln von Elementen (Overlays über Szenen)
@@ -30,13 +37,23 @@ public class SceneManager {
         layeredPane.setLayout(null); // Null-Layout für absolute Positionierung
     }
 
+    /**
+     * Gibt die Ebenen-Komponente zurück, in der alle Szenen und Overlays liegen.
+     *
+     * @return JLayeredPane mit allen registrierten Szenen und Overlays
+     */
     public JLayeredPane getLayeredPane() {
         return layeredPane;
     }
 
     // ===== Scenes =====
 
-    // Registriert eine neue Szene und fügt sie versteckt zur unteren Ebene hinzu
+    /**
+     * Registriert eine neue Szene und fügt sie versteckt zur unteren Ebene hinzu.
+     *
+     * @param id Typ, unter dem die Szene gespeichert wird
+     * @param panel zu registrierende Szene
+     */
     public void registerScene(SceneType id, Scene panel) {
         panel.setBounds(0, 0, size.width, size.height); // Nimmt das gesamte Fenster ein
         panel.setVisible(false); // Szene ist initial unsichtbar
@@ -44,7 +61,12 @@ public class SceneManager {
         layeredPane.add(panel, JLayeredPane.DEFAULT_LAYER); // Auf die unterste Ebene zeichnen
     }
 
-    // Wechselt zur angegebenen Szene, pausiert die aktuelle und setzt die neue fort
+    /**
+     * Wechselt zur angegebenen Szene, pausiert die aktuelle und setzt die neue fort.
+     * Ist die Szene bereits aktiv, passiert nichts.
+     *
+     * @param id Typ der Szene, die angezeigt werden soll
+     */
     public void setScene(SceneType id) {
         // Verhindert sinnloses Umschalten auf die bereits aktive Szene
         if (activeSceneId != null && activeSceneId == id) {
@@ -74,7 +96,12 @@ public class SceneManager {
 
     // ===== Overlay Methoden =====
 
-    // Registriert ein neues Overlay und fügt es versteckt zur oberen Ebene (Palette) hinzu
+    /**
+     * Registriert ein neues Overlay und fügt es versteckt zur oberen Ebene (Palette) hinzu.
+     *
+     * @param id Typ, unter dem das Overlay gespeichert wird
+     * @param overlay zu registrierendes Overlay
+     */
     public void registerOverlay(OverlayType id, Overlay overlay) {
         overlay.setBounds(0, 0, size.width, size.height); // Nimmt ebenfalls das gesamte Fenster ein
         overlay.setVisible(false);
@@ -82,9 +109,14 @@ public class SceneManager {
         layeredPane.add(overlay, JLayeredPane.PALETTE_LAYER); // Wird über der Szene gezeichnet
     }
 
-    // Zeigt ein Overlay an und pausiert ggf. die darunterliegende Szene
+    /**
+     * Zeigt ein Overlay an und pausiert ggf. die darunterliegende Szene.
+     * Ein bereits sichtbares anderes Overlay wird vorher versteckt, da immer nur eines sichtbar ist.
+     *
+     * @param id Typ des Overlays, das angezeigt werden soll
+     */
     public void showOverlay(OverlayType id) {
-        // Falls das Overlay bereits angezeigt wird, abbruch
+        // Falls das Overlay bereits angezeigt wird, Abbruch
         if (activeOverlayId != null && activeOverlayId == id) {
             return;
         }
@@ -111,7 +143,12 @@ public class SceneManager {
         refreshLayout();
     }
 
-    // Versteckt das aktuelle Overlay und setzt die darunterliegende Szene fort
+    /**
+     * Versteckt das angegebene Overlay, falls es gerade sichtbar ist, und setzt ggf. die darunterliegende
+     * Szene fort. Der Tastaturfokus geht anschließend zurück an die sichtbare Szene.
+     *
+     * @param id Typ des Overlays, das versteckt werden soll
+     */
     public void hideOverlay(OverlayType id) {
         if (isOverlayVisible(id)) {
             Overlay overlay = overlays.get(id);
@@ -133,28 +170,44 @@ public class SceneManager {
         refreshLayout();
     }
 
-    // Gibt zurück, ob ein bestimmtes Overlay gerade sichtbar ist
+    /**
+     * Prüft, ob ein bestimmtes Overlay gerade sichtbar ist.
+     *
+     * @param id Typ des zu prüfenden Overlays
+     * @return {@code true}, wenn das Overlay das aktuell angezeigte ist
+     */
     public boolean isOverlayVisible(OverlayType id) {
         return activeOverlayId != null && activeOverlayId == id;
     }
 
     // ===== Hilfsmethoden =====
 
-    // Hilfsmethode: Versteckt alle Komponenten außer der aktiven (targetKey)
+    /**
+     * Macht nur die Komponente zum Schlüssel {@code targetKey} sichtbar und versteckt alle anderen.
+     *
+     * @param components alle Komponenten, nach Schlüssel geordnet
+     * @param targetKey Schlüssel der Komponente, die sichtbar bleiben soll
+     * @param <K> Typ der Schlüssel
+     * @param <V> Typ der Komponenten
+     */
     private <K, V extends JComponent> void updateVisibility(Map<K, V> components, K targetKey) {
         for (Map.Entry<K, V> entry : components.entrySet()) {
-            // Setzt sichtbarkeit auf true, falls der Schlüssel übereinstimmt, andernfalls auf false
+            // Setzt Sichtbarkeit auf true, falls der Schlüssel übereinstimmt, andernfalls auf false
             entry.getValue().setVisible(entry.getKey().equals(targetKey));
         }
     }
 
-    // Fordert Swing auf, das Layout und die Darstellung zu aktualisieren
+    /**
+     * Fordert Swing auf, das Layout und die Darstellung zu aktualisieren.
+     */
     private void refreshLayout() {
         layeredPane.revalidate();
         layeredPane.repaint();
     }
 
-    // Sucht die sichtbare Szene und übergibt ihr den Tastaturfokus
+    /**
+     * Sucht die sichtbare Szene und übergibt ihr den Tastaturfokus.
+     */
     private void focusActiveScene() {
         for (Scene scene : scenes.values()) {
             if (scene.isVisible()) {
@@ -164,7 +217,11 @@ public class SceneManager {
         }
     }
 
-    // Gibt das Scene-Objekt der aktuell sichtbaren Szene zurück, oder null
+    /**
+     * Sucht die aktuell sichtbare Szene.
+     *
+     * @return sichtbare Szene oder {@code null}, wenn keine Szene sichtbar ist
+     */
     private Scene getActiveScene() {
         for (Scene scene : scenes.values()) {
             if (scene.isVisible()) {

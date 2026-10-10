@@ -17,7 +17,10 @@ import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.List;
 
-// Basisklasse für alle Overlays (Menüs, die über einer Szene liegen) mit halbtransparentem Hintergrund
+/**
+ * Basisklasse für alle Overlays, also Menüs, die über einer Szene liegen.
+ * Zeichnet einen halbtransparenten Hintergrund, zeigt einen Titel an und schließt sich mit ESC.
+ */
 public abstract class Overlay extends JPanel implements KeyListener {
     // Referenz auf das Hauptfenster, damit Unterklassen Szenen wechseln können
     protected final transient GameWindow window;
@@ -30,7 +33,15 @@ public abstract class Overlay extends JPanel implements KeyListener {
     private final boolean pauseUnderlying; // legt fest, ob die Szene darunter pausiert werden soll
     private final OverlayType overlayType;
 
-    // Baut das Overlay mit Titel, Transparenz und Pausierverhalten auf
+    /**
+     * Baut das Overlay mit Titel, Transparenz und Pausierverhalten auf.
+     *
+     * @param window Hauptfenster, über das Szenen und Overlays gewechselt werden
+     * @param title Überschrift, die als erstes Element angezeigt wird
+     * @param transparency Alphawert des Hintergrunds, wird auf 0 bis 255 begrenzt
+     * @param pauseUnderlying {@code true}, wenn die Szene darunter pausiert werden soll
+     * @param overlayType Typ, unter dem das Overlay registriert ist und mit ESC geschlossen wird
+     */
     protected Overlay(GameWindow window, String title, int transparency, boolean pauseUnderlying,
                       OverlayType overlayType) {
         this.window = window;
@@ -52,12 +63,18 @@ public abstract class Overlay extends JPanel implements KeyListener {
 
     // ===== Aufbau des Overlays =====
 
-    // Merkt sich ein weiteres Element, das später unter dem Titel angezeigt wird
+    /**
+     * Merkt sich ein weiteres Element, das später unter dem Titel angezeigt wird.
+     *
+     * @param component anzuzeigendes Element
+     */
     protected void addComponent(Component component) {
         components.add(component);
     }
 
-    // Ordnet alle gemerkten Elemente zentriert und untereinander an
+    /**
+     * Ordnet alle gemerkten Elemente zentriert und untereinander an.
+     */
     protected void positionComponents() {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0; // alles in einer einzigen Spalte
@@ -74,13 +91,22 @@ public abstract class Overlay extends JPanel implements KeyListener {
 
     // ===== Getter =====
 
+    /**
+     * Gibt an, ob die Szene unter diesem Overlay pausiert werden soll.
+     *
+     * @return {@code true}, wenn die darunterliegende Szene pausiert werden soll
+     */
     public boolean shouldPauseUnderlying() {
         return pauseUnderlying;
     }
 
     // ===== Zeichnen =====
 
-    // Zeichnet den halbtransparenten Hintergrund, durch den die Szene darunter noch durchscheint
+    /**
+     * Zeichnet den halbtransparenten Hintergrund, durch den die Szene darunter noch durchscheint.
+     *
+     * @param g Grafikkontext, in den gezeichnet wird
+     */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -95,9 +121,14 @@ public abstract class Overlay extends JPanel implements KeyListener {
     public void keyTyped(KeyEvent e) {
     }
 
+    /**
+     * Schließt das Overlay, wenn ESC gedrückt wird.
+     *
+     * @param e Tastenereignis
+     */
     @Override
     public void keyPressed(KeyEvent e) {
-        // schließt overlays mit ESC
+        // schließt Overlays mit ESC
         if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
             window.toggleOverlay(overlayType);
         }

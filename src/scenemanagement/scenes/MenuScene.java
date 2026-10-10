@@ -11,14 +11,21 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
-// Das Hauptmenü des Spiels mit Start-, Info- und Einstellungs-Buttons
+/**
+ * Das Hauptmenü des Spiels mit Start-, Einstellungs-, Info- und Beenden-Buttons.
+ * Im Hintergrund läuft eine 2D-Pong-Animation, deren Paddles der Maus folgen.
+ */
 public class MenuScene extends ButtonScene {
     private final transient Ball2D ball; // Ball der 2D-Hintergrund-Animation
 
     private final transient Paddle2D leftPaddle; // Linkes Paddle der Animation
     private final transient Paddle2D rightPaddle; // Rechtes Paddle der Animation
 
-    // Initialisiert das Menü, die Hintergrund-Animation (2D-Pong) und die Buttons
+    /**
+     * Initialisiert das Menü, die Hintergrund-Animation (2D-Pong) und die Buttons.
+     *
+     * @param window Hauptfenster, über das Overlays und Szenen gewechselt werden
+     */
     public MenuScene(GameWindow window) {
         super(window, "Pong 3D");
 
@@ -50,7 +57,10 @@ public class MenuScene extends ButtonScene {
         positionComponents(); // Buttons ausrichten
     }
 
-    // Aktualisiert die 2D-Hintergrund-Animation (Ball und Paddles im Menü)
+    /**
+     * Aktualisiert die 2D-Hintergrund-Animation: bewegt den Ball, setzt ihn nach einem
+     * Paddle-Durchgang zurück und lässt ihn an Decke und Boden abprallen.
+     */
     @Override
     protected void update() {
         ball.move(leftPaddle, rightPaddle); // Ball bewegt sich und prallt an den Paddles ab
@@ -62,7 +72,11 @@ public class MenuScene extends ButtonScene {
         }
     }
 
-    // Zeichnet die 2D-Objekte der Hintergrund-Animation
+    /**
+     * Zeichnet die gestrichelte Mittellinie und die 2D-Objekte der Hintergrund-Animation.
+     *
+     * @param g Grafikkontext, in den gezeichnet wird
+     */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -78,7 +92,7 @@ public class MenuScene extends ButtonScene {
         g2d.setStroke(dashed);
         g2d.drawLine(midX, 0, midX, window.getWindowSize().height);
 
-        // strich zurücksetzen, damit die Buttons nicht gestrichelt sind
+        // Strich zurücksetzen, damit die Buttons nicht gestrichelt sind
         g2d.setStroke(new BasicStroke());
 
         // Paddles zuerst, der Ball wird darüber gezeichnet
@@ -87,13 +101,22 @@ public class MenuScene extends ButtonScene {
         ball.paintMe(g2d);
     }
 
+    /**
+     * Lässt beide Paddles der Hintergrund-Animation der vertikalen Mausposition folgen.
+     *
+     * @param e Mausereignis mit der aktuellen Mausposition
+     */
     @Override
     public void mouseMoved(MouseEvent e) {
         leftPaddle.move(e.getY()); // Beide Paddles folgen der Mausbewegung
         rightPaddle.move(e.getY());
     }
 
-    // Tastenkürzel im Menü: Enter startet das Spiel, Escape beendet das Programm
+    /**
+     * Beendet das Programm, wenn im Menü Escape gedrückt wird.
+     *
+     * @param e Tastenereignis
+     */
     @Override
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {

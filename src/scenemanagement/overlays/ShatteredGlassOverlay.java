@@ -13,18 +13,34 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-// Overlay, das einen zersplitterten Bildschirm zeichnet, wenn der Gegner einen Punkt macht
+/**
+ * Overlay, das einen zersplitterten Bildschirm zeichnet, wenn der Gegner einen Punkt macht.
+ */
 public class ShatteredGlassOverlay extends Overlay {
     private final transient List<Line2D> cracks = new ArrayList<>(); // alle Risslinien, die gezeichnet werden
     private final transient Random random = new Random(); // sorgt dafür, dass jeder Sprung anders aussieht
 
-    // Erstellt ein komplett durchsichtiges Overlay ohne Titel, das keine Eingaben abfängt
+    /**
+     * Erstellt ein komplett durchsichtiges Overlay ohne Titel, das keine Eingaben abfängt.
+     *
+     * @param window Hauptfenster, zu dem das Overlay gehört
+     */
     public ShatteredGlassOverlay(GameWindow window) {
         super(window, "", 0, false, OverlayType.SHATTERED_GLASS); // Transparenz 0 = kein eingefärbter Hintergrund
         setFocusable(false); // darf den Tastaturfokus nicht vom Spiel wegnehmen
     }
 
-    // Erzeugt ein neues Sprungmuster rund um den übergebenen Einschlagpunkt
+    /**
+     * Erzeugt ein neues Sprungmuster rund um den übergebenen Einschlagpunkt.
+     * <p>
+     * Vom Einschlagpunkt gehen zufällig viele Strahlen nach außen, die durch Querbrüche
+     * mit ihrem jeweiligen Nachbarstrahl verbunden werden. Ein vorheriges Muster wird verworfen.
+     *
+     * @param centerX X-Koordinate des Einschlagpunkts in Pixeln
+     * @param centerY Y-Koordinate des Einschlagpunkts in Pixeln
+     * @param width Breite der Zeichenfläche in Pixeln
+     * @param height Höhe der Zeichenfläche in Pixeln
+     */
     public void generateShatter(int centerX, int centerY, int width, int height) {
         cracks.clear(); // altes Muster verwerfen
         int numRadialLines = 15 + random.nextInt(15); // Anzahl der Hauptstrahlen
@@ -61,11 +77,15 @@ public class ShatteredGlassOverlay extends Overlay {
         }
     }
 
-    // Zeichnet alle zuvor berechneten Risslinien über die Spielszene
+    /**
+     * Zeichnet alle zuvor berechneten Risslinien über die Spielszene.
+     *
+     * @param g Grafikkontext, in den gezeichnet wird
+     */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        Graphics2D g2 = (Graphics2D) g; // Grafics2D bietet Antialiasing und dickere Linien
+        Graphics2D g2 = (Graphics2D) g; // Graphics2D bietet Antialiasing und dickere Linien
 
         // Antialiasing für glatte Linien
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);

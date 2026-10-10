@@ -6,7 +6,11 @@ import rendering.Mesh;
 import java.util.ArrayList;
 import java.util.List;
 
-// Erzeugt das Mesh einer Siebensegmentanzeige (zwei Ziffern mit Doppelpunkt)
+/**
+ * Erzeugt das {@link Mesh} einer Siebensegmentanzeige (zwei Ziffern mit Doppelpunkt).
+ * <p>
+ * Eine Instanz sammelt die Geometrie für genau eine Anzeige, erzeugt wird sie über {@link #getDisplayMesh}.
+ */
 public final class SevenSegmentMeshes {
     // ===== NUR DIESE WERTE ANPASSEN =====
     private static final float DIGIT_WIDTH = 0.6f;
@@ -41,8 +45,16 @@ public final class SevenSegmentMeshes {
     private static final float CHARACTER_SPACING = 0.75f;
 
     // ===== Segment-Definitionen =====
-    // Ein Segment ist ein Rechteck um seinen Mittelpunkt; die Ausrichtung entscheidet,
-    // an welchen Ecken es abgeschrägt wird
+    /**
+     * Beschreibt ein einzelnes Segment als Rechteck um seinen Mittelpunkt.
+     * Die Ausrichtung entscheidet, an welchen Ecken es abgeschrägt wird.
+     *
+     * @param centerX X-Koordinate des Mittelpunkts
+     * @param centerY Y-Koordinate des Mittelpunkts
+     * @param width Breite des Segments
+     * @param height Höhe des Segments
+     * @param isHorizontal {@code true}, wenn das Segment waagerecht liegt
+     */
     private record Segment(float centerX, float centerY, float width, float height, boolean isHorizontal) {
     }
 
@@ -79,11 +91,19 @@ public final class SevenSegmentMeshes {
     private final List<int[]> edges = new ArrayList<>();
     private final List<int[]> faces = new ArrayList<>();
 
-    // Wird nur von getDisplayMesh benutzt, eine Instanz baut genau eine Anzeige
+    /**
+     * Privater Konstruktor, wird nur von {@link #getDisplayMesh} benutzt. Eine Instanz baut genau eine Anzeige.
+     */
     private SevenSegmentMeshes() {
     }
 
-    // Erzeugt das gesamte Anzeige-Mesh mit linker Ziffer, Doppelpunkt und rechter Ziffer
+    /**
+     * Erzeugt das gesamte Anzeige-Mesh mit linker Ziffer, Doppelpunkt und rechter Ziffer.
+     *
+     * @param leftDigit linke Ziffer, Werte außerhalb von 0-9 werden darauf begrenzt
+     * @param rightDigit rechte Ziffer, Werte außerhalb von 0-9 werden darauf begrenzt
+     * @return neues {@link Mesh} der Anzeige
+     */
     public static Mesh getDisplayMesh(int leftDigit, int rightDigit) {
         SevenSegmentMeshes display = new SevenSegmentMeshes();
 
@@ -95,7 +115,13 @@ public final class SevenSegmentMeshes {
     }
 
     // ===== Hilfsmethoden zur Geometrie-Erstellung =====
-    // Fügt die aktiven Segmente einer Ziffer hinzu, um offsetX nach links oder rechts verschoben
+
+    /**
+     * Fügt die aktiven Segmente einer Ziffer hinzu, um {@code offsetX} nach links oder rechts verschoben.
+     *
+     * @param digit darzustellende Ziffer, Werte außerhalb von 0-9 werden darauf begrenzt
+     * @param offsetX horizontale Verschiebung der Ziffer
+     */
     private void addDigit(int digit, float offsetX) {
         // Die Anzeige kennt nur die Ziffern 0-9, alles andere wird darauf begrenzt
         boolean[] activeSegments = DIGIT_SEGMENTS[Math.clamp(digit, 0, 9)];
@@ -107,14 +133,23 @@ public final class SevenSegmentMeshes {
         }
     }
 
-    // Fügt den Doppelpunkt aus seinen zwei Punkten in der Mitte der Anzeige hinzu
+    /**
+     * Fügt den Doppelpunkt aus seinen zwei Punkten in der Mitte der Anzeige hinzu.
+     */
     private void addColon() {
         addColonDot(COLON_DOT_Y_OFFSET);
         addColonDot(-COLON_DOT_Y_OFFSET);
     }
 
-    // Erzeugt ein Segment als Sechseck mit abgeschrägten Ecken (chamfer), damit die Segmente
-    // wie bei einer echten Siebensegmentanzeige spitz zueinander zulaufen, statt rechteckig zu wirken
+    /**
+     * Erzeugt ein Segment als Sechseck mit abgeschrägten Ecken (chamfer).
+     * <p>
+     * Dadurch laufen die Segmente wie bei einer echten Siebensegmentanzeige spitz zueinander zu,
+     * statt rechteckig zu wirken.
+     *
+     * @param segment Lage, Größe und Ausrichtung des Segments
+     * @param offsetX horizontale Verschiebung der zugehörigen Ziffer
+     */
     private void addSegment(Segment segment, float offsetX) {
         float x = segment.centerX() + offsetX;
         float y = segment.centerY();
@@ -142,7 +177,11 @@ public final class SevenSegmentMeshes {
         }
     }
 
-    // Erzeugt einen Punkt des Doppelpunkts als kleines regelmäßiges Vieleck
+    /**
+     * Erzeugt einen Punkt des Doppelpunkts als kleines regelmäßiges Vieleck.
+     *
+     * @param centerY Y-Position des Mittelpunkts
+     */
     private void addColonDot(float centerY) {
         float radius = COLON_DOT_SIZE / 2f;
         Vector3[] corners = new Vector3[COLON_DOT_CORNERS];
@@ -155,7 +194,11 @@ public final class SevenSegmentMeshes {
         addPolygon(corners);
     }
 
-    // Hängt ein geschlossenes Polygon an: Punkte übernehmen, Randkanten ziehen und eine Fläche bilden
+    /**
+     * Hängt ein geschlossenes Polygon an: Punkte übernehmen, Randkanten ziehen und eine Fläche bilden.
+     *
+     * @param corners Eckpunkte des Polygons in Umlaufreihenfolge
+     */
     private void addPolygon(Vector3... corners) {
         int baseIndex = vertices.size(); // Startindex der neuen Punkte
         int[] face = new int[corners.length];

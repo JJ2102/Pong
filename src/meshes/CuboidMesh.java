@@ -5,9 +5,17 @@ import rendering.Mesh;
 
 import java.util.Arrays;
 
-// Quaderförmiges Mesh mit 8 Eckpunkten, 12 Kanten und 6 Flächen
+/**
+ * Quaderförmiges {@link Mesh} mit 8 Eckpunkten, 12 Kanten und 6 Flächen, zentriert um den Ursprung.
+ */
 public class CuboidMesh extends Mesh {
-    // Konstruktor zur Initialisierung eines Quaders (Rechteck-Mesh im 3D-Raum)
+    /**
+     * Konstruktor zur Initialisierung eines Quaders (Rechteck-Mesh im 3D-Raum).
+     *
+     * @param xSize Ausdehnung entlang der X-Achse
+     * @param ySize Ausdehnung entlang der Y-Achse
+     * @param zSize Ausdehnung entlang der Z-Achse
+     */
     public CuboidMesh(double xSize, double ySize, double zSize) {
         super(
                 // ===== Eckpunkte (Vertices) =====

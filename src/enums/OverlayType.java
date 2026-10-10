@@ -1,6 +1,8 @@
 package enums;
 
-// Alle möglichen Overlays
+/**
+ * Enum, das die verschiedenen Arten von Overlays im Spiel darstellt.
+ */
 public enum OverlayType {
     PAUSE,
     DIFFICULTY,

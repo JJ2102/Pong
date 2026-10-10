@@ -6,9 +6,17 @@ import rendering.Mesh;
 import java.util.ArrayList;
 import java.util.List;
 
-// Kugelförmiges Mesh, das aus Ringen und Segmenten aufgebaut wird
+/**
+ * Kugelförmiges {@link Mesh}, das aus Ringen (Stacks) und Segmenten (Sektoren) aufgebaut wird.
+ */
 public class SphereMesh extends Mesh {
-    // Konstruktor zur Initialisierung des Ellipsen-Meshes
+    /**
+     * Konstruktor zur Initialisierung des Kugel-Meshes.
+     *
+     * @param radius Radius der Kugel
+     * @param sectors Anzahl der vertikalen Segmente rund um die Y-Achse
+     * @param stacks Anzahl der horizontalen Ringe vom Nord- zum Südpol
+     */
     public SphereMesh(double radius, int sectors, int stacks) {
 
         super(
@@ -19,8 +27,18 @@ public class SphereMesh extends Mesh {
     }
 
     // ===== Mesh-Generatoren =====
-    // Einen Eckpunkt (Vertex) für jeden schnittpunkt
-    // eines Stacks (horizontal) und Sektors (vertikal) erzeugen
+
+    /**
+     * Erzeugt einen Eckpunkt (Vertex) für jeden Schnittpunkt eines Stacks (horizontal)
+     * und eines Sektors (vertikal).
+     * <p>
+     * Pro Stack entstehen {@code sectors + 1} Punkte, damit sich der Ring an der Naht schließt.
+     *
+     * @param radius Radius der Kugel
+     * @param sectors Anzahl der Sektoren
+     * @param stacks Anzahl der Stacks
+     * @return Eckpunkte zeilenweise von oben nach unten
+     */
     private static List<Vector3> generateVertices(double radius, int sectors, int stacks) {
         List<Vector3> vertices = new ArrayList<>();
         double sectorStep = 2 * Math.PI / sectors;
@@ -45,7 +63,13 @@ public class SphereMesh extends Mesh {
         return vertices;
     }
 
-    // Erzeugt die Kanten zwischen benachbarten Punkten
+    /**
+     * Erzeugt die horizontalen und vertikalen Kanten zwischen benachbarten Punkten.
+     *
+     * @param sectors Anzahl der Sektoren
+     * @param stacks Anzahl der Stacks
+     * @return Kanten als Paare von Eckpunkt-Indizes
+     */
     private static int[][] generateEdges(int sectors, int stacks) {
         List<int[]> edges = new ArrayList<>();
         int cols = sectors + 1; // Spaltenanzahl
@@ -62,7 +86,13 @@ public class SphereMesh extends Mesh {
         return edges.toArray(new int[0][]);
     }
 
-    // Erzeugt die Dreiecksflächen für das Mesh
+    /**
+     * Erzeugt die Dreiecksflächen für das Mesh, zwei Dreiecke pro Viereck zwischen zwei Stacks und Sektoren.
+     *
+     * @param sectors Anzahl der Sektoren
+     * @param stacks Anzahl der Stacks
+     * @return Flächen als Tripel von Eckpunkt-Indizes
+     */
     private static int[][] generateFaces(int sectors, int stacks) {
         List<int[]> faces = new ArrayList<>();
         int cols = sectors + 1; // Spaltenanzahl

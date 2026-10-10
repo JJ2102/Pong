@@ -18,7 +18,11 @@ import java.awt.*;
 import java.net.URL;
 import java.util.List;
 
-// Hauptfenster des Spiels, verwaltet alle Szenen und Overlays sowie die Soundausgabe
+/**
+ * Hauptfenster des Spiels.
+ * Verwaltet über den {@link SceneManager} alle Szenen und Overlays und über den
+ * {@link SoundManager} die Soundausgabe.
+ */
 public class GameWindow extends JFrame {
     private final Dimension windowSize;
 
@@ -26,13 +30,20 @@ public class GameWindow extends JFrame {
     private final transient SceneManager sceneManager;
     private final transient SoundManager soundManager;
 
-    private boolean debug = false; // wird für debugausgaben genutzt
+    private boolean debug = false; // wird für Debugausgaben genutzt
 
     private ShatteredGlassOverlay shatteredGlassOverlay;
 
     private GameScene gameScene;
 
-    // Initialisiert das Hauptfenster, die Manager und lädt die Ressourcen
+    /**
+     * Initialisiert das Hauptfenster, die Manager und lädt die Ressourcen.
+     * <p>
+     * Am Ende wird das Fenster zentriert und sichtbar gemacht; als erste Szene wird das Hauptmenü angezeigt.
+     *
+     * @param windowSize Größe des Fensters (in der Regel die Bildschirmgröße)
+     * @throws IllegalArgumentException wenn ein Fenster-Icon nicht im Classpath gefunden wird
+     */
     public GameWindow(Dimension windowSize) {
         super("Pong 3D"); // Fenstertitel
         this.windowSize = windowSize; // Fenstergröße speichern
@@ -53,14 +64,20 @@ public class GameWindow extends JFrame {
 
         initManagers(); // Szenen und Sound laden
 
-        // Fenster Einstellungen Setzen
+        // Fenstereinstellungen setzen
         setDefaultWindowOptions();
         pack(); // Passt die Fenstergröße an den Inhalt an
         setLocationRelativeTo(null); // Zentriert das Fenster auf dem Bildschirm
         setVisible(true);
     }
 
-    // lädt das Fenster-Icon aus dem Classpath
+    /**
+     * Lädt ein Fenster-Icon aus dem Classpath.
+     *
+     * @param resourcePath Pfad der Bilddatei im Classpath (z. B. {@code "/icon/pong-16.png"})
+     * @return geladenes Icon-Bild
+     * @throws IllegalArgumentException wenn die Ressource nicht gefunden wird
+     */
     private Image loadIcon(String resourcePath) {
         URL url = GameWindow.class.getResource(resourcePath);
         if (url == null) {
@@ -69,10 +86,14 @@ public class GameWindow extends JFrame {
         return new ImageIcon(url).getImage();
     }
 
-    // Erstellt und registriert alle verfügbaren Szenen und Overlays, sowie die Soundeffekte
+    /**
+     * Erstellt und registriert alle verfügbaren Szenen und Overlays sowie die Soundeffekte.
+     * <p>
+     * Zusätzlich wird das Hauptmenü als aktive Szene gesetzt und die Hintergrundmusik gestartet.
+     */
     private void initManagers() {
         // ===== sceneManager =====
-        // Scenen Erstellen und für den SceneManager registrieren
+        // Szenen erstellen und für den SceneManager registrieren
         MenuScene menuScene = new MenuScene(this);
         sceneManager.registerScene(SceneType.MENU, menuScene);
 
@@ -110,24 +131,34 @@ public class GameWindow extends JFrame {
         soundManager.loadSoundEffect("win", "/sounds/win.wav");
         soundManager.loadSoundEffect("lose", "/sounds/lose.wav");
 
-        // Hintergrundmusik laden und sofort abspielen (Loopt standardmäßig)
+        // Hintergrundmusik laden und sofort abspielen (läuft standardmäßig in Schleife)
         soundManager.loadBackgroundMusic("bg1", "/musik/BgSong1.wav");
         soundManager.playBackgroundMusic("bg1");
     }
 
-    // Konfiguriert das Fenster (z.B. keine Ränder, nicht vergrößerbar, Schließverhalten)
+    /**
+     * Konfiguriert das Fenster: ohne Rahmen und Titelleiste, nicht vergrößerbar,
+     * und beim Schließen wird das Programm beendet.
+     */
     private void setDefaultWindowOptions() {
         setUndecorated(true); // Versteckt die Windows-Titelleiste
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Beendet das Programm beim Schließen
     }
 
-    // Startet das Spiel durch Wechsel zur Spielszene
+    /**
+     * Startet das Spiel durch Wechsel zur Spielszene.
+     */
     public void startGame() {
         sceneManager.setScene(SceneType.GAME);
     }
 
-    // Setzt das Spiel zurück und kehrt zum Hauptmenü zurück
+    /**
+     * Setzt das Spiel zurück und kehrt zum Hauptmenü zurück.
+     * <p>
+     * Dabei werden das Pause-, Sieg- und Niederlage-Overlay ausgeblendet und
+     * Punktestand sowie Positionen der {@link GameScene} zurückgesetzt.
+     */
     public void returnToMenu() {
         // Versteckt alle aktiven Spiel-Overlays
         sceneManager.hideOverlay(OverlayType.PAUSE);
@@ -141,13 +172,20 @@ public class GameWindow extends JFrame {
         sceneManager.setScene(SceneType.MENU);
     }
 
+    /**
+     * Wechselt zur Einstellungsszene.
+     */
     public void showSettings() {
         sceneManager.setScene(SceneType.SETTINGS);
     }
 
     // ===== Overlay Methoden =====
 
-    // Schaltet die Sichtbarkeit eines Overlays um (an/aus)
+    /**
+     * Schaltet die Sichtbarkeit eines Overlays um (an/aus).
+     *
+     * @param overlayId Typ des Overlays, das umgeschaltet werden soll
+     */
     public void toggleOverlay(OverlayType overlayId) {
         if (!sceneManager.isOverlayVisible(overlayId)) {
             sceneManager.showOverlay(overlayId);
@@ -156,7 +194,12 @@ public class GameWindow extends JFrame {
         }
     }
 
-    // Zeigt oder versteckt ein bestimmtes Overlay explizit
+    /**
+     * Zeigt oder versteckt ein bestimmtes Overlay explizit.
+     *
+     * @param overlayId Typ des Overlays
+     * @param show {@code true}, um das Overlay anzuzeigen, {@code false}, um es zu verstecken
+     */
     public void showOverlay(OverlayType overlayId, boolean show) {
         if (show) {
             sceneManager.showOverlay(overlayId);
@@ -186,6 +229,9 @@ public class GameWindow extends JFrame {
         return debug;
     }
 
+    /**
+     * Schaltet den Debug-Modus ein bzw. aus.
+     */
     public void toggleDebug() {
         this.debug = !this.debug;
     }

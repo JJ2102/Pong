@@ -4,9 +4,15 @@ import javax.swing.JButton;
 import java.awt.Color;
 import java.awt.Font;
 
-// Eigener JButton, der schon im einheitlichen Look des Spiels erstellt wird
+/**
+ * Eigener {@link JButton}, der direkt im einheitlichen Look des Spiels erstellt wird.
+ */
 public class Button extends JButton {
-    // Erstellt einen Button mit der Spielschrift und den festen Menü-Farben
+    /**
+     * Erstellt einen Button mit der Spielschrift und den festen Menüfarben.
+     *
+     * @param text Beschriftung des Buttons
+     */
     public Button(String text) {
         super(text);
         Font buttonFont = Globals.getMainFont(24); // Schrift aus Globals, damit alle Buttons gleich aussehen

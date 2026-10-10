@@ -4,9 +4,15 @@ import enums.OverlayType;
 import pong.GameWindow;
 import utility.Button;
 
-// Pausenmenü, das während des Spiels mit ESC eingeblendet wird
+/**
+ * Pausenmenü, das während des Spiels mit ESC eingeblendet wird.
+ */
 public class PauseOverlay extends Overlay {
-    // Erstellt die Buttons zum Fortsetzen, für den Rücksprung ins Menü und zum Beenden
+    /**
+     * Erstellt die Buttons zum Fortsetzen, für den Rücksprung ins Menü und zum Beenden.
+     *
+     * @param window Hauptfenster, über das Overlays und Szenen gewechselt werden
+     */
     public PauseOverlay(GameWindow window) {
         super(window, "Paused", 150, true, OverlayType.PAUSE); // pausiert das laufende Spiel im Hintergrund
 

@@ -4,9 +4,16 @@ import enums.OverlayType;
 import pong.GameWindow;
 import utility.Button;
 
-// Endbildschirm nach einer Partie, wird je nach übergebenem Typ als Sieg- oder Niederlage-Overlay genutzt
+/**
+ * Endbildschirm nach einer Partie, wird je nach übergebenem Typ als Sieg- oder Niederlage-Overlay genutzt.
+ */
 public class WinOverlay extends Overlay {
-    // Erstellt das Overlay mit passendem Titel und den Buttons für Revanche oder Hauptmenü
+    /**
+     * Erstellt das Overlay mit passendem Titel und den Buttons für Revanche oder Hauptmenü.
+     *
+     * @param window Hauptfenster, über das Overlays und Szenen gewechselt werden
+     * @param overlayType {@link OverlayType#LOSE} für den Niederlage-Titel, sonst Sieg-Titel
+     */
     public WinOverlay(GameWindow window, OverlayType overlayType) {
         // Der Titel hängt davon ab, ob dieses Overlay als LOSE oder als WIN registriert wurde
         super(window, overlayType == OverlayType.LOSE ? "You Lose!" : "You Win!", 150, true, overlayType);
