@@ -25,7 +25,7 @@ import java.awt.event.MouseEvent;
 public class GameScene extends Scene {
     private static final int WINNING_SCORE = 4; // Punkte, die zum Sieg nötig sind
     // volle Tiefe des Spielfelds (von Wand zu Wand)
-    private static final double BOX_DEPTH = 3;
+    private static final double BOX_DEPTH = 5;
     // halbe Tiefe (von der Mitte bis zu einer Wand), damit liegen die Wände bei z = ±BOX_HALF_DEPTH
     private static final double BOX_HALF_DEPTH = BOX_DEPTH / 2;
     // Z-Ebene, auf der sich das Spieler-Paddle bewegt (knapp vor der Wand)
