@@ -1,7 +1,7 @@
 # Mathematische Quellen
 ## Matrizen
 ### Allgemein
-- Matrix mal Matrix: https://page.math.tu-berlin.de/~moehring/Coma/Skript-I-Java/algorithmenaufarrays.pdf (6.2 Lineare Gleichungssysteme, Seite 121), 09.02.2026
+- Matrix mal Matrix: https://vhm.mathematik.uni-stuttgart.de/Vorlesungen/Lineare_Algebra/Folien_Matrix-Multiplikation.pdf, 10.10.2026
 - Matrix mal Vektor: https://wwwold.mathematik.tu-dortmund.de/lsviii/new/media/veranstaltungen/wise1112/linala/LA5.pdf (Definition 5.1), 09.02.2026
 - Inverse Matrix: https://www.mathcentre.ac.uk/resources/Engineering%20maths%20first%20aid%20kit/latexsource%20and%20diagrams/5_5.pdf, 09.03.2026
 

@@ -5,7 +5,7 @@
 ## Beschreibung
 Ein Einzelspieler 3D-Pong in Java Swing, inspiriert von klassischen Pong-Spielen,
 aber mit einer modernen selbstentwickelten perspektivischen 3D-Grafik. Das Ziel ist es, den Ball am gegnerischen Paddle vorbeizubringen.
-![game](aufnahmen/gameplay.gif)
+![game](aufnahmen/gameplay_veraltet.gif)
 
 ---
 

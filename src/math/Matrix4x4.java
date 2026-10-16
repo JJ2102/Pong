@@ -174,22 +174,22 @@ public class Matrix4x4 {
     /**
      * Erstellt eine Projektionsmatrix für die 3D-Projektion.
      * <pre>
-     * ⎡ fov  0   0  0 ⎤
-     * ⎢  0  fov  0  0 ⎥
+     * ⎡ zoom  0   0  0 ⎤
+     * ⎢  0  zoom  0  0 ⎥
      * ⎢  0   0   1  0 ⎥
      * ⎣  0   0   1  0 ⎦
      * </pre>
      *
-     * @param fov ein Zoom-Faktor, der die Breite des Sichtfeldes bestimmt (Field of View)
+     * @param zoomFaktor der die Breite des Sichtfeldes bestimmt
      * @return erstellte Projektionsmatrix
      */
     public static Matrix4x4
-    getProjectionMatrix(double fov) {
+    getProjectionMatrix(double zoomFaktor) {
         Matrix4x4 p = new Matrix4x4();
 
         // FOV-Werte setzen
-        p.setValue(0, 0, fov);
-        p.setValue(1, 1, fov);
+        p.setValue(0, 0, zoomFaktor);
+        p.setValue(1, 1, zoomFaktor);
 
         // Z- und W-Werte für Perspektive setzen
         p.setValue(2, 2, 1);

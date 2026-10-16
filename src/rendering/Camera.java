@@ -10,7 +10,7 @@ import math.Vector3;
  */
 public class Camera {
     private Vector3 position;
-    private double fov = 0.8; // Sichtfeld (Field of View)
+    private double zoomFaktor = 0.8;
 
     /**
      * Initialisiert die Kamera an der Standardposition {@code (0, 0, -5)}.
@@ -37,11 +37,11 @@ public class Camera {
         this.position = position;
     }
 
-    public double getFov() {
-        return fov;
+    public double getZoomFaktor() {
+        return zoomFaktor;
     }
 
-    public void setFov(double fov) {
-        this.fov = fov;
+    public void setZoomFaktor(double zoomFaktor) {
+        this.zoomFaktor = zoomFaktor;
     }
 }
