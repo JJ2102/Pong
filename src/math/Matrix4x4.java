@@ -180,16 +180,16 @@ public class Matrix4x4 {
      * ⎣  0   0   1  0 ⎦
      * </pre>
      *
-     * @param zoomFaktor der die Breite des Sichtfeldes bestimmt
+     * @param zoomFactor der die Breite des Sichtfeldes bestimmt
      * @return erstellte Projektionsmatrix
      */
     public static Matrix4x4
-    getProjectionMatrix(double zoomFaktor) {
+    getProjectionMatrix(double zoomFactor) {
         Matrix4x4 p = new Matrix4x4();
 
         // FOV-Werte setzen
-        p.setValue(0, 0, zoomFaktor);
-        p.setValue(1, 1, zoomFaktor);
+        p.setValue(0, 0, zoomFactor);
+        p.setValue(1, 1, zoomFactor);
 
         // Z- und W-Werte für Perspektive setzen
         p.setValue(2, 2, 1);

@@ -10,7 +10,7 @@ import math.Vector3;
  */
 public class Camera {
     private Vector3 position;
-    private double zoomFaktor = 0.8;
+    private double zoomFactor = 0.8;
 
     /**
      * Initialisiert die Kamera an der Standardposition {@code (0, 0, -5)}.
@@ -37,11 +37,11 @@ public class Camera {
         this.position = position;
     }
 
-    public double getZoomFaktor() {
-        return zoomFaktor;
+    public double getZoomFactor() {
+        return zoomFactor;
     }
 
-    public void setZoomFaktor(double zoomFaktor) {
-        this.zoomFaktor = zoomFaktor;
+    public void setZoomFactor(double zoomFactor) {
+        this.zoomFactor = zoomFactor;
     }
 }

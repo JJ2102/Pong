@@ -44,7 +44,7 @@ public final class RenderPipeline {
         Matrix4x4 viewMatrix = camera.getViewMatrix();
 
         // Schritt 3: Die Projektionsmatrix skaliert anhand des Sichtfelds (Field of View)
-        Matrix4x4 projectionMatrix = Matrix4x4.getProjectionMatrix(camera.getZoomFaktor());
+        Matrix4x4 projectionMatrix = Matrix4x4.getProjectionMatrix(camera.getZoomFactor());
 
         // Matrizen wirken von rechts nach links: erst die View-, dann die Projektionsmatrix
         return projectionMatrix.multiply(viewMatrix);
@@ -63,7 +63,7 @@ public final class RenderPipeline {
         Vector3 cameraPosition = camera.getPosition();
 
         double depth = planeZ - cameraPosition.getZ(); // Abstand der Z-Ebene zur Kamera
-        double factor = depth / camera.getZoomFaktor();
+        double factor = depth / camera.getZoomFactor();
 
 
         return new Vector3(
