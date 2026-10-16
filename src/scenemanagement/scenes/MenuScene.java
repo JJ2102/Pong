@@ -96,9 +96,9 @@ public class MenuScene extends ButtonScene {
         g2d.setStroke(new BasicStroke());
 
         // Paddles zuerst, der Ball wird darüber gezeichnet
-        leftPaddle.paintMe(g2d);
-        rightPaddle.paintMe(g2d);
-        ball.paintMe(g2d);
+        leftPaddle.draw(g2d);
+        rightPaddle.draw(g2d);
+        ball.draw(g2d);
     }
 
     /**

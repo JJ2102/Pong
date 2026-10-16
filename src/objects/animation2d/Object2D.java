@@ -46,7 +46,7 @@ public abstract class Object2D {
      *
      * @param g2d Grafikkontext, auf den gezeichnet wird
      */
-    public abstract void paintMe(Graphics2D g2d);
+    public abstract void draw(Graphics2D g2d);
 
     // ===== Getter und Setter =====
     /**

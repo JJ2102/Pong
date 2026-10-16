@@ -18,11 +18,11 @@ public class Paddle extends Entity {
      * Initialisiert das Paddle an der übergebenen Position mit Mesh und Hitbox.
      *
      * @param position Startposition des Paddles
-     * @param colorFace Füllfarbe der Fläche
-     * @param colorEdge Farbe der Kanten
+     * @param faceColor Füllfarbe der Fläche
+     * @param edgeColor Farbe der Kanten
      */
-    public Paddle(Vector3 position, Color colorFace, Color colorEdge) {
-        super(colorFace, colorEdge, new CuboidMesh(X_SIZE, Y_SIZE, 0));
+    public Paddle(Vector3 position, Color faceColor, Color edgeColor) {
+        super(faceColor, edgeColor, new CuboidMesh(X_SIZE, Y_SIZE, 0));
         getTransform().setPosition(position);
         setHitbox(new BoxHitbox(getTransform().getPosition(), new Vector3(X_SIZE, Y_SIZE, 0), Color.YELLOW));
     }

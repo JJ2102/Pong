@@ -14,8 +14,8 @@ import java.awt.Color;
  */
 public class Entity {
     private final Transform transform;
-    private final Color colorFace;
-    private final Color colorEdge;
+    private final Color faceColor;
+    private final Color edgeColor;
     private Mesh mesh;
     private BoxHitbox hitbox;
 
@@ -23,15 +23,15 @@ public class Entity {
      * Initialisiert eine Entität mit dem übergebenen Mesh und den angegebenen Farben an der Startposition.
      * Eine Hitbox ist zunächst nicht gesetzt.
      *
-     * @param colorFace Füllfarbe der Flächen
-     * @param colorEdge Farbe der Kanten
+     * @param faceColor Füllfarbe der Flächen
+     * @param edgeColor Farbe der Kanten
      * @param mesh geometrisches Modell der Entität
      */
-    public Entity(Color colorFace, Color colorEdge, Mesh mesh) {
+    public Entity(Color faceColor, Color edgeColor, Mesh mesh) {
         this.mesh = mesh;
         this.transform = new Transform();
-        this.colorFace = colorFace;
-        this.colorEdge = colorEdge;
+        this.faceColor = faceColor;
+        this.edgeColor = edgeColor;
         this.hitbox = null;
     }
 
@@ -68,7 +68,7 @@ public class Entity {
      * @return Füllfarbe der Flächen
      */
     public Color getFaceColor() {
-        return colorFace;
+        return faceColor;
     }
 
     /**
@@ -77,7 +77,7 @@ public class Entity {
      * @return Farbe der Kanten
      */
     public Color getEdgeColor() {
-        return colorEdge;
+        return edgeColor;
     }
 
     /**

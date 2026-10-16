@@ -27,7 +27,7 @@ public class Paddle2D extends Object2D {
      * @param g2d Grafikkontext, auf den gezeichnet wird
      */
     @Override
-    public void paintMe(Graphics2D g2d) {
+    public void draw(Graphics2D g2d) {
         double posX = getPosition().getX() - (double) width / 2;
         double posY = getPosition().getY() - (double) height / 2;
 
