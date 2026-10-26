@@ -5,7 +5,7 @@
 ## Beschreibung
 Ein Einzelspieler 3D-Pong in Java Swing, inspiriert von klassischen Pong-Spielen,
 aber mit einer modernen selbstentwickelten perspektivischen 3D-Grafik. Das Ziel ist es, den Ball am gegnerischen Paddle vorbeizubringen.
-![game](aufnahmen/gameplay_veraltet.gif)
+![game](aufnahmen/gameplay.png)
 
 ---
 
@@ -17,27 +17,35 @@ aber mit einer modernen selbstentwickelten perspektivischen 3D-Grafik. Das Ziel 
 ---
 
 ## Projektstruktur
-| Klasse           | Beschreibung                                                               |
-|------------------|----------------------------------------------------------------------------|
-| `BoxHitbox`      | Quaderförmige Hitbox zur Kollisionserkennung                               |
-| `Matrix4x4`      | 4×4-Matrix für Transformationsberechnungen                                 |
-| `Vektor3`        | 3-dimensionaler Vektor für Geschwindigkeit und Position                    |
-| `Entity`         | Oberklasse aller Objekte, besteht aus einem `Transform` und einem `Mesh`   |
-| `Mesh`           | Oberklasse für konkrete Formen wie `CuboidMesh` oder `SphereMesh`      |
-| `Transform`      | Speichert Rotation, Position und Skalierung als `Vektor3`                  |
-| `RenderPipeline` | Transformiert eine `Entity` so, dass sie projiziert werden kann            |
-| `Drawer`         | Zeichnet die projizierten Eckdaten auf das Panel                           |
-| `GameScene`      | Koordiniert und speichert die Spieldaten                                   |
-| `SceneManager`   | Koordiniert zwischen den verschiedenen Szenen (Menü, Spiel, Einstellungen) |
-| `SoundManager`   | Steuert die Soundwiedergabe                                                |
+| Klasse                       | Beschreibung                                                                         |
+|------------------------------|--------------------------------------------------------------------------------------|
+| `BoxHitbox`                  | Quaderförmige Hitbox zur Kollisionserkennung                                         |
+| `Matrix4x4`                  | 4×4-Matrix für Transformationsberechnungen                                           |
+| `Vector3`                    | 3-dimensionaler Vektor für Geschwindigkeit und Position                              |
+| `Entity`                     | Oberklasse aller Objekte, besteht aus einem `Transform`, einem `Mesh` und Farben     |
+| `Ball`, `Player`, `Enemy`    | Spielobjekte: Ball, Spieler-Paddle und KI-Paddle                                     |
+| `Mesh`                       | Oberklasse für konkrete Formen wie `CuboidMesh` oder `SphereMesh`                    |
+| `Transform`                  | Speichert Rotation, Position und Skalierung als `Vector3`                            |
+| `Camera`                     | Blickpunkt mit Position und Zoom-Faktor                                              |
+| `RenderPipeline`             | Berechnet die Model-View-Projektions-Matrizen aus `Transform` und `Camera`           |
+| `Renderer`                   | Projiziert die Eckpunkte einer `Entity` auf den Bildschirm und zeichnet sie          |
+| `Drawer`                     | Hilfsklasse zum Zeichnen von 2D-Polygonen, Linien und Text                           |
+| `GameScene`                  | Koordiniert und speichert die Spieldaten                                             |
+| `SceneManager`               | Koordiniert zwischen den verschiedenen Szenen (Menü, Spiel, Einstellungen)           |
+| `Overlay`                    | Oberklasse der Overlays über der Spielszene (z.B. Pause, Sieg, Schwierigkeit)        |
+| `SoundManager`               | Steuert die Soundwiedergabe                                                          |
 
 ---
 
 ## Voraussetzungen & Installation
 
+### Spielen (Windows, ohne Java-Installation)
+1. [ZIP-Datei von GitHub herunterladen](https://github.com/JJ2102/Pong/releases/download/v1.1/Pong-Windows.zip)
+2. Entpacken und `Pong/Pong.exe` starten
+
 ### Spielen (JAR)
 1. Java 26 oder höher installieren
-2. [JAR-Datei von GitHub herunterladen](https://github.com/JJ2102/Pong/releases/download/v1.0/Pong.jar)
+2. [JAR-Datei von GitHub herunterladen](https://github.com/JJ2102/Pong/releases/download/v1.1/Pong.jar)
 3. JAR-Datei mit Doppelklick oder über die Kommandozeile ausführen:
    ```bash
    java -jar Pong.jar

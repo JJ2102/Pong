@@ -105,7 +105,7 @@ public class GameScene extends Scene {
 
         // Score Display (7-Segment) konfigurieren und in der Welt platzieren
         scoreDisplay = new SevenSegmentDisplay();
-        scoreDisplay.getTransform().setScale(new Vector3(0.5, 0.5, 0.5));
+        scoreDisplay.getTransform().setScale(new Vector3(1.5, 1.5, 1.5));
         // hängt an der linken Seitenwand, also bei der halben Boxbreite
         scoreDisplay.getTransform().setPosition(new Vector3(-box.getSize().getX() / 2 + 0.1, 0, -0.5));
         scoreDisplay.getTransform().setRotation(new Vector3(0, Math.toRadians(-90), 0));
