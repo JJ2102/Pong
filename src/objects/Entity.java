@@ -1,7 +1,7 @@
 package objects;
 
-import objects.hitboxes.BoxHitbox;
 import math.Vector3;
+import objects.hitboxes.BoxHitbox;
 import rendering.Mesh;
 import rendering.Transform;
 
@@ -35,47 +35,24 @@ public class Entity {
         this.hitbox = null;
     }
 
-    /**
-     * Gibt die Transformationsdaten (Position, Rotation, Skalierung) zurück.
-     *
-     * @return {@link Transform} der Entität
-     */
+    // ===== Getter und Setter =====
+
     public Transform getTransform() {
         return transform;
     }
 
-    /**
-     * Gibt das zugeordnete Mesh zurück.
-     *
-     * @return {@link Mesh} der Entität
-     */
     public Mesh getMesh() {
         return mesh;
     }
 
-    /**
-     * Weist der Entität ein neues Mesh zu.
-     *
-     * @param mesh neues {@link Mesh}
-     */
     public final void setMesh(Mesh mesh) {
         this.mesh = mesh;
     }
 
-    /**
-     * Gibt die Füllfarbe (Face) zurück.
-     *
-     * @return Füllfarbe der Flächen
-     */
     public Color getFaceColor() {
         return faceColor;
     }
 
-    /**
-     * Gibt die Kantenfarbe (Edge) zurück.
-     *
-     * @return Farbe der Kanten
-     */
     public Color getEdgeColor() {
         return edgeColor;
     }
@@ -89,17 +66,12 @@ public class Entity {
         return hitbox;
     }
 
-    /**
-     * Weist der Entität eine neue Hitbox zu.
-     *
-     * @param hitbox neue {@link BoxHitbox}
-     */
     public final void setHitbox(BoxHitbox hitbox) {
         this.hitbox = hitbox;
     }
 
     /**
-     * Hilfsmethode, die die aktuelle Position aus dem {@link Transform} zurückgibt.
+     * Gibt die aktuelle Position aus dem {@link Transform} zurück.
      *
      * @return aktuelle Position der Entität
      */

@@ -37,6 +37,6 @@ public class WinOverlay extends Overlay {
         addComponent(playAgainButton);
         addComponent(menuButton);
 
-        positionComponents(); // ordnet Titel und Buttons untereinander an
+        positionComponents(); // Titel und Buttons untereinander anordnen
     }
 }

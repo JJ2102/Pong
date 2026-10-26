@@ -14,11 +14,11 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Overlay, das einen zersplitterten Bildschirm zeichnet, wenn der Gegner einen Punkt macht.
+ * Overlay, das einen zersplitterten Bildschirm zeichnet, wenn die CPU einen Punkt macht.
  */
 public class ShatteredGlassOverlay extends Overlay {
-    private final transient List<Line2D> cracks = new ArrayList<>(); // alle Risslinien, die gezeichnet werden
-    private final transient Random random = new Random(); // sorgt dafür, dass jeder Sprung anders aussieht
+    private final transient List<Line2D> cracks = new ArrayList<>(); // Alle Risslinien, die gezeichnet werden
+    private final transient Random random = new Random(); // Sorgt dafür, dass jeder Sprung anders aussieht
 
     /**
      * Erstellt ein komplett durchsichtiges Overlay ohne Titel, das keine Eingaben abfängt.
@@ -27,7 +27,7 @@ public class ShatteredGlassOverlay extends Overlay {
      */
     public ShatteredGlassOverlay(GameWindow window) {
         super(window, "", 0, false, OverlayType.SHATTERED_GLASS); // Transparenz 0 = kein eingefärbter Hintergrund
-        setFocusable(false); // darf den Tastaturfokus nicht vom Spiel wegnehmen
+        setFocusable(false); // Darf den Tastaturfokus nicht vom Spiel wegnehmen
     }
 
     /**
@@ -42,7 +42,7 @@ public class ShatteredGlassOverlay extends Overlay {
      * @param height Höhe der Zeichenfläche in Pixeln
      */
     public void generateShatter(int centerX, int centerY, int width, int height) {
-        cracks.clear(); // altes Muster verwerfen
+        cracks.clear(); // Altes Muster verwerfen
         int numRadialLines = 15 + random.nextInt(15); // Anzahl der Hauptstrahlen
 
         // Jeder Durchlauf erzeugt einen Strahl vom Einschlagpunkt nach außen
@@ -92,7 +92,7 @@ public class ShatteredGlassOverlay extends Overlay {
 
         // Glas-Optik: Hellgrau/Weiß mit leichter Transparenz
         g2.setColor(new Color(200, 230, 255, 150));
-        g2.setStroke(new BasicStroke(1.2f)); // dünne Linien wirken eher wie feine Risse
+        g2.setStroke(new BasicStroke(1.2f)); // Dünne Linien wirken eher wie feine Risse
 
         // Jede gespeicherte Linie einzeln zeichnen
         for (Line2D crack : cracks) {

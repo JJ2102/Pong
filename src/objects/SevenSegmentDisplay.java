@@ -5,10 +5,9 @@ import meshes.SevenSegmentMeshes;
 import java.awt.Color;
 
 /**
- * Stellt die 3D-Punkteanzeige im Stil einer Sieben-Segment-Anzeige über dem Spielfeld dar.
+ * Stellt die 3D-Punkteanzeige im Stil einer Siebensegmentanzeige über dem Spielfeld dar.
  */
 public class SevenSegmentDisplay extends Entity {
-
     /**
      * Initialisiert das Display-Mesh mit dem Punktestand 0:0.
      */

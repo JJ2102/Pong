@@ -12,14 +12,15 @@ import java.util.List;
  * Eine Instanz sammelt die Geometrie für genau eine Anzeige, erzeugt wird sie über {@link #getDisplayMesh}.
  */
 public final class SevenSegmentMeshes {
-    // ===== NUR DIESE WERTE ANPASSEN =====
+    // ===== Anpassbare Maße =====
+
     private static final float DIGIT_WIDTH = 0.6f;
     private static final float DIGIT_HEIGHT = 1.0f;
     private static final float SEGMENT_THICKNESS = 0.10f;
     private static final float SEGMENT_GAP = 0.02f;
-    // ====================================
 
     // ===== Interne Konstanten zur Positionierung =====
+
     private static final float HORIZONTAL_SEGMENT_WIDTH = DIGIT_WIDTH * 0.85f;
     private static final float VERTICAL_SEGMENT_HEIGHT = (DIGIT_HEIGHT - SEGMENT_THICKNESS * 3 - SEGMENT_GAP * 2) / 2f;
 
@@ -45,6 +46,7 @@ public final class SevenSegmentMeshes {
     private static final float CHARACTER_SPACING = 0.75f;
 
     // ===== Segment-Definitionen =====
+
     /**
      * Beschreibt ein einzelnes Segment als Rechteck um seinen Mittelpunkt.
      * Die Ausrichtung entscheidet, an welchen Ecken es abgeschrägt wird.
@@ -86,6 +88,7 @@ public final class SevenSegmentMeshes {
     };
 
     // ===== Aufbau der Anzeige =====
+
     // Gesammelte Geometrie, während die Anzeige Stück für Stück entsteht
     private final List<Vector3> vertices = new ArrayList<>();
     private final List<int[]> edges = new ArrayList<>();

@@ -8,7 +8,7 @@ public class SoundSettings {
     private float effectsVolume = 0.5f; // Lautstärke für Soundeffekte (0.0 bis 1.0)
     private float musicVolume = 0.1f; // Lautstärke für Hintergrundmusik (0.0 bis 1.0)
 
-    // Effects Volume
+    // ===== Effekt-Lautstärke =====
 
     /**
      * Gibt die Lautstärke der Soundeffekte zurück.
@@ -28,7 +28,7 @@ public class SoundSettings {
         this.effectsVolume = clamp(effectsVolume);
     }
 
-    // Music Volume
+    // ===== Musik-Lautstärke =====
 
     /**
      * Gibt die Lautstärke der Hintergrundmusik zurück.
@@ -47,6 +47,8 @@ public class SoundSettings {
     public void setMusicVolume(float musicVolume) {
         this.musicVolume = clamp(musicVolume);
     }
+
+    // ===== Hilfsmethoden =====
 
     /**
      * Begrenzt eine Lautstärke auf den Bereich [0.0, 1.0].

@@ -1,8 +1,8 @@
 package objects;
 
-import objects.hitboxes.BoxHitbox;
 import math.Vector3;
 import meshes.SphereMesh;
+import objects.hitboxes.BoxHitbox;
 import utility.Globals;
 
 import java.awt.Color;
@@ -15,13 +15,14 @@ import java.awt.Color;
 public class Ball extends Entity {
     private static final double RADIUS = 0.2;
 
+    // Geschwindigkeit
+    private static final double MIN_SPEED = 0.03;
+    private static final double MAX_SPEED = 0.05;
+    private static final double SPEED_INCREASE_PER_HIT = 0.001; // Zuwachs pro Paddle-Treffer und Achse
+
     // Grenzen für den Mittelpunkt des Balls, damit sein Rand genau die Wand berührt
     private final double maxX;
     private final double maxY;
-
-    // Speed
-    private final double maxSpeed = 0.05;
-    private final double minSpeed = 0.03;
 
     private Vector3 velocity;
 
@@ -47,13 +48,13 @@ public class Ball extends Entity {
     }
 
     /**
-     * Erzeugt einen zufälligen Geschwindigkeitswert zwischen {@code minSpeed} und {@code maxSpeed}
+     * Erzeugt einen zufälligen Geschwindigkeitswert zwischen {@code MIN_SPEED} und {@code MAX_SPEED}
      * mit zufälligem Vorzeichen.
      *
      * @return zufällige Geschwindigkeit für eine Achse
      */
     private double randomSpeed() {
-        return Globals.randomSpeed(minSpeed, maxSpeed);
+        return Globals.randomSpeed(MIN_SPEED, MAX_SPEED);
     }
 
     /**
@@ -74,8 +75,8 @@ public class Ball extends Entity {
     /**
      * Prüft auf Kollision mit den übergebenen Paddles.
      * <p>
-     * Bei einem Treffer wird der Betrag der Geschwindigkeit auf jeder Achse um {@code 0.001} erhöht
-     * und die Z-Richtung umgekehrt.
+     * Bei einem Treffer wird der Betrag der Geschwindigkeit auf jeder Achse um {@code SPEED_INCREASE_PER_HIT}
+     * erhöht und die Z-Richtung umgekehrt.
      *
      * @param paddles Hitboxen der Paddles, mit denen die Kollision geprüft wird
      * @return {@code true}, wenn der Ball ein Paddle getroffen hat, sonst {@code false}
@@ -83,11 +84,11 @@ public class Ball extends Entity {
     public boolean paddleHit(BoxHitbox[] paddles) {
         for (BoxHitbox paddle : paddles) {
             if (getHitbox().intersects(paddle)) {
-                // jeden hit plus 0.001 speed
-                velocity.setX(velocity.getX() + Math.signum(velocity.getX()) * 0.001);
-                velocity.setY(velocity.getY() + Math.signum(velocity.getY()) * 0.001);
-                velocity.setZ(velocity.getZ() + Math.signum(velocity.getZ()) * 0.001);
-                velocity.setZ(-velocity.getZ()); // Richtung ändern
+                // Jeder Treffer macht den Ball etwas schneller, die Richtung bleibt dabei erhalten
+                velocity.setX(velocity.getX() + Math.signum(velocity.getX()) * SPEED_INCREASE_PER_HIT);
+                velocity.setY(velocity.getY() + Math.signum(velocity.getY()) * SPEED_INCREASE_PER_HIT);
+                velocity.setZ(velocity.getZ() + Math.signum(velocity.getZ()) * SPEED_INCREASE_PER_HIT);
+                velocity.setZ(-velocity.getZ()); // Z-Richtung umkehren
 
                 return true;
             }
@@ -121,17 +122,13 @@ public class Ball extends Entity {
      * @param min untere Grenze
      * @param max obere Grenze
      * @param value zu prüfender Wert
-     * @return {@code true}, wenn der Wert kleiner als {@code min} oder größer als {@code max} ist
+     * @return {@code true}, wenn der Wert kleiner als {@code min} oder größer als {@code max} ist,
+     *         sonst {@code false}
      */
     private boolean isOut(double min, double max, double value) {
         return value > max || value < min;
     }
 
-    /**
-     * Liefert eine Debug-Ausgabe des Balls mit Position und Geschwindigkeit.
-     *
-     * @return Textdarstellung des Balls
-     */
     @Override
     public String toString() {
         return "[Ball] Pos: " + getTransform().getPosition() + " Speed: " + velocity;

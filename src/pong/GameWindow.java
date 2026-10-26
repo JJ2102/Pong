@@ -13,8 +13,10 @@ import scenemanagement.scenes.MenuScene;
 import scenemanagement.scenes.SettingsScene;
 import sound.SoundManager;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import java.awt.Dimension;
+import java.awt.Image;
 import java.net.URL;
 import java.util.List;
 
@@ -30,7 +32,7 @@ public class GameWindow extends JFrame {
     private final transient SceneManager sceneManager;
     private final transient SoundManager soundManager;
 
-    private boolean debug = false; // wird für Debugausgaben genutzt
+    private boolean debug = false; // Wird für Debugausgaben genutzt
 
     private ShatteredGlassOverlay shatteredGlassOverlay;
 
@@ -45,8 +47,8 @@ public class GameWindow extends JFrame {
      * @throws IllegalArgumentException wenn ein Fenster-Icon nicht im Classpath gefunden wird
      */
     public GameWindow(Dimension windowSize) {
-        super("Pong 3D"); // Fenstertitel
-        this.windowSize = windowSize; // Fenstergröße speichern
+        super("Pong 3D");
+        this.windowSize = windowSize;
 
         // Fenster-Icon in mehreren Größen setzen; Windows wählt die passende für Titelleiste, Taskleiste und Alt-Tab
         setIconImages(List.of(
@@ -64,10 +66,9 @@ public class GameWindow extends JFrame {
 
         initManagers(); // Szenen und Sound laden
 
-        // Fenstereinstellungen setzen
         setDefaultWindowOptions();
-        pack(); // Passt die Fenstergröße an den Inhalt an
-        setLocationRelativeTo(null); // Zentriert das Fenster auf dem Bildschirm
+        pack(); // Fenstergröße an den Inhalt anpassen
+        setLocationRelativeTo(null); // Fenster auf dem Bildschirm zentrieren
         setVisible(true);
     }
 
@@ -81,7 +82,7 @@ public class GameWindow extends JFrame {
     private Image loadIcon(String resourcePath) {
         URL url = GameWindow.class.getResource(resourcePath);
         if (url == null) {
-            throw new IllegalArgumentException("Icon: Resource Not Found: " + resourcePath);
+            throw new IllegalArgumentException("Icon nicht gefunden: " + resourcePath);
         }
         return new ImageIcon(url).getImage();
     }
@@ -92,8 +93,7 @@ public class GameWindow extends JFrame {
      * Zusätzlich wird das Hauptmenü als aktive Szene gesetzt und die Hintergrundmusik gestartet.
      */
     private void initManagers() {
-        // ===== sceneManager =====
-        // Szenen erstellen und für den SceneManager registrieren
+        // Szenen erstellen und beim SceneManager registrieren
         MenuScene menuScene = new MenuScene(this);
         sceneManager.registerScene(SceneType.MENU, menuScene);
 
@@ -124,7 +124,6 @@ public class GameWindow extends JFrame {
 
         sceneManager.setScene(SceneType.MENU);
 
-        // ===== soundManager =====
         // Kurze Soundeffekte in den Speicher laden
         soundManager.loadSoundEffect("pong", "/sounds/pong.wav");
         soundManager.loadSoundEffect("score", "/sounds/score.wav");
@@ -141,9 +140,9 @@ public class GameWindow extends JFrame {
      * und beim Schließen wird das Programm beendet.
      */
     private void setDefaultWindowOptions() {
-        setUndecorated(true); // Versteckt die Windows-Titelleiste
+        setUndecorated(true); // Windows-Titelleiste ausblenden
         setResizable(false);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Beendet das Programm beim Schließen
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     /**
@@ -160,15 +159,14 @@ public class GameWindow extends JFrame {
      * Punktestand sowie Positionen der {@link GameScene} zurückgesetzt.
      */
     public void returnToMenu() {
-        // Versteckt alle aktiven Spiel-Overlays
+        // Alle aktiven Spiel-Overlays ausblenden
         sceneManager.hideOverlay(OverlayType.PAUSE);
         sceneManager.hideOverlay(OverlayType.WIN);
         sceneManager.hideOverlay(OverlayType.LOSE);
 
-        // Setzt Punktestand und Positionen zurück
+        // Punktestand und Positionen zurücksetzen
         gameScene.reset();
 
-        // Zeigt wieder das Hauptmenü an
         sceneManager.setScene(SceneType.MENU);
     }
 
@@ -179,36 +177,37 @@ public class GameWindow extends JFrame {
         sceneManager.setScene(SceneType.SETTINGS);
     }
 
-    // ===== Overlay Methoden =====
+    // ===== Overlay-Methoden =====
 
     /**
      * Schaltet die Sichtbarkeit eines Overlays um (an/aus).
      *
-     * @param overlayId Typ des Overlays, das umgeschaltet werden soll
+     * @param overlayType Typ des Overlays, das umgeschaltet werden soll
      */
-    public void toggleOverlay(OverlayType overlayId) {
-        if (!sceneManager.isOverlayVisible(overlayId)) {
-            sceneManager.showOverlay(overlayId);
+    public void toggleOverlay(OverlayType overlayType) {
+        if (!sceneManager.isOverlayVisible(overlayType)) {
+            sceneManager.showOverlay(overlayType);
         } else {
-            sceneManager.hideOverlay(overlayId);
+            sceneManager.hideOverlay(overlayType);
         }
     }
 
     /**
      * Zeigt oder versteckt ein bestimmtes Overlay explizit.
      *
-     * @param overlayId Typ des Overlays
+     * @param overlayType Typ des Overlays
      * @param show {@code true}, um das Overlay anzuzeigen, {@code false}, um es zu verstecken
      */
-    public void showOverlay(OverlayType overlayId, boolean show) {
+    public void showOverlay(OverlayType overlayType, boolean show) {
         if (show) {
-            sceneManager.showOverlay(overlayId);
+            sceneManager.showOverlay(overlayType);
         } else {
-            sceneManager.hideOverlay(overlayId);
+            sceneManager.hideOverlay(overlayType);
         }
     }
 
     // ===== Getter und Setter =====
+
     public Dimension getWindowSize() {
         return windowSize;
     }

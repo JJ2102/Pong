@@ -9,7 +9,7 @@ public class Vector3 {
     private double z; // Z-Koordinate
 
     /**
-     * Konstruktor zur Initialisierung des 3D-Vektors.
+     * Initialisiert den 3D-Vektor.
      *
      * @param x X-Koordinate
      * @param y Y-Koordinate
@@ -22,6 +22,7 @@ public class Vector3 {
     }
 
     // ===== Getter und Setter =====
+
     public double getX() {
         return x;
     }
@@ -56,8 +57,8 @@ public class Vector3 {
      * @throws IllegalArgumentException wenn der Divisor 0 ist
      */
     public Vector3 divide(double divisor) {
-        if  (divisor == 0.0) {
-            throw new IllegalArgumentException("Division durch Null ist nicht erlaubt.");
+        if (divisor == 0.0) {
+            throw new IllegalArgumentException("Division durch Null ist nicht erlaubt");
         }
         return new Vector3(x / divisor, y / divisor, z / divisor);
     }
@@ -87,6 +88,7 @@ public class Vector3 {
     }
 
     // ===== Hilfsmethoden =====
+
     @Override
     public String toString() {
         return "( " + x + ", " + y + ", " + z + " )";

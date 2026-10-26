@@ -49,7 +49,7 @@ public class Ball2D extends Object2D {
     private Vector2 getNewVelocity() {
         double speed = MIN_SPEED + Math.random() * (MAX_SPEED - MIN_SPEED);
         double angle = (Math.random() * 2 - 1) * MAX_ANGLE; // -45° bis +45°
-        double directionX = Math.random() < 0.5 ? -1 : 1; // zufällig nach links oder rechts
+        double directionX = Math.random() < 0.5 ? -1 : 1; // Zufällig nach links oder rechts
 
         return new Vector2(directionX * speed * Math.cos(angle), speed * Math.sin(angle));
     }

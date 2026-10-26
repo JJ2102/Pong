@@ -19,7 +19,7 @@ import java.util.List;
  * aus Sicht der {@link Camera}.
  */
 public class Renderer {
-    private static final Stroke EDGE_STROKE = new BasicStroke(1.0f);   // Normale Objektkanten sind 1px dünn
+    private static final Stroke EDGE_STROKE = new BasicStroke(1.0f); // Normale Objektkanten sind 1 px dünn
 
     private final Camera camera; // Blickpunkt, aus dem alle Objekte gezeichnet werden
 
@@ -52,7 +52,7 @@ public class Renderer {
         this.width = width;
         this.height = height;
 
-        // 1. Kleinster Wert von Breite und Höhe mindestens 1 wird genommen und halbiert
+        // Kleinster Wert von Breite und Höhe mindestens 1 wird genommen und halbiert
         this.scale = Math.max(1, Math.min(width, height)) / 2.0;
     }
 
@@ -79,9 +79,9 @@ public class Renderer {
      * @return Position auf dem Bildschirm in Pixeln
      */
     private Vector2 project(Vector3 vector) {
-        // halbe Fensterbreite + Versatz relativ zur Fenstermitte
+        // Halbe Fensterbreite + Versatz relativ zur Fenstermitte
         double screenX = (width / 2.0 + vector.getX() * scale);
-        // halbe Fensterhöhe - Versatz relativ zur Fenstermitte (y-Achse ist in Swing nach unten gerichtet)
+        // Halbe Fensterhöhe - Versatz relativ zur Fenstermitte (y-Achse ist in Swing nach unten gerichtet)
         double screenY = (height / 2.0 - vector.getY() * scale);
         return new Vector2(screenX, screenY);
     }
@@ -145,13 +145,13 @@ public class Renderer {
 
         Mesh mesh = entity.getMesh();
 
-        // --- Render-Pipeline durchlaufen ---
+        // Render-Pipeline durchlaufen
         // 1. Model-, View- und Projektionsmatrix einmal pro Objekt zu einer Matrix kombinieren
         Matrix4x4 modelViewProjection = RenderPipeline.getModelViewProjection(entity.getTransform(), camera);
         // 2. Alle Eckpunkte damit auf 2D-Pixel-Koordinaten bringen
         Vector2[] projectedVertices = projectAll(mesh.getVertices(), modelViewProjection);
 
-        // --- Gefüllte Flächen zeichnen ---
+        // Gefüllte Flächen zeichnen
         if (renderFaces) {
             for (int[] face : mesh.getFaces()) {
                 // Verbindet die projizierten 2D-Eckpunkte zu einem Polygon und füllt es mit Farbe
@@ -160,7 +160,7 @@ public class Renderer {
             }
         }
 
-        // --- Kanten (Wireframe) zeichnen ---
+        // Kanten (Wireframe) zeichnen
         g.setStroke(edgeStroke); // Linienstärke einmal für alle Kanten dieses Objekts setzen
         for (int[] edge : mesh.getEdges()) {
             // Verbindet Start- und Endpunkt mit einer farbigen Linie
@@ -168,7 +168,7 @@ public class Renderer {
         }
     }
 
-    // ===== Utility-Methoden =====
+    // ===== Hilfsmethoden =====
 
     /**
      * Konvertiert 3D-Weltkoordinaten in 2D-Bildschirmkoordinaten.

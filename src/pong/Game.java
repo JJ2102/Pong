@@ -8,7 +8,6 @@ import java.awt.Toolkit;
  * Ermittelt die Bildschirmgröße und öffnet damit das Hauptfenster {@link GameWindow}.
  */
 public class Game {
-    // Bildschirmgröße ermitteln
     private static final Dimension SCREEN_SIZE = Toolkit.getDefaultToolkit().getScreenSize();
 
     /**
@@ -17,6 +16,6 @@ public class Game {
      * @param args Kommandozeilenargumente (werden nicht verwendet)
      */
     public static void main(String[] args) {
-        new GameWindow(SCREEN_SIZE); // GameWindow mit Bildschirmgröße erstellen
+        new GameWindow(SCREEN_SIZE);
     }
 }

@@ -10,7 +10,7 @@ import java.awt.Graphics2D;
  * Jedes Objekt besitzt eine Größe und eine Position, die seinen Mittelpunkt beschreibt.
  */
 public abstract class Object2D {
-    protected final Dimension windowSize; // zeichenbare Fläche, begrenzt alle Objekte
+    protected final Dimension windowSize; // Zeichenbare Fläche, begrenzt alle Objekte
     protected final int width;
     protected final int height;
     protected Vector2 position; // Mittelpunkt des Objekts
@@ -49,20 +49,11 @@ public abstract class Object2D {
     public abstract void draw(Graphics2D g2d);
 
     // ===== Getter und Setter =====
-    /**
-     * Gibt die aktuelle Position (Mittelpunkt) des Objekts zurück.
-     *
-     * @return aktuelle Position des Objekts
-     */
+
     public Vector2 getPosition() {
         return this.position;
     }
 
-    /**
-     * Setzt das Objekt auf eine neue Position.
-     *
-     * @param position neue Position (Mittelpunkt) des Objekts
-     */
     public void setPosition(Vector2 position) {
         this.position = position;
     }

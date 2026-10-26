@@ -22,7 +22,7 @@ public class Matrix4x4 {
      * @return eine 4x4 Einheitsmatrix
      */
     public static Matrix4x4 getUnitMatrix() {
-        Matrix4x4 unitMatrix = new Matrix4x4(); // neue Matrix erstellen
+        Matrix4x4 unitMatrix = new Matrix4x4();
         // Hauptdiagonale auf 1 setzen
         unitMatrix.matrix[0][0] = 1;
         unitMatrix.matrix[1][1] = 1;
@@ -32,6 +32,7 @@ public class Matrix4x4 {
     }
 
     // ===== Matrix-Generatoren =====
+
     /**
      * Erstellt eine Transformationsmatrix
      * aus den Positions-, Rotations- und Skalierungswerten eines {@link Transform}-Objekts.
@@ -49,8 +50,8 @@ public class Matrix4x4 {
 
         // Einzelne Transformationsmatrizen erstellen
         Matrix4x4 translationMatrix = getTranslationMatrix(position.getX(), position.getY(), position.getZ());
-        Matrix4x4 rotationMatrix = Matrix4x4.getRotationMatrix(rotation.getX(), rotation.getY(), rotation.getZ());
-        Matrix4x4 scaleMatrix = Matrix4x4.getScalingMatrix(scale.getX(), scale.getY(), scale.getZ());
+        Matrix4x4 rotationMatrix = getRotationMatrix(rotation.getX(), rotation.getY(), rotation.getZ());
+        Matrix4x4 scaleMatrix = getScalingMatrix(scale.getX(), scale.getY(), scale.getZ());
 
         // Model-Matrix: Alle Objekt-Transformationen (Translation * Rotation * Scale)
         return translationMatrix.multiply(rotationMatrix).multiply(scaleMatrix);
@@ -89,8 +90,8 @@ public class Matrix4x4 {
      * @return erstellte Translationsmatrix
      */
     private static Matrix4x4 getTranslationMatrix(double tx, double ty, double tz) {
-        Matrix4x4 translationMatrix = getUnitMatrix(); // startet mit der Einheitsmatrix
-        // Verschiebung-Werte in die vierte Spalte eintragen
+        Matrix4x4 translationMatrix = getUnitMatrix(); // Startet mit der Einheitsmatrix
+        // Verschiebungswerte in die vierte Spalte eintragen
         translationMatrix.setValue(0, 3, tx);
         translationMatrix.setValue(1, 3, ty);
         translationMatrix.setValue(2, 3, tz);
@@ -163,7 +164,7 @@ public class Matrix4x4 {
      * @return erstellte Skalierungsmatrix
      */
     private static Matrix4x4 getScalingMatrix(double sx, double sy, double sz) {
-        Matrix4x4 scalingMatrix = getUnitMatrix(); // startet mit der Einheitsmatrix
+        Matrix4x4 scalingMatrix = getUnitMatrix(); // Startet mit der Einheitsmatrix
         // Skalierungsfaktoren auf der Hauptdiagonale setzen
         scalingMatrix.setValue(0, 0, sx);
         scalingMatrix.setValue(1, 1, sy);
@@ -180,14 +181,13 @@ public class Matrix4x4 {
      * ⎣  0   0   1  0 ⎦
      * </pre>
      *
-     * @param zoomFactor der die Breite des Sichtfeldes bestimmt
+     * @param zoomFactor Zoomfaktor, der die Breite des Sichtfelds bestimmt
      * @return erstellte Projektionsmatrix
      */
-    public static Matrix4x4
-    getProjectionMatrix(double zoomFactor) {
+    public static Matrix4x4 getProjectionMatrix(double zoomFactor) {
         Matrix4x4 p = new Matrix4x4();
 
-        // FOV-Werte setzen
+        // Zoomfaktor setzen
         p.setValue(0, 0, zoomFactor);
         p.setValue(1, 1, zoomFactor);
 
@@ -199,6 +199,7 @@ public class Matrix4x4 {
     }
 
     // ===== Matrix-Operationen =====
+
     /**
      * Multipliziert diese Matrix mit einer anderen Matrix.
      *
@@ -229,13 +230,13 @@ public class Matrix4x4 {
      * @return neuer, mit der Matrix multiplizierter Vektor
      */
     public Vector3 multiply(Vector3 vector) {
-        // neue Komponenten inklusive homogener Koordinaten berechnen
+        // Neue Komponenten inklusive homogener Koordinaten berechnen
         double x = vector.getX() * matrix[0][0] + vector.getY() * matrix[0][1] + vector.getZ() * matrix[0][2] + matrix[0][3];
         double y = vector.getX() * matrix[1][0] + vector.getY() * matrix[1][1] + vector.getZ() * matrix[1][2] + matrix[1][3];
         double z = vector.getX() * matrix[2][0] + vector.getY() * matrix[2][1] + vector.getZ() * matrix[2][2] + matrix[2][3];
         double w = vector.getX() * matrix[3][0] + vector.getY() * matrix[3][1] + vector.getZ() * matrix[3][2] + matrix[3][3];
 
-        // Normalisierung, falls nötig
+        // Perspektivische Division, falls nötig
         if (w != 0 && w != 1) {
             return new Vector3(x / w, y / w, z / w);
         }
@@ -243,6 +244,7 @@ public class Matrix4x4 {
     }
 
     // ===== Hilfsmethoden =====
+
     /**
      * Setzt den Wert an der angegebenen Position in der Matrix.
      *
@@ -267,4 +269,3 @@ public class Matrix4x4 {
         return sb.toString();
     }
 }
-

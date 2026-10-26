@@ -2,19 +2,31 @@ package scenemanagement.scenes;
 
 import enums.Difficulty;
 import enums.OverlayType;
-import objects.hitboxes.BoxHitbox;
 import math.Vector2;
 import math.Vector3;
-import objects.*;
+import objects.Ball;
+import objects.Box;
+import objects.Enemy;
+import objects.Player;
+import objects.SevenSegmentDisplay;
+import objects.Vector;
+import objects.hitboxes.BoxHitbox;
+import pong.GameWindow;
 import rendering.Camera;
 import rendering.Drawer;
 import rendering.Renderer;
-import pong.GameWindow;
 import utility.Cooldown;
 import utility.Countdown;
 import utility.Globals;
 
-import java.awt.*;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import java.awt.RenderingHints;
+import java.awt.Stroke;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
@@ -24,26 +36,26 @@ import java.awt.event.MouseEvent;
  */
 public class GameScene extends Scene {
     private static final int WINNING_SCORE = 4; // Punkte, die zum Sieg nötig sind
-    // volle Tiefe des Spielfelds (von Wand zu Wand)
+    // Volle Tiefe des Spielfelds (von Wand zu Wand)
     private static final double BOX_DEPTH = 5;
-    // halbe Tiefe (von der Mitte bis zu einer Wand), damit liegen die Wände bei z = ±BOX_HALF_DEPTH
+    // Halbe Tiefe (von der Mitte bis zu einer Wand), damit liegen die Wände bei z = ±BOX_HALF_DEPTH
     private static final double BOX_HALF_DEPTH = BOX_DEPTH / 2;
     // Z-Ebene, auf der sich das Spieler-Paddle bewegt (knapp vor der Wand)
     private static final double PLAYER_POSITION_Z = -BOX_HALF_DEPTH + 0.2;
     private static final int SCORE_BASELINE_Y = 50; // Grundlinie, auf der der Punktestand sitzt
     private static final int SCORE_LINE_GAP = 15; // Abstand zwischen Punktestand und den Strichen daneben
 
-    // Renderer
-    private final transient Renderer renderer; // rechnet die 3D-Objekte auf die 2D-Zeichenfläche um
+    // Darstellung
+    private final transient Renderer renderer; // Rechnet die 3D-Objekte auf die 2D-Zeichenfläche um
     private final transient Camera camera; // Blickpunkt, aus dem die Szene gezeichnet wird
 
     // Objekte
     private final transient Player player; // Paddle des Spielers (folgt der Maus)
-    private final transient Enemy aiPlayer; // Paddle der KI
+    private final transient Enemy cpuPlayer; // Paddle der CPU
     private final transient Box box; // Der Spielraum bzw. die Wände drumherum
     private final transient Ball ball;
 
-    // KoordinatenAchsen
+    // Koordinatenachsen
     private final transient Vector xAxis;
     private final transient Vector yAxis;
     private final transient Vector zAxis;
@@ -51,26 +63,26 @@ public class GameScene extends Scene {
     // Punkteanzeige, die als 3D-Objekt an der Seitenwand hängt
     private final transient SevenSegmentDisplay scoreDisplay;
 
-    // Hitboxes
-    private final transient BoxHitbox goalPlayerHitbox; // Torfläche vor dem Spieler, Treffer = Punkt für die KI
-    private final transient BoxHitbox goalAiHitbox; // Torfläche hinter der KI, Treffer = Punkt für den Spieler
+    // Hitboxen
+    private final transient BoxHitbox goalPlayerHitbox; // Torfläche vor dem Spieler, Treffer = Punkt für die CPU
+    private final transient BoxHitbox goalCpuHitbox; // Torfläche hinter der CPU, Treffer = Punkt für den Spieler
 
-    // Hit Cooldown
+    // Treffer-Cooldown
     private final transient Cooldown hitCooldown; // Sperrzeit nach einem Paddle-Treffer
 
-    // Scoring
+    // Rundenstart
     private final transient Countdown countdown; // Countdown vor jeder Runde
 
-    // Difficulty
-    private Difficulty gameDifficulty = Difficulty.MEDIUM; // legt fest, wie schnell die KI dem Ball folgen darf
+    // Schwierigkeit
+    private Difficulty gameDifficulty = Difficulty.MEDIUM; // Legt fest, wie schnell die CPU dem Ball folgen darf
 
-    // FPS
+    // FPS-Messung
     private long lastFrameTime = System.currentTimeMillis(); // Zeitstempel des letzten Frames
-    private int fps = 0; // zuletzt berechnete Bilder pro Sekunde, wird nur im Debug-Modus angezeigt
+    private int fps = 0; // Zuletzt berechnete Bilder pro Sekunde, wird nur im Debug-Modus angezeigt
 
-    // Score
+    // Punktestand
     private int playerScore = 0;
-    private int aiScore = 0;
+    private int cpuScore = 0;
 
     private GameState gameState = GameState.COUNTING_DOWN; // Das Spiel beginnt immer mit einem Countdown
 
@@ -78,7 +90,7 @@ public class GameScene extends Scene {
     private transient Vector3 mousePosition = new Vector3(0, 0, PLAYER_POSITION_Z); // Aktuelle Mausposition im 3D-Raum
 
     /**
-     * Initialisiert Renderer, Kamera, Box, Ball, Spieler und Gegner sowie die Tore.
+     * Initialisiert Renderer, Kamera, Box, Ball, Spieler und CPU sowie die Tore.
      *
      * @param window Hauptfenster, zu dem die Szene gehört
      */
@@ -103,14 +115,14 @@ public class GameScene extends Scene {
         box = new Box(new Vector3(4.90, 2.8, BOX_DEPTH));
         ball = new Ball(box.getSize());
 
-        // Score Display (7-Segment) konfigurieren und in der Welt platzieren
+        // Punkteanzeige (Siebensegmentanzeige) konfigurieren und in der Welt platzieren
         scoreDisplay = new SevenSegmentDisplay();
         scoreDisplay.getTransform().setScale(new Vector3(1.5, 1.5, 1.5));
-        // hängt an der linken Seitenwand, also bei der halben Boxbreite
+        // Hängt an der linken Seitenwand, also bei der halben Boxbreite
         scoreDisplay.getTransform().setPosition(new Vector3(-box.getSize().getX() / 2 + 0.1, 0, -0.5));
         scoreDisplay.getTransform().setRotation(new Vector3(0, Math.toRadians(-90), 0));
 
-        // 3 Sekunden Countdown (für den Start jeder Runde) erstellen
+        // Countdown von 3 Sekunden für den Start jeder Runde erstellen
         countdown = new Countdown(3000);
         countdown.onTick(_ -> repaint()); // Bei jedem Tick neu zeichnen, damit die Zahl sichtbar runterzählt
         countdown.onFinish(() -> {
@@ -121,19 +133,19 @@ public class GameScene extends Scene {
         // Cooldown für Paddle-Treffer (verhindert mehrfache Kollisionserkennung im selben Frame)
         hitCooldown = new Cooldown(120);
 
-        // Hitboxes für Tore generieren (an der Vorder- und Rückwand der Box)
+        // Hitboxen für Tore generieren (an der Vorder- und Rückwand der Box)
         Vector3 boxSize = box.getSize();
         Vector3 hitboxSize = new Vector3(boxSize.getX(), boxSize.getY(), 0);
         goalPlayerHitbox = new BoxHitbox(new Vector3(0, 0, -BOX_HALF_DEPTH), hitboxSize, Color.RED);
-        goalAiHitbox = new BoxHitbox(new Vector3(0, 0, BOX_HALF_DEPTH), hitboxSize, Color.RED);
+        goalCpuHitbox = new BoxHitbox(new Vector3(0, 0, BOX_HALF_DEPTH), hitboxSize, Color.RED);
 
         // Spieler-Paddle vorne platzieren
         player = new Player(new Vector3(0, 0, PLAYER_POSITION_Z));
 
-        // KI-Paddle spiegelverkehrt hinten platzieren
+        // CPU-Paddle spiegelverkehrt hinten platzieren
         Vector3 playerPosition = player.getTransform().getPosition();
-        Vector3 aiPosition = new Vector3(playerPosition.getX(), playerPosition.getY(), -PLAYER_POSITION_Z);
-        aiPlayer = new Enemy(aiPosition, box.getSize());
+        Vector3 cpuPosition = new Vector3(playerPosition.getX(), playerPosition.getY(), -PLAYER_POSITION_Z);
+        cpuPlayer = new Enemy(cpuPosition, box.getSize());
     }
 
     // ===== Spiel-Logik =====
@@ -155,8 +167,7 @@ public class GameScene extends Scene {
 
         // Leichte Kamera-Bewegung basierend auf der Mausposition für Parallaxen-Effekt
         Vector3 targetCameraPosition = mousePosition.divide(15);
-        Vector3 cameraPosition = camera.getPosition().
-                lerp(targetCameraPosition, 0.5);
+        Vector3 cameraPosition = camera.getPosition().lerp(targetCameraPosition, 0.5);
         camera.setPosition(new Vector3(cameraPosition.getX(), cameraPosition.getY(), camera.getPosition().getZ()));
 
         // Während des Countdowns bewegen sich nur Spieler und Kamera, der Rest bleibt stehen
@@ -165,7 +176,7 @@ public class GameScene extends Scene {
         }
 
         // Kollision des Balls mit den beiden Paddles prüfen
-        BoxHitbox[] paddleHitboxes = new BoxHitbox[]{player.getHitbox(), aiPlayer.getHitbox()};
+        BoxHitbox[] paddleHitboxes = new BoxHitbox[] {player.getHitbox(), cpuPlayer.getHitbox()};
         if (hitCooldown.isReady() && ball.paddleHit(paddleHitboxes)) {
             window.getSoundManager().playSoundEffect("pong");
             hitCooldown.trigger(); // Verhindert, dass der Treffer sofort mehrfach ausgelöst wird
@@ -175,29 +186,29 @@ public class GameScene extends Scene {
         ball.move();
 
         // Tore prüfen (hat der Ball die vordere oder hintere Wand erreicht?)
-        if (goalPlayerHitbox.intersects(ball.getHitbox())) { // Ball trifft vorne → Punkt für KI
-            addPoint(PlayerType.AI);
+        if (goalPlayerHitbox.intersects(ball.getHitbox())) { // Ball trifft vorne → Punkt für die CPU
+            addPoint(PlayerType.CPU);
         }
-        if (goalAiHitbox.intersects(ball.getHitbox())) { // Ball trifft hinten → Punkt für Spieler
+        if (goalCpuHitbox.intersects(ball.getHitbox())) { // Ball trifft hinten → Punkt für Spieler
             addPoint(PlayerType.PLAYER);
         }
 
-        // KI bewegt sich in Richtung des Balls (Geschwindigkeit ist durch Difficulty begrenzt)
-        aiPlayer.move(ball.getTransform().getPosition(), gameDifficulty.getValue());
+        // Die CPU bewegt sich in Richtung des Balls (Geschwindigkeit ist durch die Schwierigkeit begrenzt)
+        cpuPlayer.move(ball.getTransform().getPosition(), gameDifficulty.getValue());
     }
 
     /**
      * Zählt einen Punkt für den Torschützen, aktualisiert die Anzeige und prüft auf Sieg.
      * <p>
-     * Punktet die KI, wird zusätzlich der Glasbruch-Effekt am Ort des Balls angezeigt.
+     * Punktet die CPU, wird zusätzlich der Glasbruch-Effekt am Ort des Balls angezeigt.
      * Hat noch niemand gewonnen, beginnt der Countdown für die nächste Runde.
      *
      * @param scorer Seite, die den Punkt erzielt hat
      */
     private void addPoint(PlayerType scorer) {
-        if (scorer == PlayerType.AI) {
-            aiScore++;
-            // Bildschirm brechen-Effekt am aktuellen Ort des Balls erzeugen
+        if (scorer == PlayerType.CPU) {
+            cpuScore++;
+            // Glasbruch-Effekt am aktuellen Ort des Balls erzeugen
             Vector2 ballScreenPosition = renderer.worldToScreen(ball.getTransform().getPosition());
             window.getShatteredGlassOverlay().generateShatter(
                     (int) ballScreenPosition.getX(), (int) ballScreenPosition.getY(),
@@ -208,12 +219,12 @@ public class GameScene extends Scene {
         }
 
         window.getSoundManager().playSoundEffect("score");
-        scoreDisplay.setScore(playerScore, aiScore); // Punktetafel aktualisieren
+        scoreDisplay.setScore(playerScore, cpuScore); // Punkteanzeige aktualisieren
         ball.reset(); // Ball zurück in die Mitte
 
         // Überprüfen, ob jemand die nötigen Punkte zum Sieg erreicht hat
-        if (aiScore == WINNING_SCORE || playerScore == WINNING_SCORE) {
-            if (aiScore == WINNING_SCORE) {
+        if (cpuScore == WINNING_SCORE || playerScore == WINNING_SCORE) {
+            if (cpuScore == WINNING_SCORE) {
                 window.toggleOverlay(OverlayType.LOSE);
                 window.getSoundManager().playSoundEffect("lose");
             } else {
@@ -222,7 +233,7 @@ public class GameScene extends Scene {
             }
             return;
         }
-        aiPlayer.reset();
+        cpuPlayer.reset();
 
         // Wenn noch niemand gewonnen hat, startet der Countdown für die nächste Runde
         gameState = GameState.COUNTING_DOWN;
@@ -230,17 +241,17 @@ public class GameScene extends Scene {
     }
 
     /**
-     * Setzt den Spielstand, Ball und Gegner für ein komplett neues Spiel zurück.
+     * Setzt den Spielstand, Ball und CPU-Paddle für ein komplett neues Spiel zurück.
      */
     public void reset() {
         playerScore = 0;
-        aiScore = 0;
-        scoreDisplay.setScore(playerScore, aiScore);
+        cpuScore = 0;
+        scoreDisplay.setScore(playerScore, cpuScore);
         ball.reset();
-        aiPlayer.reset();
+        cpuPlayer.reset();
     }
 
-    // ===== Laufzeit (Lifecycle) =====
+    // ===== Lebenszyklus =====
 
     /**
      * Friert das Spiel ein (z. B. beim Öffnen des Pausenmenüs): Game-Loop und Countdown werden angehalten.
@@ -282,7 +293,7 @@ public class GameScene extends Scene {
 
     /**
      * Zeichnet die gesamte Szene: 3D-Objekte, Punktestand, Countdown und im Debug-Modus
-     * zusätzlich Koordinatenachsen, Hitboxes und FPS.
+     * zusätzlich Koordinatenachsen, Hitboxen und FPS.
      *
      * @param g Grafikkontext, in den gezeichnet wird
      */
@@ -294,7 +305,7 @@ public class GameScene extends Scene {
 
         // Reihenfolge beachten: Von hinten nach vorne rendern
         renderer.renderEntity(g2d, box);
-        renderer.renderEntity(g2d, aiPlayer);
+        renderer.renderEntity(g2d, cpuPlayer);
         renderer.renderEntity(g2d, scoreDisplay);
         renderer.renderEntity(g2d, ball);
         renderer.renderEntity(g2d, player);
@@ -305,23 +316,23 @@ public class GameScene extends Scene {
             renderer.renderEntity(g2d, yAxis);
             renderer.renderEntity(g2d, zAxis);
 
-            // Debug-Modus: Alle Hitboxes (Paddles, Tore, Ball) anzeigen
+            // Debug-Modus: Alle Hitboxen (Paddles, Tore, Ball) anzeigen
             Stroke hitboxStroke = new BasicStroke(2.0f);
             renderer.renderEntity(g2d, ball.getHitbox(), false, hitboxStroke);
-            renderer.renderEntity(g2d, aiPlayer.getHitbox(), false, hitboxStroke);
-            renderer.renderEntity(g2d, goalAiHitbox, false, hitboxStroke);
+            renderer.renderEntity(g2d, cpuPlayer.getHitbox(), false, hitboxStroke);
+            renderer.renderEntity(g2d, goalCpuHitbox, false, hitboxStroke);
             renderer.renderEntity(g2d, player.getHitbox(), false, hitboxStroke);
             renderer.renderEntity(g2d, goalPlayerHitbox, false, hitboxStroke);
 
             // FPS oben links anzeigen
-            g2d.setFont(new Font("Monospace", Font.BOLD, 20));
-            g2d.setColor(Color.GREEN);
+            g2d.setFont(new Font("Monospaced", Font.BOLD, 20));
+            g2d.setColor(Globals.getFontColor());
             g2d.drawString("FPS: " + fps, 10, 20);
         }
 
         // Punktestand zentriert oben einblenden
         g2d.setFont(Globals.getMainFont(36));
-        String scoreText = playerScore + " : " + aiScore;
+        String scoreText = playerScore + " : " + cpuScore;
         // Die Maße werden vorab geholt, weil sich die Striche daran ausrichten
         Rectangle scoreBounds = Drawer.getCenteredStringBounds(g2d, scoreText, getWidth() / 2, SCORE_BASELINE_Y);
 
@@ -333,7 +344,7 @@ public class GameScene extends Scene {
         Drawer.drawOutlinedLine(g2d, leftX, lineTop, leftX, lineBottom, Color.BLUE, Color.CYAN, 3f, 1f);
         Drawer.drawOutlinedLine(g2d, rightX, lineTop, rightX, lineBottom, Color.RED, Color.PINK, 3f, 1f);
 
-        Drawer.drawCenteredString(g2d, scoreText, getWidth() / 2, SCORE_BASELINE_Y, Color.GREEN);
+        Drawer.drawCenteredString(g2d, scoreText, getWidth() / 2, SCORE_BASELINE_Y, Globals.getFontColor());
 
         // Countdown groß in der Mitte einblenden
         if (gameState == GameState.COUNTING_DOWN && countdown.isRunning()) {
@@ -343,7 +354,7 @@ public class GameScene extends Scene {
         }
     }
 
-    // ===== Key/MouseListener Methoden =====
+    // ===== Eingabebehandlung =====
 
     /**
      * Merkt sich bei jeder Mausbewegung die Zielposition für das Spieler-Paddle.
@@ -352,13 +363,13 @@ public class GameScene extends Scene {
      */
     @Override
     public void mouseMoved(MouseEvent e) {
-        // Wandelt 2D-Maus-Pixel-Koordinaten in 3D-Weltkoordinaten für das Paddle um
+        // 2D-Maus-Pixel-Koordinaten in 3D-Weltkoordinaten für das Paddle umwandeln
         Vector2 mouseScreenPosition = new Vector2(e.getX(), e.getY());
         mousePosition = renderer.screenToWorld(mouseScreenPosition, PLAYER_POSITION_Z);
     }
 
     /**
-     * Verarbeitet die Tastenkürzel im Spiel: Escape öffnet bzw. schließt die Pause, F3 schaltet die Debug-Ansicht um.
+     * Verarbeitet die Tastenkürzel im Spiel: ESC öffnet bzw. schließt die Pause, F3 schaltet die Debug-Ansicht um.
      *
      * @param e Tastenereignis
      */
@@ -373,11 +384,12 @@ public class GameScene extends Scene {
     }
 
     // ===== Getter und Setter =====
+
     public void setDifficulty(Difficulty difficulty) {
         this.gameDifficulty = difficulty;
     }
 
-    // ===== Debug Methoden =====
+    // ===== Debug-Methoden =====
 
     /**
      * Misst die Zeit seit dem letzten Frame und rechnet sie in Bilder pro Sekunde um.
@@ -397,7 +409,7 @@ public class GameScene extends Scene {
     /**
      * Unterscheidet, für wen ein Punkt gezählt wird.
      */
-    private enum PlayerType { PLAYER, AI }
+    private enum PlayerType { PLAYER, CPU }
 
     /**
      * Gibt an, ob das Spiel gerade läuft oder auf den Rundenstart wartet.

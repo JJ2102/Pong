@@ -15,7 +15,7 @@ public class DifficultyOverlay extends Overlay {
      * @param window Hauptfenster, über das das Spiel gestartet wird
      */
     public DifficultyOverlay(GameWindow window) {
-        super(window, "Select Difficulty", 200, true, OverlayType.DIFFICULTY); // pausiert die Szene darunter
+        super(window, "Select Difficulty", 200, true, OverlayType.DIFFICULTY); // Pausiert die Szene darunter
 
         // Buttons
         Button easyButton = new Button("Easy");
@@ -28,7 +28,7 @@ public class DifficultyOverlay extends Overlay {
         easyButton.addActionListener(_ -> startGame(Difficulty.EASY));
         mediumButton.addActionListener(_ -> startGame(Difficulty.MEDIUM));
         hardButton.addActionListener(_ -> startGame(Difficulty.HARD));
-        // blendet das Overlay wieder aus
+        // Overlay wieder ausblenden
         cancelButton.addActionListener(_ -> window.toggleOverlay(OverlayType.DIFFICULTY));
 
         addComponent(easyButton);
@@ -36,7 +36,7 @@ public class DifficultyOverlay extends Overlay {
         addComponent(hardButton);
         addComponent(cancelButton);
 
-        positionComponents(); // ordnet Titel und Buttons untereinander an
+        positionComponents(); // Titel und Buttons untereinander anordnen
     }
 
     /**

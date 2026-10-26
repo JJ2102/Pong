@@ -1,6 +1,7 @@
 package rendering;
 
 import math.Vector3;
+
 import java.util.List;
 
 /**
@@ -89,6 +90,7 @@ public class Mesh {
     }
 
     // ===== Getter =====
+
     public int[][] getFaces() {
         return faces;
     }

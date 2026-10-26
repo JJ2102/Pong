@@ -2,20 +2,16 @@ package scenemanagement.overlays;
 
 import enums.OverlayType;
 import pong.GameWindow;
+import utility.ComponentColumn;
 import utility.Globals;
 
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
-import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Basisklasse für alle Overlays, also Menüs, die über einer Szene liegen.
@@ -25,12 +21,12 @@ public abstract class Overlay extends JPanel implements KeyListener {
     // Referenz auf das Hauptfenster, damit Unterklassen Szenen wechseln können
     protected final transient GameWindow window;
 
-    // alle Elemente des Overlays in Anzeigereihenfolge
-    private final transient List<Component> components = new ArrayList<>();
+    // Titel und alle weiteren Elemente des Overlays in Anzeigereihenfolge
+    private final transient ComponentColumn column;
 
     private final int transparency; // Alphawert des Hintergrunds (0 = unsichtbar, 255 = deckend)
     private final Color bgColor = Globals.getBackgroundColor();
-    private final boolean pauseUnderlying; // legt fest, ob die Szene darunter pausiert werden soll
+    private final boolean pauseUnderlying; // Legt fest, ob die Szene darunter pausiert werden soll
     private final OverlayType overlayType;
 
     /**
@@ -54,11 +50,7 @@ public abstract class Overlay extends JPanel implements KeyListener {
         this.pauseUnderlying = pauseUnderlying;
         this.overlayType = overlayType;
 
-        // Titel in großer Schrift erzeugen und als erstes Element eintragen
-        JLabel titleLabel = new JLabel(title);
-        titleLabel.setFont(Globals.getMainFont(72));
-        titleLabel.setForeground(Globals.getFontColor());
-        components.add(titleLabel);
+        column = new ComponentColumn(title);
     }
 
     // ===== Aufbau des Overlays =====
@@ -69,24 +61,14 @@ public abstract class Overlay extends JPanel implements KeyListener {
      * @param component anzuzeigendes Element
      */
     protected void addComponent(Component component) {
-        components.add(component);
+        column.add(component);
     }
 
     /**
      * Ordnet alle gemerkten Elemente zentriert und untereinander an.
      */
     protected void positionComponents() {
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = 0; // alles in einer einzigen Spalte
-        gbc.anchor = GridBagConstraints.CENTER;
-        gbc.insets = new Insets(10, 0, 10, 0); // etwas Abstand nach oben und unten
-
-        // Jedes Element bekommt eine eigene Zeile, von oben nach unten
-        int yPos = 0;
-        for (Component component : components) {
-            gbc.gridy = yPos++;
-            add(component, gbc);
-        }
+        column.placeIn(this);
     }
 
     // ===== Getter =====
@@ -94,7 +76,7 @@ public abstract class Overlay extends JPanel implements KeyListener {
     /**
      * Gibt an, ob die Szene unter diesem Overlay pausiert werden soll.
      *
-     * @return {@code true}, wenn die darunterliegende Szene pausiert werden soll
+     * @return {@code true}, wenn die darunterliegende Szene pausiert werden soll, sonst {@code false}
      */
     public boolean shouldPauseUnderlying() {
         return pauseUnderlying;
@@ -128,7 +110,6 @@ public abstract class Overlay extends JPanel implements KeyListener {
      */
     @Override
     public void keyPressed(KeyEvent e) {
-        // schließt Overlays mit ESC
         if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
             window.toggleOverlay(overlayType);
         }

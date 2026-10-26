@@ -45,7 +45,7 @@ public class BoxHitbox extends Entity {
     }
 
     /**
-     * Gibt die Ecke unten, hinten, links der Box zurück.
+     * Gibt die Ecke unten, vorne, links der Box zurück.
      *
      * @return Ecke mit den kleinsten Koordinaten auf allen Achsen
      */
@@ -58,7 +58,7 @@ public class BoxHitbox extends Entity {
     }
 
     /**
-     * Gibt die Ecke oben, vorne, rechts der Box zurück.
+     * Gibt die Ecke oben, hinten, rechts der Box zurück.
      *
      * @return Ecke mit den größten Koordinaten auf allen Achsen
      */

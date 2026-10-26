@@ -8,9 +8,8 @@ import math.Vector3;
  * Stellt die Matrizen bereit, die 3D-Weltkoordinaten in kameraspezifische Projektionskoordinaten überführen.
  */
 public final class RenderPipeline {
-
     /**
-     * Privater Konstruktor, da die reine Hilfsklasse nie instanziiert wird.
+     * Privater Konstruktor, da die Hilfsklasse nie instanziiert wird.
      */
     private RenderPipeline() {
     }
@@ -43,7 +42,7 @@ public final class RenderPipeline {
         // Schritt 2: Die View-Matrix richtet die Welt relativ zur Kamera aus
         Matrix4x4 viewMatrix = camera.getViewMatrix();
 
-        // Schritt 3: Die Projektionsmatrix skaliert anhand des Sichtfelds (Field of View)
+        // Schritt 3: Die Projektionsmatrix skaliert anhand des Zoomfaktors
         Matrix4x4 projectionMatrix = Matrix4x4.getProjectionMatrix(camera.getZoomFactor());
 
         // Matrizen wirken von rechts nach links: erst die View-, dann die Projektionsmatrix
@@ -64,7 +63,6 @@ public final class RenderPipeline {
 
         double depth = planeZ - cameraPosition.getZ(); // Abstand der Z-Ebene zur Kamera
         double factor = depth / camera.getZoomFactor();
-
 
         return new Vector3(
                 cameraPosition.getX() + normalized.getX() * factor,

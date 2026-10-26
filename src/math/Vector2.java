@@ -8,7 +8,7 @@ public class Vector2 {
     private double y; // Y-Koordinate
 
     /**
-     * Konstruktor zur Initialisierung des 2D-Vektors.
+     * Initialisiert den 2D-Vektor.
      *
      * @param x X-Koordinate
      * @param y Y-Koordinate
@@ -19,6 +19,7 @@ public class Vector2 {
     }
 
     // ===== Getter und Setter =====
+
     public double getX() {
         return x;
     }
@@ -36,6 +37,7 @@ public class Vector2 {
     }
 
     // ===== Vektor-Operationen =====
+
     /**
      * Addiert einen anderen 2D-Vektor zu diesem Vektor und gibt das Ergebnis zurück.
      *
@@ -47,6 +49,7 @@ public class Vector2 {
     }
 
     // ===== Hilfsmethoden =====
+
     @Override
     public String toString() {
         return "( " + x + ", " + y + " )";

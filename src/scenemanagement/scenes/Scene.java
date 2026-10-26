@@ -15,7 +15,7 @@ import java.awt.event.MouseMotionListener;
  * Kümmert sich um den Game-Loop, die Zeichenfläche und die Eingaben von Tastatur und Maus.
  */
 public abstract class Scene extends JPanel implements KeyListener, MouseMotionListener {
-    protected final GameWindow window; // Referenz auf das Hauptfenster, um z.B. Szenen zu wechseln
+    protected final GameWindow window; // Referenz auf das Hauptfenster, um z. B. Szenen zu wechseln
     private final Timer timer; // Taktgeber der Szene, ruft update() und repaint() auf
 
     /**
@@ -29,7 +29,7 @@ public abstract class Scene extends JPanel implements KeyListener, MouseMotionLi
         addKeyListener(this);
         addMouseMotionListener(this);
 
-        // Game-Loop: alle 20ms (~50 FPS) Zustand aktualisieren und neu zeichnen
+        // Game-Loop: alle 20 ms (~50 FPS) Zustand aktualisieren und neu zeichnen
         timer = new Timer(20, _ -> {
             update();
             repaint();
@@ -92,7 +92,8 @@ public abstract class Scene extends JPanel implements KeyListener, MouseMotionLi
         return timer;
     }
 
-    // ===== Default Input-Handling =====
+    // ===== Standard-Eingabebehandlung =====
+
     // Leere Standardimplementierungen, damit Unterklassen nur überschreiben, was sie brauchen
     @Override
     public void keyTyped(KeyEvent e) {

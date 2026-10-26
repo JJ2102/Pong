@@ -10,16 +10,15 @@ import java.util.function.LongConsumer;
  * Andere Klassen werden per Listener über jeden Tick und über das Ablaufen informiert.
  */
 public class Countdown {
-
     private final long durationMs; // Gesamtdauer eines Durchlaufs in Millisekunden
 
-    private long remainingMs; // aktuell verbleibende Zeit in Millisekunden
+    private long remainingMs; // Aktuell verbleibende Zeit in Millisekunden
     private long endTime; // Zeitpunkt (in ms), an dem der Countdown abläuft
 
-    private final Timer timer; // ruft update() regelmäßig auf
+    private final Timer timer; // Ruft update() regelmäßig auf
 
-    private final List<LongConsumer> tickListeners = new ArrayList<>(); // werden bei jedem Tick benachrichtigt
-    private final List<Runnable> finishListeners = new ArrayList<>(); // werden einmal beim Ablaufen benachrichtigt
+    private final List<LongConsumer> tickListeners = new ArrayList<>(); // Werden bei jedem Tick benachrichtigt
+    private final List<Runnable> finishListeners = new ArrayList<>(); // Werden einmal beim Ablaufen benachrichtigt
 
     /**
      * Legt die Dauer fest und erstellt den Timer; gestartet wird er erst mit {@link #start()}.
@@ -29,7 +28,7 @@ public class Countdown {
     public Countdown(long durationMs) {
         this.durationMs = durationMs;
 
-        this.timer = new Timer(100, _ -> update()); // Standard-Tick-Intervall: 100ms
+        this.timer = new Timer(100, _ -> update()); // Standard-Tick-Intervall: 100 ms
     }
 
     /**
@@ -39,7 +38,7 @@ public class Countdown {
      * Tick-Listenern ausgeführt.
      */
     private void update() {
-        remainingMs = endTime - System.currentTimeMillis(); // berechnet die übrigen ms
+        remainingMs = endTime - System.currentTimeMillis(); // Übrige Zeit in ms
 
         if (remainingMs <= 0) { // Countdown beendet
             remainingMs = 0;
@@ -56,7 +55,7 @@ public class Countdown {
         }
     }
 
-    // ===== Control =====
+    // ===== Steuerung =====
 
     /**
      * Startet den Countdown von vorne mit der vollen Dauer.
@@ -81,7 +80,7 @@ public class Countdown {
         start();
     }
 
-    // ===== Listeners =====
+    // ===== Listener =====
 
     /**
      * Meldet einen Listener an, der bei jedem Tick die verbleibende Zeit erhält.
@@ -101,7 +100,7 @@ public class Countdown {
         finishListeners.add(listener);
     }
 
-    // ===== Information =====
+    // ===== Abfragen =====
 
     /**
      * Gibt die Restzeit in vollen Sekunden zurück, praktisch für die Anzeige.
@@ -115,7 +114,7 @@ public class Countdown {
     /**
      * Gibt zurück, ob der Countdown gerade läuft.
      *
-     * @return {@code true}, wenn der Timer läuft
+     * @return {@code true}, wenn der Timer läuft, sonst {@code false}
      */
     public boolean isRunning() {
         return timer.isRunning();

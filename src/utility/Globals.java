@@ -9,15 +9,16 @@ import java.awt.image.BufferedImage;
 
 /**
  * Sammlung statischer Hilfsmethoden für Werte, die im ganzen Spiel einheitlich sein sollen
- * (Farben, Schrift, Zufall).
+ * (Farben, Schrift, Cursor, Zufall).
  */
 public final class Globals {
-
     /**
      * Privater Konstruktor, da die Hilfsklasse nie instanziiert wird.
      */
     private Globals() {
     }
+
+    // ===== Cursor =====
 
     /**
      * Erzeugt einen komplett durchsichtigen Cursor, damit die Maus im Spiel nicht stört.
@@ -35,7 +36,7 @@ public final class Globals {
     // ===== Farbe =====
 
     /**
-     * Liefert die einheitliche Hintergrundfarbe aller Szenen und Overlays.
+     * Gibt die einheitliche Hintergrundfarbe aller Szenen und Overlays zurück.
      *
      * @return Hintergrundfarbe (Schwarz)
      */
@@ -44,7 +45,7 @@ public final class Globals {
     }
 
     /**
-     * Liefert die einheitliche Schriftfarbe im typischen Retro-Grün.
+     * Gibt die einheitliche Schriftfarbe im typischen Retro-Grün zurück.
      *
      * @return Schriftfarbe (Grün)
      */
@@ -53,7 +54,7 @@ public final class Globals {
     }
 
     /**
-     * Liefert die gleiche Schriftfarbe, aber mit einstellbarer Transparenz.
+     * Gibt die gleiche Schriftfarbe zurück, aber mit einstellbarer Transparenz.
      *
      * @param transparency Alphawert von 0 (unsichtbar) bis 255 (voll deckend)
      * @return grüne Schriftfarbe mit der angegebenen Transparenz
@@ -62,8 +63,10 @@ public final class Globals {
         return new Color(0, 255, 0, transparency);
     }
 
+    // ===== Schrift =====
+
     /**
-     * Liefert die Standardschrift des Spiels in der gewünschten Größe.
+     * Gibt die Standardschrift des Spiels in der gewünschten Größe zurück.
      *
      * @param size Schriftgröße in Punkt
      * @return fette Arial-Schrift in der angegebenen Größe
@@ -75,17 +78,18 @@ public final class Globals {
     // ===== Zufallswerte =====
 
     /**
-     * Liefert einen zufälligen Geschwindigkeitswert zwischen {@code min} und {@code max} mit zufälligem Vorzeichen.
+     * Gibt einen zufälligen Geschwindigkeitswert zwischen {@code min} und {@code max} mit zufälligem Vorzeichen
+     * zurück.
      *
      * @param min kleinster Betrag der Geschwindigkeit
      * @param max größter Betrag der Geschwindigkeit
      * @return zufällige Geschwindigkeit, deren Betrag in [{@code min}, {@code max}] liegt
      */
     public static double randomSpeed(double min, double max) {
-        // zufällige Richtung: -1 oder +1
+        // Zufällige Richtung: -1 oder +1
         double sign = Math.random() < 0.5 ? -1 : 1;
 
-        // zufällige Geschwindigkeit im Bereich [min, max]
+        // Zufällige Geschwindigkeit im Bereich [min, max]
         double magnitude = min + Math.random() * (max - min);
 
         return sign * magnitude; // Betrag mit der Richtung kombinieren

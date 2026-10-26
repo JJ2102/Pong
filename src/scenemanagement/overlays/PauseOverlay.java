@@ -14,7 +14,7 @@ public class PauseOverlay extends Overlay {
      * @param window Hauptfenster, über das Overlays und Szenen gewechselt werden
      */
     public PauseOverlay(GameWindow window) {
-        super(window, "Paused", 150, true, OverlayType.PAUSE); // pausiert das laufende Spiel im Hintergrund
+        super(window, "Paused", 150, true, OverlayType.PAUSE); // Pausiert das laufende Spiel im Hintergrund
 
         // Buttons
         Button resumeButton = new Button("Resume");
@@ -29,12 +29,12 @@ public class PauseOverlay extends Overlay {
             window.toggleOverlay(OverlayType.PAUSE);
             window.returnToMenu();
         });
-        quitButton.addActionListener(_ -> System.exit(0)); // beendet das Programm sofort
+        quitButton.addActionListener(_ -> System.exit(0)); // Programm sofort beenden
 
         addComponent(resumeButton);
         addComponent(menuButton);
         addComponent(quitButton);
 
-        positionComponents(); // ordnet Titel und Buttons untereinander an
+        positionComponents(); // Titel und Buttons untereinander anordnen
     }
 }

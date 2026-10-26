@@ -20,7 +20,7 @@ public class Camera {
     }
 
     /**
-     * Liefert die View-Matrix, die alle Objekte relativ zur Kamera ausrichtet.
+     * Gibt die View-Matrix zurück, die alle Objekte relativ zur Kamera ausrichtet.
      *
      * @return View-Matrix zur aktuellen Kameraposition
      */
@@ -29,6 +29,7 @@ public class Camera {
     }
 
     // ===== Getter und Setter =====
+
     public Vector3 getPosition() {
         return position;
     }

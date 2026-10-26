@@ -17,7 +17,7 @@ public class Button extends JButton {
         super(text);
         Font buttonFont = Globals.getMainFont(24); // Schrift aus Globals, damit alle Buttons gleich aussehen
         setFont(buttonFont);
-        setBackground(new Color(0, 68, 68)); // dunkles Türkis als Hintergrund
-        setForeground(new Color(255, 255, 255, 179)); // leicht transparente weiße Schrift
+        setBackground(new Color(0, 68, 68)); // Dunkles Türkis als Hintergrund
+        setForeground(new Color(255, 255, 255, 179)); // Leicht transparente weiße Schrift
     }
 }

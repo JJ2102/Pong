@@ -1,8 +1,8 @@
 package objects;
 
-import objects.hitboxes.BoxHitbox;
 import math.Vector3;
 import meshes.CuboidMesh;
+import objects.hitboxes.BoxHitbox;
 
 import java.awt.Color;
 

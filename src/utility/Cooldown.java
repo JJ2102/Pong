@@ -20,7 +20,7 @@ public class Cooldown {
     /**
      * Prüft, ob die Sperrzeit abgelaufen ist und die Aktion wieder erlaubt ist.
      *
-     * @return {@code true}, wenn die Aktion ausgeführt werden darf
+     * @return {@code true}, wenn die Aktion ausgeführt werden darf, sonst {@code false}
      */
     public boolean isReady() {
         return System.currentTimeMillis() >= nextAllowed;
@@ -30,6 +30,6 @@ public class Cooldown {
      * Startet die Sperre neu; wird nach dem Ausführen der Aktion aufgerufen.
      */
     public void trigger() {
-        nextAllowed = System.currentTimeMillis() + durationMs; // ab jetzt wieder für durationMs ms gesperrt
+        nextAllowed = System.currentTimeMillis() + durationMs; // Ab jetzt wieder für durationMs ms gesperrt
     }
 }

@@ -7,7 +7,12 @@ import objects.animation2d.Paddle2D;
 import pong.GameWindow;
 import utility.Button;
 
-import java.awt.*;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Stroke;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
@@ -54,7 +59,7 @@ public class MenuScene extends ButtonScene {
         addComponent(infoButton);
         addComponent(exitButton);
 
-        positionComponents(); // Buttons ausrichten
+        positionComponents(); // Titel und Buttons untereinander anordnen
     }
 
     /**
@@ -82,12 +87,12 @@ public class MenuScene extends ButtonScene {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
 
-        // gestrichelte Linie in der Mitte des Fensters zeichnen
-        g2d.setColor(java.awt.Color.WHITE);
+        // Gestrichelte Linie in der Mitte des Fensters zeichnen
+        g2d.setColor(Color.WHITE);
         int midX = window.getWindowSize().width / 2;
 
         Stroke dashed = new BasicStroke(3, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL,
-                                0, new float[]{30}, 0);
+                                0, new float[] {30}, 0);
 
         g2d.setStroke(dashed);
         g2d.drawLine(midX, 0, midX, window.getWindowSize().height);
@@ -113,14 +118,14 @@ public class MenuScene extends ButtonScene {
     }
 
     /**
-     * Beendet das Programm, wenn im Menü Escape gedrückt wird.
+     * Beendet das Programm, wenn im Menü ESC gedrückt wird.
      *
      * @param e Tastenereignis
      */
     @Override
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-            System.exit(0); // Beenden mit Escape
+            System.exit(0); // Beenden mit ESC
         }
     }
 }

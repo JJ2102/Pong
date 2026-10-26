@@ -17,7 +17,7 @@ public class InfoOverlay extends Overlay {
      * @param window Hauptfenster, über das das Overlay wieder ausgeblendet wird
      */
     public InfoOverlay(GameWindow window) {
-        // fast deckender Hintergrund, Szene darunter läuft weiter
+        // Fast deckender Hintergrund, Szene darunter läuft weiter
         super(window, "Information", 225, false, OverlayType.INFO);
 
         // Der Text wird als HTML gesetzt, damit Zeilenumbrüche und Fettschrift möglich sind
@@ -25,10 +25,10 @@ public class InfoOverlay extends Overlay {
         addComponent(controlsLabel);
 
         Button cancelButton = new Button("Close");
-        cancelButton.addActionListener(_ -> window.toggleOverlay(OverlayType.INFO)); // blendet das Overlay wieder aus
+        cancelButton.addActionListener(_ -> window.toggleOverlay(OverlayType.INFO)); // Overlay wieder ausblenden
         addComponent(cancelButton);
 
-        positionComponents(); // ordnet Titel, Text und Button untereinander an
+        positionComponents(); // Titel, Text und Button untereinander anordnen
     }
 
     /**

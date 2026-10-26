@@ -11,14 +11,13 @@ import java.util.List;
  */
 public class SphereMesh extends Mesh {
     /**
-     * Konstruktor zur Initialisierung des Kugel-Meshes.
+     * Initialisiert das Kugel-Mesh.
      *
      * @param radius Radius der Kugel
      * @param sectors Anzahl der vertikalen Segmente rund um die Y-Achse
      * @param stacks Anzahl der horizontalen Ringe vom Nord- zum Südpol
      */
     public SphereMesh(double radius, int sectors, int stacks) {
-
         super(
                 generateVertices(radius, sectors, stacks),
                 generateEdges(sectors, stacks),
@@ -47,13 +46,13 @@ public class SphereMesh extends Mesh {
 
         // Schleife über die Stacks (von oben nach unten)
         for (int i = 0; i <= stacks; i++) {
-            stackAngle = Math.PI / 2 - i * stackStep; // Von pi/2 bis -pi/2
+            stackAngle = Math.PI / 2 - i * stackStep; // Von π/2 bis −π/2
             xz = radius * Math.cos(stackAngle);
             y = radius * Math.sin(stackAngle);
 
             // Schleife über die Sektoren (von links nach rechts)
             for (int j = 0; j <= sectors; j++) {
-                sectorAngle = j * sectorStep; // Von 0° bis 360°
+                sectorAngle = j * sectorStep; // Von 0 bis 2π
                 x = xz * Math.cos(sectorAngle);
                 z = xz * Math.sin(sectorAngle);
                 vertices.add(new Vector3(x, y, z));
@@ -77,10 +76,10 @@ public class SphereMesh extends Mesh {
         for (int i = 0; i < stacks; i++) {
             for (int j = 0; j < sectors; j++) {
                 int idx = i * cols + j; // Aktueller Index
-                // horizontale Kante
-                edges.add(new int[]{idx, idx + 1});
-                // vertikale Kante
-                edges.add(new int[]{idx, idx + cols});
+                // Horizontale Kante
+                edges.add(new int[] {idx, idx + 1});
+                // Vertikale Kante
+                edges.add(new int[] {idx, idx + cols});
             }
         }
         return edges.toArray(new int[0][]);
@@ -108,8 +107,8 @@ public class SphereMesh extends Mesh {
                 int d = idx + cols;
 
                 // Zwei Dreiecke pro Rechteck erstellen (a-b-c und a-c-d)
-                faces.add(new int[]{a, b, c});
-                faces.add(new int[]{a, c, d});
+                faces.add(new int[] {a, b, c});
+                faces.add(new int[] {a, c, d});
             }
         }
         return faces.toArray(new int[0][]);

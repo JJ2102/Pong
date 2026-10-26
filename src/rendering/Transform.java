@@ -19,28 +19,18 @@ public class Transform {
         this.scale = new Vector3(1, 1, 1);
     }
 
-    // ===== Hilfsmethoden =====
+    // ===== Getter und Setter =====
 
-    /**
-     * Liefert die Position des Objekts.
-     *
-     * @return Position im 3D-Raum
-     */
     public Vector3 getPosition() {
         return position;
     }
 
-    /**
-     * Setzt die Position des Objekts.
-     *
-     * @param position neue Position im 3D-Raum
-     */
     public void setPosition(Vector3 position) {
         this.position = position;
     }
 
     /**
-     * Liefert die Rotation des Objekts.
+     * Gibt die Rotation des Objekts zurück.
      *
      * @return Rotation um die X-, Y- und Z-Achse in Radiant
      */
@@ -57,20 +47,10 @@ public class Transform {
         this.rotation = rotation;
     }
 
-    /**
-     * Liefert die Skalierung des Objekts.
-     *
-     * @return Skalierungsfaktoren entlang der X-, Y- und Z-Achse
-     */
     public Vector3 getScale() {
         return scale;
     }
 
-    /**
-     * Setzt die Skalierung des Objekts.
-     *
-     * @param scale neue Skalierungsfaktoren entlang der X-, Y- und Z-Achse
-     */
     public void setScale(Vector3 scale) {
         this.scale = scale;
     }
