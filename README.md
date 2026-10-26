@@ -3,7 +3,7 @@
 ---
 
 ## Beschreibung
-Ein Einzelspieler 3D-Pong in Java Swing, inspiriert von klassischen Pong-Spielen,
+Ein Einzelspieler-3D-Pong in Java Swing, inspiriert von klassischen Pong-Spielen,
 aber mit einer modernen selbstentwickelten perspektivischen 3D-Grafik. Das Ziel ist es, den Ball am gegnerischen Paddle vorbeizubringen.
 ![game](aufnahmen/gameplay.png)
 
@@ -55,7 +55,7 @@ aber mit einer modernen selbstentwickelten perspektivischen 3D-Grafik. Das Ziel 
 1. Repository klonen:
    ```bash
    git clone https://github.com/JJ2102/Pong.git
-    ```
+   ```
 2. Projekt in einer Java-IDE (z.B. IntelliJ IDEA, Eclipse) öffnen
 3. `src`-Ordner als Quellcode-Verzeichnis markieren
 4. `res`-Ordner als Ressourcen-Verzeichnis markieren
