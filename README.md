@@ -23,7 +23,7 @@ aber mit einer modernen selbstentwickelten perspektivischen 3D-Grafik. Das Ziel 
 | `Matrix4x4`                  | 4×4-Matrix für Transformationsberechnungen                                           |
 | `Vector3`                    | 3-dimensionaler Vektor für Geschwindigkeit und Position                              |
 | `Entity`                     | Oberklasse aller Objekte, besteht aus einem `Transform`, einem `Mesh` und Farben     |
-| `Ball`, `Player`, `Enemy`    | Spielobjekte: Ball, Spieler-Paddle und KI-Paddle                                     |
+| `Ball`, `Player`, `Enemy`    | Spielobjekte: Ball, Spieler-Paddle und CPU-Paddle                                    |
 | `Mesh`                       | Oberklasse für konkrete Formen wie `CuboidMesh` oder `SphereMesh`                    |
 | `Transform`                  | Speichert Rotation, Position und Skalierung als `Vector3`                            |
 | `Camera`                     | Blickpunkt mit Position und Zoom-Faktor                                              |
